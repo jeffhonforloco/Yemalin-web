@@ -1,12 +1,18 @@
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Search, ShoppingBag, User, Heart, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import YemalinLogo from '../YemalinLogo';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+
+  // Function to check if a path is active
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
 
   return (
     <header className="bg-white w-full border-b border-gray-100 sticky top-0 z-50">
@@ -30,11 +36,36 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8 mx-8">
-            <Link to="/shop" className="text-sm font-medium hover:text-yemalin-grey-600 transition-colors">Shop</Link>
-            <Link to="/designers" className="text-sm font-medium hover:text-yemalin-grey-600 transition-colors">Designers</Link>
-            <Link to="/collections" className="text-sm font-medium hover:text-yemalin-grey-600 transition-colors">Collections</Link>
-            <Link to="/blog" className="text-sm font-medium hover:text-yemalin-grey-600 transition-colors">Journal</Link>
-            <Link to="/about" className="text-sm font-medium hover:text-yemalin-grey-600 transition-colors">About</Link>
+            <Link 
+              to="/shop" 
+              className={`text-sm font-medium hover:text-yemalin-grey-600 transition-colors ${isActive('/shop') ? 'text-yemalin-grey-600 font-semibold' : ''}`}
+            >
+              Shop
+            </Link>
+            <Link 
+              to="/designers" 
+              className={`text-sm font-medium hover:text-yemalin-grey-600 transition-colors ${isActive('/designers') ? 'text-yemalin-grey-600 font-semibold' : ''}`}
+            >
+              Designers
+            </Link>
+            <Link 
+              to="/collections" 
+              className={`text-sm font-medium hover:text-yemalin-grey-600 transition-colors ${isActive('/collections') ? 'text-yemalin-grey-600 font-semibold' : ''}`}
+            >
+              Collections
+            </Link>
+            <Link 
+              to="/blog" 
+              className={`text-sm font-medium hover:text-yemalin-grey-600 transition-colors ${isActive('/blog') ? 'text-yemalin-grey-600 font-semibold' : ''}`}
+            >
+              Journal
+            </Link>
+            <Link 
+              to="/about" 
+              className={`text-sm font-medium hover:text-yemalin-grey-600 transition-colors ${isActive('/about') ? 'text-yemalin-grey-600 font-semibold' : ''}`}
+            >
+              About
+            </Link>
           </div>
 
           {/* Icons */}
@@ -75,35 +106,35 @@ const Navbar = () => {
           <div className="flex flex-col space-y-6 text-center">
             <Link 
               to="/shop" 
-              className="text-2xl font-display" 
+              className={`text-2xl font-display ${isActive('/shop') ? 'text-yemalin-grey-600' : ''}`}
               onClick={() => setIsMenuOpen(false)}
             >
               Shop
             </Link>
             <Link 
               to="/designers" 
-              className="text-2xl font-display" 
+              className={`text-2xl font-display ${isActive('/designers') ? 'text-yemalin-grey-600' : ''}`} 
               onClick={() => setIsMenuOpen(false)}
             >
               Designers
             </Link>
             <Link 
               to="/collections" 
-              className="text-2xl font-display" 
+              className={`text-2xl font-display ${isActive('/collections') ? 'text-yemalin-grey-600' : ''}`}
               onClick={() => setIsMenuOpen(false)}
             >
               Collections
             </Link>
             <Link 
               to="/blog" 
-              className="text-2xl font-display" 
+              className={`text-2xl font-display ${isActive('/blog') ? 'text-yemalin-grey-600' : ''}`}
               onClick={() => setIsMenuOpen(false)}
             >
               Journal
             </Link>
             <Link 
               to="/about" 
-              className="text-2xl font-display" 
+              className={`text-2xl font-display ${isActive('/about') ? 'text-yemalin-grey-600' : ''}`}
               onClick={() => setIsMenuOpen(false)}
             >
               About

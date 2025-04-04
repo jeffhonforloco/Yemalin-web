@@ -11,6 +11,11 @@ import Dashboard from "./pages/Dashboard";
 import DashboardProducts from "./pages/DashboardProducts";
 import DashboardOrders from "./pages/DashboardOrders";
 import DashboardAnalytics from "./pages/DashboardAnalytics";
+import Shop from "./pages/Shop";
+import Designers from "./pages/Designers";
+import Collections from "./pages/Collections";
+import Blog from "./pages/Blog";
+import About from "./pages/About";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +32,11 @@ const App = () => (
           <Route path="/dashboard/products" element={<DashboardProducts />} />
           <Route path="/dashboard/orders" element={<DashboardOrders />} />
           <Route path="/dashboard/analytics" element={<DashboardAnalytics />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/designers" element={<Designers />} />
+          <Route path="/collections" element={<Collections />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
