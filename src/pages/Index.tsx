@@ -1,13 +1,44 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import MainLayout from '../components/layouts/MainLayout';
+import Hero from '../components/home/Hero';
+import FeaturedCategories from '../components/home/FeaturedCategories';
+import ProductGrid from '../components/products/ProductGrid';
+import { featuredProducts, newArrivals } from '../data/mockProducts';
+import FeaturedDesigners from '../components/home/FeaturedDesigners';
+import FeaturedCollections from '../components/home/FeaturedCollections';
+import Testimonials from '../components/home/Testimonials';
+import Newsletter from '../components/home/Newsletter';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <MainLayout>
+      <Hero />
+      
+      <div className="luxury-container">
+        <ProductGrid 
+          title="New Arrivals" 
+          subtitle="The latest additions to our curated collection"
+          products={newArrivals}
+          columns={4}
+        />
       </div>
-    </div>
+      
+      <FeaturedCategories />
+      
+      <div className="luxury-container">
+        <ProductGrid 
+          title="Featured Products" 
+          subtitle="Handpicked selections from our luxury collections"
+          products={featuredProducts}
+          columns={4}
+        />
+      </div>
+      
+      <FeaturedDesigners />
+      <FeaturedCollections />
+      <Testimonials />
+      <Newsletter />
+    </MainLayout>
   );
 };
 

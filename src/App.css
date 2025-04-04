@@ -1,3 +1,4 @@
+/* This file is intentionally minimal as we're using tailwind for styling */
 #root {
   max-width: 1280px;
   margin: 0 auto;
