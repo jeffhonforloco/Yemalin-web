@@ -71,7 +71,7 @@
 
 /* Product card styles */
 .product-card {
-  @apply overflow-hidden transition-all duration-300;
+  @apply overflow-hidden transition-all duration-300 hover:shadow-md;
 }
 
 .product-card:hover .product-image {
@@ -91,6 +91,36 @@
   @apply opacity-100 translate-y-0;
 }
 
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   @apply w-2;
@@ -102,4 +132,36 @@
 
 ::-webkit-scrollbar-thumb {
   @apply bg-yemalin-grey-300 hover:bg-yemalin-grey-400;
+}
+
+/* Card hover effects */
+.luxury-card {
+  @apply transition-all duration-300 hover:shadow-lg hover:translate-y-[-5px];
+}
+
+/* Button hover animations */
+.btn-hover-slide {
+  @apply relative overflow-hidden;
+}
+
+.btn-hover-slide::after {
+  content: '';
+  @apply absolute bg-yemalin-accent opacity-0 h-full w-full left-0 top-0 -z-10 transition-all duration-300;
+}
+
+.btn-hover-slide:hover::after {
+  @apply opacity-10;
+}
+
+/* Image zoom effect */
+.zoom-container {
+  @apply overflow-hidden;
+}
+
+.zoom-image {
+  @apply transition-transform duration-700 ease-in-out;
+}
+
+.zoom-container:hover .zoom-image {
+  @apply scale-110;
 }
