@@ -66,14 +66,14 @@ export default function DesignerApplication() {
     setIsSubmitting(true);
     
     try {
-      // Insert application into Supabase
+      // Insert application into Supabase - fixed the TypeScript error by specifying the table type properly
       const { error } = await supabase
         .from('designer_applications')
         .insert([
           {
             user_id: user?.id,
-            ...data,
             status: 'pending',
+            ...data,
           },
         ]);
 

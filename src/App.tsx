@@ -19,6 +19,7 @@ import Blog from "./pages/Blog";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
 import DesignerApplication from "./pages/DesignerApplication";
+import BlogManagement from "./pages/BlogManagement";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/dashboard/products" element={<DashboardProducts />} />
             <Route path="/dashboard/orders" element={<DashboardOrders />} />
             <Route path="/dashboard/analytics" element={<DashboardAnalytics />} />
+            <Route path="/dashboard/blog" element={<BlogManagement />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/designers" element={<Designers />} />
             <Route path="/designers/apply" element={<DesignerApplication />} />
