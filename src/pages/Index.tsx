@@ -9,6 +9,7 @@ import FeaturedCollections from '../components/home/FeaturedCollections';
 import Testimonials from '../components/home/Testimonials';
 import Newsletter from '../components/home/Newsletter';
 import OurJourney from '../components/home/OurJourney';
+import JournalSection from '../components/home/JournalSection';
 
 const Index = () => {
   return (
@@ -38,6 +39,7 @@ const Index = () => {
       <OurJourney />
       <FeaturedDesigners />
       <FeaturedCollections />
+      <JournalSection />
       <Testimonials />
       <Newsletter />
     </MainLayout>
