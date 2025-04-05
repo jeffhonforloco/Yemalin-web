@@ -1,13 +1,23 @@
 
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, ShoppingBag, User, Heart, Menu, X } from 'lucide-react';
+import { Search, ShoppingBag, User, Heart, Menu, X, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import YemalinLogo from '../YemalinLogo';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   // Function to check if a path is active
   const isActive = (path: string) => {
@@ -85,9 +95,38 @@ const Navbar = () => {
                 0
               </span>
             </Link>
-            <Link to="/account" className="p-2 hover:bg-gray-50 rounded-full">
-              <User size={20} />
-            </Link>
+            
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="p-2 hover:bg-gray-50 rounded-full">
+                    <User size={20} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/account">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/account/orders">Orders</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/account/wishlist">Wishlist</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={signOut} className="text-red-500">
+                    <LogOut size={16} className="mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/auth" className="p-2 hover:bg-gray-50 rounded-full">
+                <User size={20} />
+              </Link>
+            )}
           </div>
         </nav>
       </div>
@@ -141,24 +180,46 @@ const Navbar = () => {
             </Link>
             
             <div className="pt-6 border-t border-gray-100">
-              <Button 
-                className="w-full mb-3 btn-primary"
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  // Navigate to login
-                }}
-              >
-                Sign In
-              </Button>
-              <Button 
-                className="w-full btn-secondary"
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  // Navigate to register
-                }}
-              >
-                Create Account
-              </Button>
+              {user ? (
+                <>
+                  <Link to="/account">
+                    <Button 
+                      className="w-full mb-3 bg-black text-white hover:bg-black/80"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      My Account
+                    </Button>
+                  </Link>
+                  <Button 
+                    className="w-full border border-black bg-white text-black hover:bg-gray-100"
+                    onClick={() => {
+                      signOut();
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link to="/auth">
+                    <Button 
+                      className="w-full mb-3 bg-black text-white hover:bg-black/80"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link to="/auth?tab=signup">
+                    <Button 
+                      className="w-full border border-black bg-white text-black hover:bg-gray-100"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Create Account
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

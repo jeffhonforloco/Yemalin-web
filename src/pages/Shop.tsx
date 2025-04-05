@@ -153,7 +153,7 @@ const Shop = () => {
             <ProductGrid 
               products={uniqueProducts}
               columns={3}
-              showTitle={false}
+              title=""
             />
           </div>
         </div>
