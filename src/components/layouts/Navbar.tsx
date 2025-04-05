@@ -1,10 +1,11 @@
+
 // Import the required dependencies for this component
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { YemalinLogo } from '@/components/YemalinLogo';
+import YemalinLogo from '@/components/YemalinLogo';
 import { ChevronDown, Menu, ShoppingBag, User, Pencil } from 'lucide-react';
 
 const Navbar = () => {
