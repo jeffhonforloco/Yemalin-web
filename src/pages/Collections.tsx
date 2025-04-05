@@ -21,7 +21,7 @@ const collections = [
   {
     id: 'sustainable-luxury',
     title: 'Sustainable Luxury',
-    description: 'Ethical fashion that doesn't compromise on style',
+    description: 'Ethical fashion that doesn\'t compromise on style',
     image: 'https://images.unsplash.com/photo-1523381294911-8d3cead13475?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
     link: '/collections/sustainable-luxury'
   },

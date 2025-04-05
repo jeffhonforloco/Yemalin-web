@@ -32,7 +32,7 @@ const designersList = [
     name: 'Hiroshi Tanaka',
     location: 'Tokyo, Japan',
     established: '2005',
-    bio: 'Hiroshi Tanaka's designs represent the perfect marriage of Japanese minimalism and European craftsmanship. After training in Milan, Tanaka returned to Tokyo to launch his eponymous label focused on timeless, understated luxury.',
+    bio: 'Hiroshi Tanaka\'s designs represent the perfect marriage of Japanese minimalism and European craftsmanship. After training in Milan, Tanaka returned to Tokyo to launch his eponymous label focused on timeless, understated luxury.',
     image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80',
     logo: 'https://images.unsplash.com/photo-1622442730733-9b0db1412258?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1364&q=80',
     signature: 'Clean lines with meticulous attention to detail',
