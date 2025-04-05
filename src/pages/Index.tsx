@@ -8,6 +8,7 @@ import FeaturedDesigners from '../components/home/FeaturedDesigners';
 import FeaturedCollections from '../components/home/FeaturedCollections';
 import Testimonials from '../components/home/Testimonials';
 import Newsletter from '../components/home/Newsletter';
+import OurJourney from '../components/home/OurJourney';
 
 const Index = () => {
   return (
@@ -34,6 +35,7 @@ const Index = () => {
         />
       </div>
       
+      <OurJourney />
       <FeaturedDesigners />
       <FeaturedCollections />
       <Testimonials />
