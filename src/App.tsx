@@ -18,6 +18,7 @@ import Collections from "./pages/Collections";
 import Blog from "./pages/Blog";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
+import DesignerApplication from "./pages/DesignerApplication";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/dashboard/analytics" element={<DashboardAnalytics />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/designers" element={<Designers />} />
+            <Route path="/designers/apply" element={<DesignerApplication />} />
             <Route path="/collections" element={<Collections />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/about" element={<About />} />
