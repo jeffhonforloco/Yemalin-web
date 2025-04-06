@@ -1,12 +1,7 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
 import YemalinLogo from '@/components/YemalinLogo';
 
@@ -33,53 +28,54 @@ const DesignerApplication = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (!user) {
       toast({
         variant: "destructive",
-        title: "Not authenticated",
-        description: "You must be signed in to submit an application"
+        title: "Authentication required",
+        description: "Please sign in before submitting your application"
       });
-      navigate('/designer-login');
+      navigate('/designers/login');
       return;
     }
     
     setLoading(true);
     
     try {
-      const { error } = await supabase.from('designer_applications').insert([
-        {
-          user_id: user.id,
-          email: formData.email || user.email,
-          designer_name: formData.designerName,
-          brand_name: formData.brandName,
-          location: formData.location,
-          established: formData.established,
-          website: formData.website,
-          bio: formData.bio,
-          design_philosophy: formData.designPhilosophy,
-          social_media: formData.socialMedia,
-          portfolio: formData.portfolio,
-          status: 'pending'
-        }
-      ]);
-
+      const applicationData = {
+        user_id: user.id,
+        email: user.email,
+        designer_name: formData.designerName,
+        brand_name: formData.brandName,
+        location: formData.location,
+        established: formData.established,
+        website: formData.website,
+        bio: formData.bio,
+        design_philosophy: formData.designPhilosophy,
+        social_media: formData.socialMedia,
+        portfolio: formData.portfolio,
+        status: 'pending'
+      };
+      
+      const { error } = await supabase
+        .from('designer_applications')
+        .insert(applicationData);
+      
       if (error) throw error;
       
       toast({
         title: "Application submitted",
-        description: "Thank you for your application. We will review it and get back to you soon."
+        description: "Thank you! We'll review your application and get back to you soon."
       });
       
       navigate('/dashboard');
-      
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Submission failed",
-        description: error.message || "There was a problem submitting your application. Please try again."
+        description: error.message || "Please try again later"
       });
     } finally {
       setLoading(false);

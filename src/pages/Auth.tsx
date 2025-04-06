@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,7 +15,6 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Check if user is already logged in
     const checkUser = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
@@ -184,7 +182,7 @@ const Auth = () => {
         
         <div className="text-center mt-8">
           <p className="text-sm text-gray-600 mb-4">
-            Are you a designer? <Link to="/designer-login" className="underline hover:text-black">Access the Designer Portal</Link>
+            Are you a designer? <Link to="/designers/login" className="underline hover:text-black">Access the Designer Portal</Link>
           </p>
           <p className="text-sm text-gray-600">
             By signing in or creating an account, you agree to our{' '}
