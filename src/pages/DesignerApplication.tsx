@@ -1,325 +1,249 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { useToast } from '@/hooks/use-toast';
-import MainLayout from '@/components/layouts/MainLayout';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { ArrowLeft, CheckCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { toast } from '@/hooks/use-toast';
+import YemalinLogo from '@/components/YemalinLogo';
 
-// Define form schema
-const designerApplicationSchema = z.object({
-  brandName: z.string().min(2, 'Brand name must be at least 2 characters'),
-  designerName: z.string().min(2, 'Designer name must be at least 2 characters'),
-  location: z.string().min(2, 'Location must be at least 2 characters'),
-  established: z.string().min(4, 'Please provide a valid year'),
-  email: z.string().email('Please provide a valid email'),
-  website: z.string().url('Please provide a valid website URL'),
-  bio: z.string().min(50, 'Bio must be at least 50 characters'),
-  designPhilosophy: z.string().min(50, 'Design philosophy must be at least 50 characters'),
-  socialMedia: z.string().optional(),
-  portfolio: z.string().url('Please provide a valid portfolio URL'),
-});
-
-type DesignerApplicationValues = z.infer<typeof designerApplicationSchema>;
-
-export default function DesignerApplication() {
-  const { user } = useAuth();
+const DesignerApplication = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const form = useForm<DesignerApplicationValues>({
-    resolver: zodResolver(designerApplicationSchema),
-    defaultValues: {
-      brandName: '',
-      designerName: '',
-      location: '',
-      established: '',
-      email: user?.email || '',
-      website: '',
-      bio: '',
-      designPhilosophy: '',
-      socialMedia: '',
-      portfolio: '',
-    },
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  
+  const [formData, setFormData] = useState({
+    designerName: '',
+    brandName: '',
+    email: '',
+    location: '',
+    established: '',
+    website: '',
+    bio: '',
+    designPhilosophy: '',
+    socialMedia: '',
+    portfolio: ''
   });
 
-  async function onSubmit(data: DesignerApplicationValues) {
-    setIsSubmitting(true);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!user) {
+      toast({
+        variant: "destructive",
+        title: "Not authenticated",
+        description: "You must be signed in to submit an application"
+      });
+      navigate('/designer-login');
+      return;
+    }
+    
+    setLoading(true);
     
     try {
-      // Insert application into Supabase - fixed the TypeScript error by specifying the table type properly
-      const { error } = await supabase
-        .from('designer_applications')
-        .insert([
-          {
-            user_id: user?.id,
-            status: 'pending',
-            ...data,
-          },
-        ]);
+      const { error } = await supabase.from('designer_applications').insert([
+        {
+          user_id: user.id,
+          email: formData.email || user.email,
+          designer_name: formData.designerName,
+          brand_name: formData.brandName,
+          location: formData.location,
+          established: formData.established,
+          website: formData.website,
+          bio: formData.bio,
+          design_philosophy: formData.designPhilosophy,
+          social_media: formData.socialMedia,
+          portfolio: formData.portfolio,
+          status: 'pending'
+        }
+      ]);
 
       if (error) throw error;
       
-      setIsSubmitted(true);
       toast({
-        title: "Application Submitted",
-        description: "Your application has been received. We'll review it and get back to you soon.",
+        title: "Application submitted",
+        description: "Thank you for your application. We will review it and get back to you soon."
       });
-    } catch (error) {
-      console.error('Error submitting application:', error);
+      
+      navigate('/dashboard');
+      
+    } catch (error: any) {
       toast({
-        title: "Submission Failed",
-        description: "There was a problem submitting your application. Please try again.",
         variant: "destructive",
+        title: "Submission failed",
+        description: error.message || "There was a problem submitting your application. Please try again."
       });
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
-  }
-
-  if (isSubmitted) {
-    return (
-      <MainLayout>
-        <div className="luxury-container py-16">
-          <div className="max-w-2xl mx-auto text-center bg-yemalin-grey-100 p-10">
-            <CheckCircle className="mx-auto h-16 w-16 text-green-600 mb-6" />
-            <h1 className="text-3xl font-display mb-4">Application Received</h1>
-            <p className="mb-6 text-gray-600">
-              Thank you for your interest in becoming a Yemalin designer. Our team will review your application and get back to you within 5-7 business days.
-            </p>
-            <Link to="/designers">
-              <Button className="bg-black text-white hover:bg-gray-800">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Return to Designers
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </MainLayout>
-    );
-  }
+  };
 
   return (
-    <MainLayout>
-      <div className="bg-yemalin-grey-100 py-16">
-        <div className="luxury-container text-center">
-          <h1 className="text-3xl md:text-4xl font-display mb-4">Apply to Sell with Us</h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            We're always looking for talented designers to join our curated marketplace.
-            Please complete the form below to apply.
+    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+      <div className="w-full max-w-3xl mx-auto">
+        <div className="mb-8 text-center">
+          <YemalinLogo className="h-12 w-auto mx-auto mb-6" />
+          <h1 className="text-2xl font-display">Designer Application</h1>
+          <p className="text-gray-600 mt-2">
+            Join the Yemalin community of independent designers
           </p>
         </div>
-      </div>
-
-      <div className="luxury-container py-16">
-        <div className="max-w-3xl mx-auto">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="brandName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Brand Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your brand name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
+        
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 md:p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="designerName">Designer / Principal Name</Label>
+                <Input
+                  id="designerName"
                   name="designerName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Designer Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your full name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  value={formData.designerName}
+                  onChange={handleChange}
+                  required
                 />
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="location"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Location</FormLabel>
-                      <FormControl>
-                        <Input placeholder="City, Country" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="established"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Year Established</FormLabel>
-                      <FormControl>
-                        <Input placeholder="YYYY" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+              
+              <div>
+                <Label htmlFor="brandName">Brand Name</Label>
+                <Input
+                  id="brandName"
+                  name="brandName"
+                  value={formData.brandName}
+                  onChange={handleChange}
+                  required
                 />
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
+              
+              <div>
+                <Label htmlFor="email">Contact Email</Label>
+                <Input
+                  id="email"
                   name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Contact Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="email@example.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder={user?.email || ''}
                 />
-
-                <FormField
-                  control={form.control}
+                <p className="text-xs text-gray-500 mt-1">
+                  Leave blank to use your account email
+                </p>
+              </div>
+              
+              <div>
+                <Label htmlFor="location">Location</Label>
+                <Input
+                  id="location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  placeholder="City, Country"
+                  required
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="established">Year Established</Label>
+                <Input
+                  id="established"
+                  name="established"
+                  value={formData.established}
+                  onChange={handleChange}
+                  placeholder="e.g., 2018"
+                  required
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="website">Website</Label>
+                <Input
+                  id="website"
                   name="website"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Website</FormLabel>
-                      <FormControl>
-                        <Input placeholder="https://yourwebsite.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  value={formData.website}
+                  onChange={handleChange}
+                  placeholder="https://"
                 />
               </div>
-
-              <FormField
-                control={form.control}
-                name="bio"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Designer/Brand Bio</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Tell us about yourself and your brand (minimum 50 characters)"
-                        rows={5}
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Share your background, education, and career highlights.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="designPhilosophy"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Design Philosophy</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Describe your approach to design and what inspires your work (minimum 50 characters)"
-                        rows={5}
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="socialMedia"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Social Media Links</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Instagram, Pinterest, etc. (one link per line)"
-                        rows={3}
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Optional: Share your social media handles where we can see your work.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="portfolio"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Portfolio Link</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://yourportfolio.com" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Link to your portfolio, lookbook, or collection images.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="flex justify-between">
-                <Link to="/designers">
-                  <Button type="button" variant="outline">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back
-                  </Button>
-                </Link>
-                <Button 
-                  type="submit" 
-                  className="bg-black text-white hover:bg-gray-800"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? 'Submitting...' : 'Submit Application'}
-                </Button>
+              
+              <div>
+                <Label htmlFor="bio">Brand Biography</Label>
+                <Textarea
+                  id="bio"
+                  name="bio"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  placeholder="Tell us about your brand (500 characters max)"
+                  className="h-24"
+                  maxLength={500}
+                  required
+                />
               </div>
-            </form>
-          </Form>
+              
+              <div>
+                <Label htmlFor="designPhilosophy">Design Philosophy</Label>
+                <Textarea
+                  id="designPhilosophy"
+                  name="designPhilosophy"
+                  value={formData.designPhilosophy}
+                  onChange={handleChange}
+                  placeholder="What values guide your design process? (300 characters max)"
+                  className="h-24"
+                  maxLength={300}
+                  required
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="socialMedia">Social Media Handles</Label>
+                <Textarea
+                  id="socialMedia"
+                  name="socialMedia"
+                  value={formData.socialMedia}
+                  onChange={handleChange}
+                  placeholder="Instagram: @your_handle&#10;Pinterest: @your_handle&#10;TikTok: @your_handle"
+                  className="h-24"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="portfolio">Portfolio Links</Label>
+                <Textarea
+                  id="portfolio"
+                  name="portfolio"
+                  value={formData.portfolio}
+                  onChange={handleChange}
+                  placeholder="Please provide links to your portfolio, lookbooks, or press features"
+                  className="h-24"
+                  required
+                />
+              </div>
+            </div>
+            
+            <div className="pt-4">
+              <Button 
+                type="submit" 
+                className="w-full bg-black text-white hover:bg-black/80"
+                disabled={loading}
+              >
+                {loading ? 'Submitting...' : 'Submit Application'}
+              </Button>
+            </div>
+            
+            <p className="text-xs text-gray-500 text-center mt-4">
+              Applications are reviewed within 5-7 business days. We'll contact you by email with our decision.
+            </p>
+          </form>
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
-}
+};
+
+export default DesignerApplication;

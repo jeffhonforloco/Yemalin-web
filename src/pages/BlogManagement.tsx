@@ -1,724 +1,650 @@
-
-import { useState } from 'react';
-import MainLayout from '@/components/layouts/MainLayout';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle, CheckCircle, Edit, Loader2, Plus, Trash } from 'lucide-react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useEffect } from 'react';
+import { toast } from '@/hooks/use-toast';
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { MoreVertical, Edit, Trash2, ImagePlus, UserPlus, CheckCircle, XCircle } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
+import { format } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { DateRange } from "react-day-picker"
+import { useToast } from "@/hooks/use-toast"
 
-const blogPostSchema = z.object({
-  title: z.string().min(5, { message: 'Title must be at least 5 characters' }),
-  excerpt: z.string().min(10, { message: 'Excerpt must be at least 10 characters' }),
-  content: z.string().min(50, { message: 'Content must be at least 50 characters' }),
-  image_url: z.string().url({ message: 'Please enter a valid URL' }).optional().or(z.literal('')),
-  category: z.string().min(1, { message: 'Please select a category' }),
-  author: z.string().min(2, { message: 'Author name must be at least 2 characters' }),
-  author_image: z.string().url({ message: 'Please enter a valid URL' }).optional().or(z.literal('')),
-  read_time: z.string().optional(),
-});
-
-type BlogPostFormValues = z.infer<typeof blogPostSchema>;
+interface BlogPost {
+  id: string;
+  created_at: string;
+  title: string;
+  content: string;
+  image_url: string;
+  author_id: string;
+  author_name: string;
+  author_image_url: string;
+  published_at: string | null;
+  is_published: boolean;
+}
 
 const BlogManagement = () => {
-  const { user } = useAuth();
-  const { toast } = useToast();
-  const [blogs, setBlogs] = useState<any[]>([]);
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [generating, setGenerating] = useState(false);
-  const [generationTopic, setGenerationTopic] = useState('');
-  const [generationKeywords, setGenerationKeywords] = useState('');
-  const [generationTone, setGenerationTone] = useState('professional');
-  const [generationType, setGenerationType] = useState('blog');
-  const [generatedContent, setGeneratedContent] = useState<{title?: string, content?: string}>({});
-  const [currentBlogId, setCurrentBlogId] = useState<string | null>(null);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-
-  const form = useForm<BlogPostFormValues>({
-    resolver: zodResolver(blogPostSchema),
-    defaultValues: {
-      title: '',
-      excerpt: '',
-      content: '',
-      image_url: '',
-      category: '',
-      author: '',
-      author_image: '',
-      read_time: '',
-    },
+  const [error, setError] = useState<string | null>(null);
+  const [newPost, setNewPost] = useState({
+    title: '',
+    content: '',
+    image_url: '',
+    author_name: '',
+    author_image_url: '',
+    published_at: null,
   });
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: new Date(),
+  })
+  const { toast } = useToast()
 
   useEffect(() => {
-    fetchBlogs();
+    fetchPosts();
   }, []);
 
-  const fetchBlogs = async () => {
+  const fetchPosts = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
         .order('created_at', { ascending: false });
+
+      if (error) {
+        throw error;
+      }
       
-      if (error) throw error;
-      setBlogs(data || []);
-    } catch (error) {
-      console.error('Error fetching blogs:', error);
+      // Check if data is not null before setting the state
+      if (data) {
+        setPosts(data as BlogPost[]);
+      } else {
+        setPosts([]); // Set to an empty array if data is null
+      }
+      
+    } catch (err: any) {
+      setError(err.message);
       toast({
-        title: 'Failed to fetch blog posts',
-        description: 'There was an error retrieving your blog posts.',
-        variant: 'destructive',
+        variant: "destructive",
+        title: "Loading failed",
+        description: err.message || "Failed to load blog posts"
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCreate = (data: BlogPostFormValues) => {
-    createOrUpdateBlog(data);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setNewPost({ ...newPost, [e.target.name]: e.target.value });
   };
 
-  const createOrUpdateBlog = async (data: BlogPostFormValues) => {
-    if (!user) {
-      toast({
-        title: 'Authentication Required',
-        description: 'You must be logged in to manage blogs.',
-        variant: 'destructive',
-      });
-      return;
-    }
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    setSaving(true);
+    setLoading(true);
     try {
-      const blogData = {
-        ...data,
-        user_id: user.id,
-        status: 'draft',
-        read_time: data.read_time || `${Math.ceil(data.content.length / 1500)} min read`,
-      };
-
-      if (currentBlogId) {
-        // Update existing blog
-        const { error } = await supabase
-          .from('blog_posts')
-          .update(blogData)
-          .eq('id', currentBlogId);
-
-        if (error) throw error;
-
-        toast({
-          title: 'Blog Updated',
-          description: 'Your blog post has been updated successfully.',
+      const { data, error } = await supabase.storage
+        .from('blog-images')
+        .upload(`public/${file.name}`, file, {
+          cacheControl: '3600',
+          upsert: false,
         });
-      } else {
-        // Create new blog
-        const { error } = await supabase
-          .from('blog_posts')
-          .insert([blogData]);
 
-        if (error) throw error;
-
-        toast({
-          title: 'Blog Created',
-          description: 'Your blog post has been created successfully.',
-        });
+      if (error) {
+        throw error;
       }
 
-      // Reset form and state
-      form.reset();
-      setCurrentBlogId(null);
-      fetchBlogs();
-    } catch (error) {
-      console.error('Error saving blog:', error);
+      const imageUrl = `${supabase.storageUrl}/blog-images/${data.path}`;
+      setNewPost({ ...newPost, image_url: imageUrl });
       toast({
-        title: 'Failed to Save',
-        description: 'There was an error saving your blog post.',
-        variant: 'destructive',
+        title: "Upload successful",
+        description: "Image uploaded successfully"
+      });
+    } catch (err: any) {
+      setError(err.message);
+      toast({
+        variant: "destructive",
+        title: "Upload failed",
+        description: err.message || "Failed to upload image"
       });
     } finally {
-      setSaving(false);
+      setLoading(false);
     }
   };
 
-  const handleEdit = (blog: any) => {
-    setCurrentBlogId(blog.id);
-    form.reset({
-      title: blog.title || '',
-      excerpt: blog.excerpt || '',
-      content: blog.content || '',
-      image_url: blog.image_url || '',
-      category: blog.category || '',
-      author: blog.author || '',
-      author_image: blog.author_image || '',
-      read_time: blog.read_time || '',
+  const handleAuthorImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.storage
+        .from('author-images')
+        .upload(`public/${file.name}`, file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      const imageUrl = `${supabase.storageUrl}/author-images/${data.path}`;
+      setNewPost({ ...newPost, author_image_url: imageUrl });
+      toast({
+        title: "Upload successful",
+        description: "Author image uploaded successfully"
+      });
+    } catch (err: any) {
+      setError(err.message);
+      toast({
+        variant: "destructive",
+        title: "Upload failed",
+        description: err.message || "Failed to upload author image"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = await supabase
+        .from('blog_posts')
+        .insert([
+          {
+            title: newPost.title,
+            content: newPost.content,
+            image_url: newPost.image_url,
+            author_name: newPost.author_name,
+            author_image_url: newPost.author_image_url,
+            published_at: newPost.published_at,
+          },
+        ]);
+
+      if (error) {
+        throw error;
+      }
+
+      fetchPosts();
+      setNewPost({
+        title: '',
+        content: '',
+        image_url: '',
+        author_name: '',
+        author_image_url: '',
+        published_at: null,
+      });
+      toast({
+        title: "Post created",
+        description: "Blog post created successfully"
+      });
+    } catch (err: any) {
+      setError(err.message);
+      toast({
+        variant: "destructive",
+        title: "Creation failed",
+        description: err.message || "Failed to create blog post"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (postId: string) => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.from('blog_posts').delete().match({ id: postId });
+
+      if (error) {
+        throw error;
+      }
+
+      fetchPosts();
+      setIsDialogOpen(false);
+      toast({
+        title: "Post deleted",
+        description: "Blog post deleted successfully"
+      });
+    } catch (err: any) {
+      setError(err.message);
+      toast({
+        variant: "destructive",
+        title: "Deletion failed",
+        description: err.message || "Failed to delete blog post"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = (post: BlogPost) => {
+    setSelectedPost(post);
+    setIsEditing(true);
+    setNewPost({
+      title: post.title,
+      content: post.content,
+      image_url: post.image_url,
+      author_name: post.author_name,
+      author_image_url: post.author_image_url,
+      published_at: post.published_at,
     });
   };
 
-  const handleDelete = async (id: string) => {
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedPost) return;
+
+    setLoading(true);
     try {
       const { error } = await supabase
         .from('blog_posts')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      toast({
-        title: 'Blog Deleted',
-        description: 'Your blog post has been deleted.',
-      });
-
-      fetchBlogs();
-    } catch (error) {
-      console.error('Error deleting blog:', error);
-      toast({
-        title: 'Failed to Delete',
-        description: 'There was an error deleting your blog post.',
-        variant: 'destructive',
-      });
-    } finally {
-      setDeletingId(null);
-      setOpenDialog(false);
-    }
-  };
-
-  const handlePublish = async (id: string, currentStatus: string) => {
-    const newStatus = currentStatus === 'published' ? 'draft' : 'published';
-    try {
-      const { error } = await supabase
-        .from('blog_posts')
-        .update({ 
-          status: newStatus,
-          published_at: newStatus === 'published' ? new Date().toISOString() : null 
+        .update({
+          title: newPost.title,
+          content: newPost.content,
+          image_url: newPost.image_url,
+          author_name: newPost.author_name,
+          author_image_url: newPost.author_image_url,
+          published_at: newPost.published_at,
         })
-        .eq('id', id);
+        .match({ id: selectedPost.id });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
+      fetchPosts();
+      setNewPost({
+        title: '',
+        content: '',
+        image_url: '',
+        author_name: '',
+        author_image_url: '',
+        published_at: null,
+      });
+      setIsEditing(false);
+      setSelectedPost(null);
       toast({
-        title: newStatus === 'published' ? 'Blog Published' : 'Blog Unpublished',
-        description: newStatus === 'published' 
-          ? 'Your blog post is now live on the site.'
-          : 'Your blog post has been unpublished.',
+        title: "Post updated",
+        description: "Blog post updated successfully"
       });
-
-      fetchBlogs();
-    } catch (error) {
-      console.error('Error updating publication status:', error);
+    } catch (err: any) {
+      setError(err.message);
       toast({
-        title: 'Failed to Update Status',
-        description: 'There was an error updating your blog post status.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const generateContent = async () => {
-    if (!generationTopic) {
-      toast({
-        title: 'Topic Required',
-        description: 'Please enter a topic for content generation.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    setGenerating(true);
-    setGeneratedContent({});
-
-    try {
-      const { data, error } = await supabase.functions.invoke('generate-blog-content', {
-        body: {
-          topic: generationTopic,
-          keywords: generationKeywords,
-          tone: generationTone,
-          type: generationType
-        },
-      });
-
-      if (error) throw error;
-
-      setGeneratedContent({
-        title: data.title,
-        content: data.content,
-      });
-
-      // Update form with generated content
-      form.setValue('title', data.title);
-      form.setValue('content', data.content);
-      form.setValue('excerpt', data.excerpt || data.content.substring(0, 150) + '...');
-
-      toast({
-        title: 'Content Generated',
-        description: 'Successfully generated content with AI.',
-      });
-    } catch (error) {
-      console.error('Error generating content:', error);
-      toast({
-        title: 'Generation Failed',
-        description: 'Failed to generate content. Please try again.',
-        variant: 'destructive',
+        variant: "destructive",
+        title: "Update failed",
+        description: err.message || "Failed to update blog post"
       });
     } finally {
-      setGenerating(false);
+      setLoading(false);
     }
   };
+
+  const handlePublish = async (postId: string, isPublished: boolean) => {
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('blog_posts')
+        .update({ is_published: !isPublished })
+        .match({ id: postId });
+
+      if (error) {
+        throw error;
+      }
+
+      fetchPosts();
+      toast({
+        title: "Post updated",
+        description: `Blog post ${isPublished ? 'unpublished' : 'published'} successfully`
+      });
+    } catch (err: any) {
+      setError(err.message);
+      toast({
+        variant: "destructive",
+        title: "Update failed",
+        description: err.message || "Failed to update blog post"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Replace the function with document.createElement approach for file upload buttons
+  const handleImageUploadClick = () => {
+    const fileInput = document.getElementById('image-upload');
+    if (fileInput) {
+      (fileInput as HTMLElement).click();
+    }
+  };
+
+  const handleAuthorImageUploadClick = () => {
+    const fileInput = document.getElementById('author-image-upload');
+    if (fileInput) {
+      (fileInput as HTMLElement).click();
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <MainLayout>
-      <div className="luxury-container py-12">
-        <h1 className="text-3xl font-display mb-8">Blog Management</h1>
+    <div className="container mx-auto py-10">
+      <h1 className="text-3xl font-semibold mb-6">Blog Management</h1>
 
-        <Tabs defaultValue="editor" className="w-full">
-          <TabsList className="mb-8">
-            <TabsTrigger value="editor">Editor</TabsTrigger>
-            <TabsTrigger value="posts">My Posts</TabsTrigger>
-            <TabsTrigger value="generator">AI Generator</TabsTrigger>
-          </TabsList>
+      {/* Create New Post Form */}
+      <form onSubmit={isEditing ? handleUpdate : handleSubmit} className="mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <Label htmlFor="title">Title</Label>
+            <Input
+              type="text"
+              id="title"
+              name="title"
+              value={newPost.title}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="author_name">Author Name</Label>
+            <Input
+              type="text"
+              id="author_name"
+              name="author_name"
+              value={newPost.author_name}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+        </div>
 
-          <TabsContent value="editor" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>{currentBlogId ? 'Edit Blog Post' : 'Create New Blog Post'}</CardTitle>
-                <CardDescription>
-                  {currentBlogId 
-                    ? 'Update your existing blog post'
-                    : 'Fill in the details to create a new blog post'}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(handleCreate)} className="space-y-6">
-                    <FormField
-                      control={form.control}
-                      name="title"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Title</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Enter your blog post title" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+        <div className="mt-4">
+          <Label htmlFor="content">Content</Label>
+          <Textarea
+            id="content"
+            name="content"
+            value={newPost.content}
+            onChange={handleInputChange}
+            rows={6}
+            required
+          />
+        </div>
 
-                    <FormField
-                      control={form.control}
-                      name="excerpt"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Excerpt</FormLabel>
-                          <FormControl>
-                            <Textarea 
-                              placeholder="A brief summary of your post"
-                              className="resize-none"
-                              rows={2}
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <Label htmlFor="image_url">Image URL</Label>
+            <div className="flex items-center space-x-2">
+              <Input
+                type="text"
+                id="image_url"
+                name="image_url"
+                value={newPost.image_url}
+                onChange={handleInputChange}
+                placeholder="Or upload below"
+              />
+              <Button type="button" variant="secondary" size="sm" onClick={handleImageUploadClick}>
+                <ImagePlus className="h-4 w-4 mr-2" /> Upload
+              </Button>
+              <input
+                type="file"
+                id="image-upload"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+            </div>
+            {newPost.image_url && (
+              <img src={newPost.image_url} alt="Blog Post" className="mt-2 max-h-32" />
+            )}
+          </div>
+          <div>
+            <Label htmlFor="author_image_url">Author Image URL</Label>
+            <div className="flex items-center space-x-2">
+              <Input
+                type="text"
+                id="author_image_url"
+                name="author_image_url"
+                value={newPost.author_image_url}
+                onChange={handleInputChange}
+                placeholder="Or upload below"
+              />
+              <Button type="button" variant="secondary" size="sm" onClick={handleAuthorImageUploadClick}>
+                <UserPlus className="h-4 w-4 mr-2" /> Upload
+              </Button>
+              <input
+                type="file"
+                id="author-image-upload"
+                accept="image/*"
+                onChange={handleAuthorImageUpload}
+                className="hidden"
+              />
+            </div>
+            {newPost.author_image_url && (
+              <img src={newPost.author_image_url} alt="Author" className="mt-2 max-h-32" />
+            )}
+          </div>
+        </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <FormField
-                        control={form.control}
-                        name="category"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Category</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select a category" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="Sustainability">Sustainability</SelectItem>
-                                <SelectItem value="Designer Spotlight">Designer Spotlight</SelectItem>
-                                <SelectItem value="Fashion History">Fashion History</SelectItem>
-                                <SelectItem value="Style Guide">Style Guide</SelectItem>
-                                <SelectItem value="Craftsmanship">Craftsmanship</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+        <div className="mt-4">
+          <Label>Publish Date</Label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-[240px] justify-start text-left font-normal",
+                  !date?.from ? "text-muted-foreground" : ""
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {date?.from ? (
+                  format(date.from, "PPP")} - {date?.to ? format(date.to, "PPP") : format(date.from, "PPP")
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="center" side="bottom">
+              <Calendar
+                mode="range"
+                defaultMonth={date?.from}
+                selected={date}
+                onSelect={(value) => {
+                  setDate(value);
+                  if (value?.from) {
+                    const isoDate = value.from.toISOString();
+                    setNewPost({ ...newPost, published_at: isoDate });
+                  }
+                }}
+                disabled={(date) =>
+                  date > new Date()
+                }
+                className="border-0 rounded-md"
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
 
-                      <FormField
-                        control={form.control}
-                        name="read_time"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Read Time</FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g., 5 min read" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                              Leave blank to calculate automatically
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+        <div className="mt-6">
+          <Button type="submit" disabled={loading}>
+            {loading ? 'Submitting...' : isEditing ? 'Update Post' : 'Create Post'}
+          </Button>
+          {isEditing && (
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => {
+                setIsEditing(false);
+                setSelectedPost(null);
+                setNewPost({
+                  title: '',
+                  content: '',
+                  image_url: '',
+                  author_name: '',
+                  author_image_url: '',
+                  published_at: null,
+                });
+              }}
+              className="ml-2"
+            >
+              Cancel Edit
+            </Button>
+          )}
+        </div>
+      </form>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <FormField
-                        control={form.control}
-                        name="author"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Author Name</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Author name" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+      <Separator className="my-8" />
 
-                      <FormField
-                        control={form.control}
-                        name="author_image"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Author Image URL</FormLabel>
-                            <FormControl>
-                              <Input placeholder="https://example.com/author.jpg" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    <FormField
-                      control={form.control}
-                      name="image_url"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Featured Image URL</FormLabel>
-                          <FormControl>
-                            <Input placeholder="https://example.com/image.jpg" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="content"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Content</FormLabel>
-                          <FormControl>
-                            <Textarea 
-                              placeholder="Write your blog post content here"
-                              className="min-h-[300px]"
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <div className="flex justify-end space-x-4">
-                      {currentBlogId && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => {
-                            setCurrentBlogId(null);
-                            form.reset();
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                      )}
-                      <Button type="submit" disabled={saving}>
-                        {saving ? (
+      {/* Blog Posts Table */}
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <Table>
+          <TableCaption>A list of your recent blog posts.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="px-6 py-3">Title</TableHead>
+              <TableHead className="px-6 py-3">Author</TableHead>
+              <TableHead className="px-6 py-3">Publish Date</TableHead>
+              <TableHead className="px-6 py-3">Status</TableHead>
+              <TableHead className="px-6 py-3">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {posts.map((post) => (
+              <TableRow key={post.id} className="bg-white border-b hover:bg-gray-50">
+                <TableCell className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                  {post.title}
+                </TableCell>
+                <TableCell className="px-6 py-4">{post.author_name}</TableCell>
+                <TableCell className="px-6 py-4">
+                  {post.published_at ? format(new Date(post.published_at), "PPP") : 'Not set'}
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  {post.is_published ? (
+                    <Badge variant="success">Published</Badge>
+                  ) : (
+                    <Badge variant="secondary">Draft</Badge>
+                  )}
+                </TableCell>
+                <TableCell className="px-6 py-4 text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuItem onClick={() => handleEdit(post)}>
+                        <Edit className="h-4 w-4 mr-2" /> Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handlePublish(post.id, post.is_published)}>
+                        {post.is_published ? (
                           <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Saving...
+                            <XCircle className="h-4 w-4 mr-2 text-red-500" /> Unpublish
                           </>
                         ) : (
-                          <>{currentBlogId ? 'Update' : 'Create'} Post</>
+                          <>
+                            <CheckCircle className="h-4 w-4 mr-2 text-green-500" /> Publish
+                          </>
                         )}
-                      </Button>
-                    </div>
-                  </form>
-                </Form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="posts">
-            {loading ? (
-              <div className="flex justify-center items-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin" />
-              </div>
-            ) : blogs.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-500 mb-4">You haven't created any blog posts yet.</p>
-                <Button onClick={() => document.querySelector('[data-value="editor"]')?.click()}>
-                  <Plus className="mr-2 h-4 w-4" /> Create Your First Post
-                </Button>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {blogs.map((blog) => (
-                  <Card key={blog.id} className="overflow-hidden">
-                    <div className="flex flex-col md:flex-row">
-                      {blog.image_url && (
-                        <div className="w-full md:w-1/4">
-                          <img
-                            src={blog.image_url}
-                            alt={blog.title}
-                            className="h-full w-full object-cover"
-                            style={{ maxHeight: '200px' }}
-                          />
-                        </div>
-                      )}
-                      <div className={`flex flex-col p-6 ${blog.image_url ? 'w-full md:w-3/4' : 'w-full'}`}>
-                        <div className="flex justify-between items-start mb-2">
-                          <div>
-                            <span className={`inline-flex items-center px-2 py-1 text-xs rounded-full ${
-                              blog.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                            } mr-2`}>
-                              {blog.status === 'published' ? (
-                                <>
-                                  <CheckCircle className="mr-1 h-3 w-3" /> Published
-                                </>
-                              ) : (
-                                <>
-                                  <Edit className="mr-1 h-3 w-3" /> Draft
-                                </>
-                              )}
-                            </span>
-                            <span className="text-xs text-gray-500">{blog.category}</span>
-                          </div>
-                          <div className="flex space-x-2">
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              onClick={() => handleEdit(blog)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            
-                            <Button 
-                              variant={blog.status === 'published' ? 'destructive' : 'default'}
-                              size="sm" 
-                              onClick={() => handlePublish(blog.id, blog.status)}
-                            >
-                              {blog.status === 'published' ? 'Unpublish' : 'Publish'}
-                            </Button>
-                            
-                            <Dialog open={openDialog && deletingId === blog.id} onOpenChange={(open) => {
-                              setOpenDialog(open);
-                              if (!open) setDeletingId(null);
-                            }}>
-                              <DialogTrigger asChild>
-                                <Button 
-                                  variant="destructive" 
-                                  size="sm" 
-                                  onClick={() => setDeletingId(blog.id)}
-                                >
-                                  <Trash className="h-4 w-4" />
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent>
-                                <DialogHeader>
-                                  <DialogTitle>Are you sure?</DialogTitle>
-                                  <DialogDescription>
-                                    This action cannot be undone. This will permanently delete your blog post.
-                                  </DialogDescription>
-                                </DialogHeader>
-                                <DialogFooter>
-                                  <Button
-                                    variant="outline"
-                                    onClick={() => {
-                                      setOpenDialog(false);
-                                      setDeletingId(null);
-                                    }}
-                                  >
-                                    Cancel
-                                  </Button>
-                                  <Button 
-                                    variant="destructive" 
-                                    onClick={() => blog.id && handleDelete(blog.id)}
-                                  >
-                                    Delete
-                                  </Button>
-                                </DialogFooter>
-                              </DialogContent>
-                            </Dialog>
-                          </div>
-                        </div>
-                        
-                        <h3 className="text-xl font-bold mb-2">{blog.title}</h3>
-                        <p className="text-gray-600 mb-4 line-clamp-2">{blog.excerpt}</p>
-                        
-                        <div className="flex items-center justify-between mt-auto text-xs text-gray-500">
-                          <div className="flex items-center">
-                            {blog.author_image ? (
-                              <img 
-                                src={blog.author_image} 
-                                alt={blog.author} 
-                                className="w-6 h-6 rounded-full mr-2 object-cover"
-                              />
-                            ) : (
-                              <span className="w-6 h-6 bg-gray-200 rounded-full mr-2" />
-                            )}
-                            <span>{blog.author || 'Anonymous'}</span>
-                          </div>
-                          <div>
-                            {blog.read_time && <span className="ml-2">{blog.read_time}</span>}
-                            {blog.date && <span className="ml-2">· {new Date(blog.date).toLocaleDateString()}</span>}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="generator" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>AI Content Generator</CardTitle>
-                <CardDescription>
-                  Use seowriting.ai to automatically generate high-quality blog content
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Topic</label>
-                    <Input
-                      placeholder="Enter your main topic (e.g., Sustainable Luxury Fashion)"
-                      value={generationTopic}
-                      onChange={(e) => setGenerationTopic(e.target.value)}
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Keywords (comma-separated)</label>
-                    <Input
-                      placeholder="e.g., sustainable, luxury, ethical fashion, eco-friendly"
-                      value={generationKeywords}
-                      onChange={(e) => setGenerationKeywords(e.target.value)}
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Content Type</label>
-                      <Select value={generationType} onValueChange={setGenerationType}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select content type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="blog">Blog Post</SelectItem>
-                          <SelectItem value="article">Article</SelectItem>
-                          <SelectItem value="product">Product Description</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Tone</label>
-                      <Select value={generationTone} onValueChange={setGenerationTone}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select tone" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="professional">Professional</SelectItem>
-                          <SelectItem value="conversational">Conversational</SelectItem>
-                          <SelectItem value="formal">Formal</SelectItem>
-                          <SelectItem value="friendly">Friendly</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  
-                  <Button 
-                    onClick={generateContent} 
-                    disabled={generating || !generationTopic}
-                    className="w-full"
-                  >
-                    {generating ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Generating content...
-                      </>
-                    ) : (
-                      'Generate Content'
-                    )}
-                  </Button>
-
-                  {Object.keys(generatedContent).length > 0 && (
-                    <div className="mt-6 border rounded-md p-4">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-medium">Generated Content</h3>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => document.querySelector('[data-value="editor"]')?.click()}
-                        >
-                          Edit in Full Editor
-                        </Button>
-                      </div>
-                      
-                      {generatedContent.title && (
-                        <div className="mb-4">
-                          <h4 className="font-medium mb-1">Title</h4>
-                          <div className="bg-muted p-2 rounded">{generatedContent.title}</div>
-                        </div>
-                      )}
-                      
-                      {generatedContent.content && (
-                        <div>
-                          <h4 className="font-medium mb-1">Content</h4>
-                          <div className="bg-muted p-2 rounded max-h-[300px] overflow-y-auto">
-                            {generatedContent.content.split('\n').map((paragraph, index) => (
-                              <p key={index} className={index > 0 ? 'mt-2' : undefined}>
-                                {paragraph}
-                              </p>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <DropdownMenuItem>
+                            <Trash2 className="h-4 w-4 mr-2 text-red-500" /> Delete
+                          </DropdownMenuItem>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will permanently delete your post from our servers.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => {
+                              setSelectedPost(post);
+                              setIsDialogOpen(true);
+                            }}>Continue</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
-    </MainLayout>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this blog post? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (selectedPost) {
+                  handleDelete(selectedPost.id);
+                }
+              }}
+              disabled={loading}
+            >
+              {loading ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   );
 };
 
