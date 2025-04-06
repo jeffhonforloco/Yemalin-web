@@ -46,7 +46,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <div className="product-card group">
       <div className="relative overflow-hidden mb-4">
-        <Link to={`/products/${slug}`}>
+        <Link to={`/shop/${slug}`}>
           <img
             src={imageUrl}
             alt={name}
@@ -80,16 +80,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
         
         {/* Quick shop overlay (appears on hover) */}
         <div className="absolute bottom-0 left-0 right-0 bg-white bg-opacity-90 py-3 translate-y-full group-hover:translate-y-0 transition-transform">
-          <button className="w-full text-center text-sm font-medium">
+          <Link to={`/shop/${slug}`} className="w-full block text-center text-sm font-medium">
             Quick View
-          </button>
+          </Link>
         </div>
       </div>
       
       {/* Product info */}
       <div className="px-1">
         <h3 className="text-xs text-gray-500 uppercase mb-1">{brand}</h3>
-        <Link to={`/products/${slug}`}>
+        <Link to={`/shop/${slug}`}>
           <h2 className="text-sm font-medium mb-2 hover:underline">{name}</h2>
         </Link>
         <div className="flex items-center gap-2">

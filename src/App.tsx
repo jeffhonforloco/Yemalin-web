@@ -15,6 +15,7 @@ import DashboardProducts from "./pages/DashboardProducts";
 import DashboardOrders from "./pages/DashboardOrders";
 import DashboardAnalytics from "./pages/DashboardAnalytics";
 import Shop from "./pages/Shop";
+import ProductDetail from "./pages/ProductDetail";
 import Designers from "./pages/Designers";
 import Collections from "./pages/Collections";
 import Blog from "./pages/Blog";
@@ -58,6 +59,7 @@ const App = () => (
             <Route path="/dashboard/blog/new" element={<BlogEditor />} />
             <Route path="/dashboard/blog/edit/:id" element={<BlogEditor />} />
             <Route path="/shop" element={<Shop />} />
+            <Route path="/shop/:slug" element={<ProductDetail />} />
             <Route path="/designers" element={<Designers />} />
             <Route path="/designers/apply" element={<DesignerApplication />} />
             <Route path="/collections" element={<Collections />} />
