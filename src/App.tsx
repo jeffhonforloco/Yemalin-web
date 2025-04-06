@@ -23,6 +23,7 @@ import BlogManagement from "./pages/BlogManagement";
 import Sustainability from "./pages/Sustainability";
 import Career from "./pages/Career";
 import Press from "./pages/Press";
+import FAQ from "./pages/FAQ";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ const App = () => (
             <Route path="/sustainability" element={<Sustainability />} />
             <Route path="/careers" element={<Career />} />
             <Route path="/press" element={<Press />} />
+            <Route path="/faq" element={<FAQ />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
