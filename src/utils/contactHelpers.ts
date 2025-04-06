@@ -7,7 +7,7 @@ import { sendEmail } from "./emailService";
  * Falls back to copying the email address to clipboard if mail client cannot be opened
  */
 export const contactSupport = () => {
-  const supportEmail = "info@yemalin.com";
+  const supportEmail = "Admin@yemalin.com";
   const subject = "Customer Support Request";
   
   try {
@@ -22,7 +22,7 @@ export const contactSupport = () => {
       })
       .catch(() => {
         toast.error("Could not open email client or copy to clipboard");
-        toast("Please email us at info@yemalin.com");
+        toast("Please email us at Admin@yemalin.com");
       });
   }
 };
@@ -39,7 +39,7 @@ export const sendSupportEmail = async (
 ) => {
   try {
     const result = await sendEmail({
-      to: "info@yemalin.com",
+      to: "Admin@yemalin.com",
       subject: `Support Request: ${subject}`,
       body: `
         Name: ${name || "Not provided"}
