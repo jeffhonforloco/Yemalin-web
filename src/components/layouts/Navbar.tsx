@@ -16,9 +16,9 @@ const Navbar = () => {
 
   return (
     <div className="bg-white border-b sticky top-0 z-50">
-      <div className="luxury-container flex justify-between items-center py-4">
-        <Link to="/" className="hover:opacity-80 transition-opacity">
-          <YemalinLogo className="h-10" />
+      <div className="luxury-container flex justify-between items-center py-2">
+        <Link to="/" className="hover:opacity-80 transition-opacity pl-0 ml-0">
+          <YemalinLogo className="h-14" />
         </Link>
 
         {/* Desktop Navigation */}
