@@ -5,6 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+
+// Import pages
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Account from "./pages/Account";
@@ -17,11 +19,13 @@ import Designers from "./pages/Designers";
 import Collections from "./pages/Collections";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import BlogEditor from "./pages/BlogEditor";
+import BlogPreview from "./pages/BlogPreview"; 
+import BlogManagement from "./pages/BlogManagement";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
 import DesignerAuth from "./pages/DesignerAuth";
 import DesignerApplication from "./pages/DesignerApplication";
-import BlogManagement from "./pages/BlogManagement";
 import Sustainability from "./pages/Sustainability";
 import Career from "./pages/Career";
 import Press from "./pages/Press";
@@ -51,11 +55,14 @@ const App = () => (
             <Route path="/dashboard/orders" element={<DashboardOrders />} />
             <Route path="/dashboard/analytics" element={<DashboardAnalytics />} />
             <Route path="/dashboard/blog" element={<BlogManagement />} />
+            <Route path="/dashboard/blog/new" element={<BlogEditor />} />
+            <Route path="/dashboard/blog/edit/:id" element={<BlogEditor />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/designers" element={<Designers />} />
             <Route path="/designers/apply" element={<DesignerApplication />} />
             <Route path="/collections" element={<Collections />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/preview" element={<BlogPreview />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/about" element={<About />} />
             <Route path="/sustainability" element={<Sustainability />} />

@@ -1,132 +1,48 @@
 
-import { useParams, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Clock, Calendar } from 'lucide-react';
 import BlogNewsletter from '@/components/blog/BlogNewsletter';
-import { allBlogPosts } from '@/data/mockBlogPostsData';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/hooks/use-toast';
 
-interface BlogPostData {
-  id?: string;
+interface BlogPost {
   title: string;
   excerpt: string;
   content: string;
-  image?: string;
   image_url?: string;
   category?: string;
   author?: string;
-  authorImage?: string;
   author_image?: string;
   date?: string;
   read_time?: string;
-  link?: string;
 }
 
-const BlogPost = () => {
-  const { slug } = useParams();
+const BlogPreview = () => {
   const navigate = useNavigate();
-  const [post, setPost] = useState<BlogPostData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [post, setPost] = useState<BlogPost | null>(null);
 
   useEffect(() => {
-    fetchPost();
-  }, [slug]);
-
-  const fetchPost = async () => {
-    setLoading(true);
-    
-    // First check if we have a real blog post from the database
-    if (slug !== 'preview') {
+    const previewData = localStorage.getItem('preview_post');
+    if (previewData) {
       try {
-        // Generate likely slug format for database comparison
-        const formattedSlug = slug?.replace(/-/g, ' ');
-        
-        const { data, error } = await supabase
-          .from('blog_posts')
-          .select('*')
-          .or(`title.ilike.%${formattedSlug}%,id.eq.${slug}`)
-          .eq('status', 'published')
-          .limit(1);
-          
-        if (error) throw error;
-        
-        if (data && data.length > 0) {
-          // Format the post data
-          setPost({
-            title: data[0].title,
-            excerpt: data[0].excerpt || "",
-            content: data[0].content || "",
-            image_url: data[0].image_url,
-            category: data[0].category,
-            author: data[0].author,
-            author_image: data[0].author_image,
-            date: new Date(data[0].published_at || data[0].created_at).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            }),
-            read_time: data[0].read_time
-          });
-          setLoading(false);
-          return;
-        }
+        setPost(JSON.parse(previewData));
       } catch (error) {
-        console.error("Error fetching from Supabase:", error);
-        // Continue to mock data as fallback
+        console.error('Failed to parse preview data:', error);
       }
     }
-
-    // If we're here, try mock data or preview data
-    if (slug === 'preview') {
-      // Use preview data from localStorage
-      const previewData = localStorage.getItem('preview_post');
-      if (previewData) {
-        try {
-          setPost(JSON.parse(previewData));
-        } catch (error) {
-          console.error('Failed to parse preview data:', error);
-        }
-      }
-    } else {
-      // Use mock data as fallback
-      const foundPost = allBlogPosts.find(p => {
-        const postSlug = p.link.substring(1);
-        return postSlug === slug || postSlug === `blog/${slug}`;
-      });
-      
-      if (foundPost) {
-        setPost(foundPost);
-      }
-    }
-    
-    setLoading(false);
-  };
-
-  if (loading) {
-    return (
-      <MainLayout>
-        <div className="luxury-container py-16">
-          <div className="flex items-center justify-center h-96">
-            <div className="animate-pulse text-2xl">Loading article...</div>
-          </div>
-        </div>
-      </MainLayout>
-    );
-  }
+  }, []);
 
   if (!post) {
     return (
       <MainLayout>
         <div className="luxury-container py-16">
           <div className="text-center py-16">
-            <h1 className="text-3xl font-display mb-4">Article Not Found</h1>
-            <p className="mb-8">We couldn't find the article you're looking for.</p>
-            <Button onClick={() => navigate('/blog')}>
-              Return to Journal
+            <h1 className="text-3xl font-display mb-4">No Preview Available</h1>
+            <p className="mb-8">No preview data found. Please return to the editor.</p>
+            <Button onClick={() => navigate('/dashboard/blog')}>
+              Return to Blog Dashboard
             </Button>
           </div>
         </div>
@@ -134,65 +50,26 @@ const BlogPost = () => {
     );
   }
 
-  // For SEO optimization
-  useEffect(() => {
-    // Update page title for SEO
-    document.title = `${post.title} | Yemalin Journal`;
-    
-    // Add meta description
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (!metaDescription) {
-      metaDescription = document.createElement('meta');
-      metaDescription.setAttribute('name', 'description');
-      document.head.appendChild(metaDescription);
-    }
-    metaDescription.setAttribute('content', post.excerpt);
-    
-    // Set canonical link
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (!canonicalLink) {
-      canonicalLink = document.createElement('link');
-      canonicalLink.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonicalLink);
-    }
-    canonicalLink.setAttribute('href', `${window.location.origin}/blog/${slug}`);
-
-    // Add Open Graph meta tags
-    const ogTags = {
-      'og:title': post.title,
-      'og:description': post.excerpt,
-      'og:type': 'article',
-      'og:url': window.location.href,
-      'og:image': post.image_url || post.image || '',
-    };
-
-    Object.entries(ogTags).forEach(([property, content]) => {
-      let ogTag = document.querySelector(`meta[property="${property}"]`);
-      if (!ogTag) {
-        ogTag = document.createElement('meta');
-        ogTag.setAttribute('property', property);
-        document.head.appendChild(ogTag);
-      }
-      ogTag.setAttribute('content', content);
-    });
-    
-    return () => {
-      // Reset title when component unmounts
-      document.title = 'Yemalin';
-    };
-  }, [post]);
-
   return (
     <MainLayout>
       {/* Hero Section */}
       <div className="w-full">
         <div className="relative h-[60vh] overflow-hidden">
           <img 
-            src={post.image_url || post.image}
+            src={post.image_url || '/placeholder.svg'}
             alt={post.title}
             className="w-full h-full object-cover object-center"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = '/placeholder.svg';
+            }}
           />
         </div>
+      </div>
+      
+      {/* PREVIEW Banner */}
+      <div className="bg-yellow-100 text-yellow-800 py-2 px-4 text-center">
+        <p className="font-medium">PREVIEW MODE - This is how your article will appear when published</p>
       </div>
       
       {/* Article Content */}
@@ -200,9 +77,9 @@ const BlogPost = () => {
         <Button 
           variant="ghost" 
           className="mb-8 inline-flex items-center"
-          onClick={() => navigate('/blog')}
+          onClick={() => navigate(-1)}
         >
-          <ArrowLeft size={16} className="mr-2" /> Back to Journal
+          <ArrowLeft size={16} className="mr-2" /> Back to Editor
         </Button>
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -210,30 +87,26 @@ const BlogPost = () => {
           <div className="lg:col-span-8">
             <div className="mb-6">
               <span className="inline-block bg-yemalin-grey-100 px-3 py-1 text-xs font-medium mb-4">
-                {post.category}
+                {post.category || 'Uncategorized'}
               </span>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-display mb-6">{post.title}</h1>
               
               <div className="flex items-center gap-6 text-sm text-gray-600 mb-8">
                 <div className="flex items-center">
                   <Calendar size={16} className="mr-2" />
-                  <span>{post.date}</span>
+                  <span>{post.date || new Date().toLocaleDateString()}</span>
                 </div>
                 <div className="flex items-center">
                   <Clock size={16} className="mr-2" />
-                  <span>{post.read_time}</span>
+                  <span>{post.read_time || '5 min read'}</span>
                 </div>
               </div>
             </div>
             
             <div className="prose prose-lg max-w-none">
-              {post.excerpt && <p className="text-lg font-medium mb-6">{post.excerpt}</p>}
+              <p className="text-lg font-medium mb-6">{post.excerpt}</p>
               
-              {post.content.startsWith('<') ? (
-                <div dangerouslySetInnerHTML={{ __html: post.content }} />
-              ) : (
-                <p>{post.content}</p>
-              )}
+              <div dangerouslySetInnerHTML={{ __html: post.content }} />
             </div>
           </div>
           
@@ -243,7 +116,7 @@ const BlogPost = () => {
               <div className="bg-yemalin-grey-100 p-6 mb-8">
                 <div className="flex items-center mb-4">
                   <img 
-                    src={post.author_image || post.authorImage}
+                    src={post.author_image || '/placeholder.svg'}
                     alt={post.author}
                     className="w-16 h-16 rounded-full mr-4 object-cover"
                     onError={(e) => {
@@ -252,12 +125,12 @@ const BlogPost = () => {
                     }}
                   />
                   <div>
-                    <h3 className="font-medium text-lg">{post.author}</h3>
+                    <h3 className="font-medium text-lg">{post.author || 'Editorial Team'}</h3>
                     <p className="text-sm text-gray-600">Fashion Editor</p>
                   </div>
                 </div>
                 <p className="text-sm">
-                  With over a decade of experience in luxury fashion journalism, {post.author} specializes in spotlighting emerging designers and sustainable practices in the industry.
+                  With over a decade of experience in luxury fashion journalism, {post.author || 'our editor'} specializes in spotlighting emerging designers and sustainable practices in the industry.
                 </p>
               </div>
               
@@ -265,7 +138,7 @@ const BlogPost = () => {
                 <h3 className="font-display text-xl mb-4">Related Categories</h3>
                 <div className="flex flex-wrap gap-2">
                   <span className="bg-yemalin-grey-100 px-3 py-1 text-xs font-medium">
-                    {post.category}
+                    {post.category || 'Uncategorized'}
                   </span>
                   <span className="bg-yemalin-grey-100 px-3 py-1 text-xs font-medium">
                     Fashion
@@ -313,4 +186,4 @@ const BlogPost = () => {
   );
 };
 
-export default BlogPost;
+export default BlogPreview;
