@@ -1,4 +1,3 @@
-
 import MainLayout from '@/components/layouts/MainLayout';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
@@ -62,11 +61,6 @@ const Blog = () => {
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }
-
-  // Helper function to extract slug from link
-  const getRouteFromLink = (link: string) => {
-    return link.substring(1); // Remove the leading '/' from the link
-  };
   
   return (
     <MainLayout>
@@ -105,7 +99,7 @@ const Blog = () => {
                     </div>
                   </div>
                 </div>
-                <Link to={getRouteFromLink(featuredPost.link)}>
+                <Link to={featuredPost.link}>
                   <Button className="bg-white text-black hover:bg-black hover:text-white">
                     Read Article
                   </Button>
@@ -139,7 +133,7 @@ const Blog = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {currentPosts.map(post => (
                 <Card key={post.id} className="overflow-hidden border-none shadow-sm group">
-                  <Link to={getRouteFromLink(post.link)} className="block">
+                  <Link to={post.link} className="block">
                     <div className="h-60 overflow-hidden">
                       <img 
                         src={post.image}
@@ -235,7 +229,7 @@ const Blog = () => {
                   .slice(indexOfFirstPost, indexOfLastPost)
                   .map(post => (
                     <Card key={post.id} className="overflow-hidden border-none shadow-sm group">
-                      <Link to={getRouteFromLink(post.link)} className="block">
+                      <Link to={post.link} className="block">
                         <div className="h-60 overflow-hidden">
                           <img 
                             src={post.image}

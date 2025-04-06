@@ -15,12 +15,17 @@ const BlogPost = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Find the post based on the URL slug
-    const urlPath = `/blog/${slug}`;
-    const foundPost = allBlogPosts.find(p => p.link === urlPath);
+    // Find the post based on the URL slug without prepending /blog/
+    const foundPost = allBlogPosts.find(p => {
+      // Extract slug from link (remove leading slash)
+      const postSlug = p.link.substring(1);
+      return postSlug === slug || postSlug === `blog/${slug}`; 
+    });
     
     if (foundPost) {
       setPost(foundPost);
+    } else {
+      console.error(`Blog post not found with slug: ${slug}`);
     }
     setLoading(false);
   }, [slug]);
