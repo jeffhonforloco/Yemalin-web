@@ -1,12 +1,17 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import MainLayout from '../components/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Briefcase, User, Users, Mail, MapPin, Building, GraduationCap } from 'lucide-react';
+import JobApplicationForm from '../components/career/JobApplicationForm';
 
 const Career = () => {
+  // State for job application form dialog
+  const [applicationFormOpen, setApplicationFormOpen] = useState(false);
+  const [selectedPosition, setSelectedPosition] = useState<string>('');
+
   // Sample job listings
   const jobListings = [
     {
@@ -51,6 +56,11 @@ const Career = () => {
     }
   ];
 
+  const handleApplyClick = (positionTitle?: string) => {
+    setSelectedPosition(positionTitle || '');
+    setApplicationFormOpen(true);
+  };
+
   return (
     <MainLayout>
       {/* Hero Section */}
@@ -61,7 +71,7 @@ const Career = () => {
             Be part of shaping the future of sustainable and ethical fashion with Yemalin.
             Discover meaningful career opportunities with us.
           </p>
-          <Button size="lg" className="font-medium">
+          <Button size="lg" className="font-medium" onClick={() => handleApplyClick()}>
             View Open Positions
           </Button>
         </div>
@@ -164,7 +174,13 @@ const Career = () => {
                       <TableCell>{job.type}</TableCell>
                       <TableCell>{job.posted}</TableCell>
                       <TableCell className="text-right">
-                        <Button variant="outline" size="sm">Apply Now</Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleApplyClick(job.title)}
+                        >
+                          Apply Now
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -229,16 +245,30 @@ const Career = () => {
             We're always on the lookout for exceptional talent. Send us your resume and let us know how you can contribute to Yemalin's mission.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="outline" className="bg-transparent text-white border-white hover:bg-white hover:text-black">
+            <Button 
+              variant="outline" 
+              className="bg-transparent text-white border-white hover:bg-white hover:text-black"
+              onClick={() => handleApplyClick("General Application")}
+            >
               <Mail className="mr-2 h-4 w-4" />
               Send Us Your Resume
             </Button>
-            <Button className="bg-white text-black hover:bg-gray-200">
+            <Button 
+              className="bg-white text-black hover:bg-gray-200"
+              onClick={() => handleApplyClick()}
+            >
               View All Positions
             </Button>
           </div>
         </div>
       </section>
+
+      {/* Job Application Form Dialog */}
+      <JobApplicationForm 
+        open={applicationFormOpen} 
+        onOpenChange={setApplicationFormOpen} 
+        positionTitle={selectedPosition}
+      />
     </MainLayout>
   );
 };
