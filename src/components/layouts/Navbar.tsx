@@ -82,9 +82,17 @@ const Navbar = () => {
               )}
             </div>
           ) : (
-            <Link to="/auth">
-              <Button variant="link">Sign in</Button>
-            </Link>
+            <div className="flex items-center space-x-2">
+              <Link to="/auth">
+                <Button variant="link">Sign in</Button>
+              </Link>
+              <Link to="/designer-login">
+                <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                  <Pencil className="h-3 w-3" />
+                  <span>Designer Portal</span>
+                </Button>
+              </Link>
+            </div>
           )}
         </div>
 
@@ -143,9 +151,16 @@ const Navbar = () => {
                   )}
                   
                   {!user && (
-                    <Link to="/auth" className="mt-auto">
-                      <Button className="w-full">Sign In</Button>
-                    </Link>
+                    <>
+                      <div className="h-px bg-gray-200 my-2"></div>
+                      <Link to="/auth" className="px-2 py-2 hover:bg-gray-100 rounded text-center">
+                        Sign In
+                      </Link>
+                      <Link to="/designer-login" className="px-2 py-2 hover:bg-gray-100 rounded text-center flex items-center justify-center space-x-1">
+                        <Pencil className="h-3 w-3" />
+                        <span>Designer Portal</span>
+                      </Link>
+                    </>
                   )}
                 </nav>
               </div>

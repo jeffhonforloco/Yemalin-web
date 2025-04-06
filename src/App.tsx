@@ -18,6 +18,7 @@ import Collections from "./pages/Collections";
 import Blog from "./pages/Blog";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
+import DesignerAuth from "./pages/DesignerAuth";
 import DesignerApplication from "./pages/DesignerApplication";
 import BlogManagement from "./pages/BlogManagement";
 import Sustainability from "./pages/Sustainability";
@@ -41,6 +42,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/designer-login" element={<DesignerAuth />} />
             <Route path="/account" element={<Account />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/dashboard/products" element={<DashboardProducts />} />

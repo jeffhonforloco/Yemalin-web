@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -183,15 +183,18 @@ const Auth = () => {
         </div>
         
         <div className="text-center mt-8">
+          <p className="text-sm text-gray-600 mb-4">
+            Are you a designer? <Link to="/designer-login" className="underline hover:text-black">Access the Designer Portal</Link>
+          </p>
           <p className="text-sm text-gray-600">
             By signing in or creating an account, you agree to our{' '}
-            <a href="/terms" className="underline hover:text-black">
+            <Link to="/terms" className="underline hover:text-black">
               Terms of Service
-            </a>{' '}
+            </Link>{' '}
             and{' '}
-            <a href="/privacy" className="underline hover:text-black">
+            <Link to="/privacy" className="underline hover:text-black">
               Privacy Policy
-            </a>
+            </Link>
           </p>
         </div>
       </div>
