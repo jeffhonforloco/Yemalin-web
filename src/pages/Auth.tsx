@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -87,7 +88,9 @@ const Auth = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <YemalinLogo className="h-12 w-auto mx-auto mb-6" />
+          <Link to="/">
+            <YemalinLogo className="h-12 w-auto mx-auto mb-6" />
+          </Link>
           <h1 className="text-2xl font-display">Welcome to Yemalin</h1>
           <p className="text-gray-600 mt-2">Sign in or create an account</p>
         </div>

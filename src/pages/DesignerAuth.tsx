@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,6 @@ import { toast } from '@/hooks/use-toast';
 import YemalinLogo from '@/components/YemalinLogo';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Link } from 'react-router-dom';
 
 const DesignerAuth = () => {
   const navigate = useNavigate();
@@ -110,7 +109,9 @@ const DesignerAuth = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <YemalinLogo className="h-12 w-auto mx-auto mb-6" />
+          <Link to="/">
+            <YemalinLogo className="h-12 w-auto mx-auto mb-6" />
+          </Link>
           <h1 className="text-2xl font-display">Designer Portal</h1>
           <p className="text-gray-600 mt-2">Sign in or register as a designer</p>
         </div>
