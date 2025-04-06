@@ -12,6 +12,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Clock, User } from 'lucide-react';
+import BlogNewsletter from '@/components/blog/BlogNewsletter';
 
 // Mock data for blog posts
 const blogPosts = [
@@ -278,22 +279,7 @@ const Blog = () => {
         </Tabs>
         
         {/* Newsletter Section */}
-        <div className="mt-16 p-12 bg-yemalin-grey-100 text-center">
-          <h3 className="text-2xl font-display mb-4">Subscribe to Our Journal</h3>
-          <p className="text-gray-600 max-w-2xl mx-auto mb-6">
-            Stay updated with our latest articles, designer interviews, style guides, and exclusive content.
-          </p>
-          <div className="flex max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="flex-grow px-4 py-3 text-sm border border-gray-300 focus:outline-none focus:border-black"
-            />
-            <Button className="bg-black text-white hover:bg-gray-800">
-              Subscribe
-            </Button>
-          </div>
-        </div>
+        <BlogNewsletter />
       </div>
     </MainLayout>
   );

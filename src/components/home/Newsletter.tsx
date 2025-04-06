@@ -1,21 +1,31 @@
 
 import { useState } from 'react';
+import { subscribeToNewsletter } from '@/utils/subscriptionUtils';
 
 const Newsletter = () => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const success = await subscribeToNewsletter({ 
+        email, 
+        source: 'Homepage Footer' 
+      });
+      
+      if (success) {
+        setMessage('Thank you for subscribing to our newsletter!');
+        setEmail('');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
       setIsSubmitting(false);
-      setMessage('Thank you for subscribing to our newsletter!');
-      setEmail('');
-    }, 1000);
+    }
   };
 
   return (

@@ -1,10 +1,35 @@
 
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import YemalinLogo from '../YemalinLogo';
 import { Instagram, Facebook, Twitter, Mail } from 'lucide-react';
 import { contactSupport } from '@/utils/contactHelpers';
+import { subscribeToNewsletter } from '@/utils/subscriptionUtils';
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      const success = await subscribeToNewsletter({ 
+        email, 
+        source: 'Footer' 
+      });
+      
+      if (success) {
+        setEmail('');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <footer className="bg-white pt-16 pb-8 border-t border-gray-100">
       <div className="luxury-container">
@@ -50,16 +75,23 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-medium mb-4">Join Our Community</h3>
             <p className="text-sm text-gray-600 mb-4">Subscribe to receive updates on new arrivals, special offers, and fashion inspiration.</p>
-            <div className="flex">
+            <form onSubmit={handleSubscribe} className="flex">
               <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email address"
+                required
                 className="flex-grow px-3 py-2 text-sm border border-gray-300 focus:outline-none focus:border-black"
               />
-              <button className="bg-black text-white px-4 py-2 text-sm whitespace-nowrap">
-                Subscribe
+              <button 
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-black text-white px-4 py-2 text-sm whitespace-nowrap disabled:opacity-70"
+              >
+                {isSubmitting ? 'Wait...' : 'Subscribe'}
               </button>
-            </div>
+            </form>
             <div className="flex items-center space-x-4 mt-6">
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-black transition-colors">
                 <Instagram size={20} />
@@ -73,7 +105,10 @@ const Footer = () => {
                 <Twitter size={20} />
                 <span className="sr-only">Twitter</span>
               </a>
-              <a href="mailto:Admin@yemalin.com" className="text-gray-600 hover:text-black transition-colors">
+              <a href="#" onClick={(e) => {
+                e.preventDefault();
+                contactSupport();
+              }} className="text-gray-600 hover:text-black transition-colors">
                 <Mail size={20} />
                 <span className="sr-only">Email</span>
               </a>
