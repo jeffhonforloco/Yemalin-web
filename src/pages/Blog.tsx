@@ -1,5 +1,6 @@
 import MainLayout from '@/components/layouts/MainLayout';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { 
   Card, 
@@ -13,6 +14,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Clock, User } from 'lucide-react';
 import BlogNewsletter from '@/components/blog/BlogNewsletter';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 // Mock data for blog posts
 const blogPosts = [
@@ -90,6 +100,85 @@ const blogPosts = [
   }
 ];
 
+// Add more mock blog posts to demonstrate pagination
+const additionalPosts = [
+  {
+    id: 'post7',
+    title: 'Fashion Week Highlights: Emerging Trends for Next Season',
+    excerpt: 'Our fashion directors report from the front rows of the most influential runway shows, spotlighting the trends that will define the coming season.',
+    image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
+    author: 'Thomas Reed',
+    authorImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80',
+    date: 'February 28, 2025',
+    readTime: '9 min read',
+    category: 'Style Guide',
+    link: '/blog/fashion-week-highlights'
+  },
+  {
+    id: 'post8',
+    title: 'The Ethics of Luxury: Transparency in the Supply Chain',
+    excerpt: 'An investigation into how luxury brands are addressing the demand for ethical production and transparency throughout their supply chains.',
+    image: 'https://images.unsplash.com/photo-1622227922682-56c92e523e58?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    author: 'Maya Patel',
+    authorImage: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=761&q=80',
+    date: 'February 20, 2025',
+    readTime: '12 min read',
+    category: 'Sustainability',
+    link: '/blog/ethics-luxury-supply-chain'
+  },
+  {
+    id: 'post9',
+    title: 'The Art of Accessorizing: Less is More',
+    excerpt: 'Our style experts share their secrets for curating the perfect accessories to elevate any outfit without overwhelming your look.',
+    image: 'https://images.unsplash.com/photo-1523779105320-d1cd346ff52b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80',
+    author: 'Sophie Lambert',
+    authorImage: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=688&q=80',
+    date: 'February 15, 2025',
+    readTime: '7 min read',
+    category: 'Style Guide',
+    link: '/blog/art-of-accessorizing'
+  },
+  {
+    id: 'post10',
+    title: 'Behind the Scenes: The Making of a Handcrafted Leather Bag',
+    excerpt: 'Follow the journey of a luxury leather bag from initial sketches to the final product, highlighting the craftsmanship involved at each step.',
+    image: 'https://images.unsplash.com/photo-1527236438218-d82077ae1f85?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
+    author: 'David Kim',
+    authorImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+    date: 'February 8, 2025',
+    readTime: '10 min read',
+    category: 'Craftsmanship',
+    link: '/blog/making-leather-bag'
+  },
+  {
+    id: 'post11',
+    title: 'Iconic Fashion Moments: Looking Back at Style-Defining Eras',
+    excerpt: 'A retrospective exploration of the most influential fashion moments from the past century and their continuing impact on current trends.',
+    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1376&q=80',
+    author: 'Elena Martin',
+    authorImage: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80',
+    date: 'January 30, 2025',
+    readTime: '14 min read',
+    category: 'Fashion History',
+    link: '/blog/iconic-fashion-moments'
+  },
+  {
+    id: 'post12',
+    title: 'Interview: Rising Star Designer on Innovation in Traditional Techniques',
+    excerpt: 'An exclusive conversation with an emerging designer about merging heritage craft with modern innovation in the luxury design space.',
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1376&q=80',
+    author: 'Thomas Reed',
+    authorImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80',
+    date: 'January 25, 2025',
+    readTime: '11 min read',
+    category: 'Designer Spotlight',
+    link: '/blog/interview-rising-designer'
+  }
+];
+
+// Combine the original posts with the additional posts
+const allBlogPosts = [...blogPosts, ...additionalPosts];
+
 // Categories for filtering
 const categories = [
   'All',
@@ -102,9 +191,30 @@ const categories = [
 
 const Blog = () => {
   // Featured post is the first post in our list
-  const featuredPost = blogPosts[0];
-  // Rest of the posts
-  const restOfPosts = blogPosts.slice(1);
+  const featuredPost = allBlogPosts[0];
+  
+  // State for pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 6;
+  
+  // Calculate pagination values
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = allBlogPosts.slice(1).slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil((allBlogPosts.length - 1) / postsPerPage);
+  
+  // Function to handle page changes
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    // Scroll to top when changing page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
+  // Generate page numbers for pagination
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
   
   return (
     <MainLayout>
@@ -175,7 +285,7 @@ const Blog = () => {
           {/* Tab Content - All Posts */}
           <TabsContent value="All" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {restOfPosts.map(post => (
+              {currentPosts.map(post => (
                 <Card key={post.id} className="overflow-hidden border-none shadow-sm group">
                   <Link to={post.link} className="block">
                     <div className="h-60 overflow-hidden">
@@ -218,14 +328,59 @@ const Blog = () => {
                 </Card>
               ))}
             </div>
+            
+            {/* Pagination */}
+            <Pagination className="mt-12">
+              <PaginationContent>
+                {currentPage > 1 && (
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      href="#" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePageChange(currentPage - 1);
+                      }} 
+                    />
+                  </PaginationItem>
+                )}
+                
+                {pageNumbers.map((number) => (
+                  <PaginationItem key={number}>
+                    <PaginationLink 
+                      href="#" 
+                      isActive={number === currentPage}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePageChange(number);
+                      }}
+                    >
+                      {number}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                
+                {currentPage < totalPages && (
+                  <PaginationItem>
+                    <PaginationNext 
+                      href="#" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePageChange(currentPage + 1);
+                      }} 
+                    />
+                  </PaginationItem>
+                )}
+              </PaginationContent>
+            </Pagination>
           </TabsContent>
           
           {/* Tab Content - Category Specific Posts */}
           {categories.slice(1).map(category => (
             <TabsContent key={category} value={category} className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {blogPosts
+                {allBlogPosts
                   .filter(post => post.category === category)
+                  .slice(indexOfFirstPost, indexOfLastPost)
                   .map(post => (
                     <Card key={post.id} className="overflow-hidden border-none shadow-sm group">
                       <Link to={post.link} className="block">
@@ -269,10 +424,56 @@ const Blog = () => {
                     </Card>
                   ))}
               </div>
-              {blogPosts.filter(post => post.category === category).length === 0 && (
+              
+              {allBlogPosts.filter(post => post.category === category).length === 0 && (
                 <div className="text-center py-12">
                   <p className="text-gray-500">No articles in this category yet.</p>
                 </div>
+              )}
+              
+              {allBlogPosts.filter(post => post.category === category).length > postsPerPage && (
+                <Pagination className="mt-12">
+                  <PaginationContent>
+                    {currentPage > 1 && (
+                      <PaginationItem>
+                        <PaginationPrevious 
+                          href="#" 
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(currentPage - 1);
+                          }} 
+                        />
+                      </PaginationItem>
+                    )}
+                    
+                    {pageNumbers.map((number) => (
+                      <PaginationItem key={number}>
+                        <PaginationLink 
+                          href="#" 
+                          isActive={number === currentPage}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(number);
+                          }}
+                        >
+                          {number}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+                    
+                    {currentPage < totalPages && (
+                      <PaginationItem>
+                        <PaginationNext 
+                          href="#" 
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(currentPage + 1);
+                          }} 
+                        />
+                      </PaginationItem>
+                    )}
+                  </PaginationContent>
+                </Pagination>
               )}
             </TabsContent>
           ))}
