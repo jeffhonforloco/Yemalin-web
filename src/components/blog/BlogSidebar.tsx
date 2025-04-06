@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 
 interface BlogSidebarProps {
   author?: string;
@@ -10,6 +11,39 @@ interface BlogSidebarProps {
 }
 
 const BlogSidebar = ({ author, authorImage, category, postTitle, postUrl }: BlogSidebarProps) => {
+  const [relatedCategories, setRelatedCategories] = useState<string[]>([]);
+  
+  // Get related categories based on current category
+  useEffect(() => {
+    // Default categories if none are found
+    const defaultCategories = ["Fashion", "Style Guide", "Sustainability"];
+    
+    // If we have a category, include it and add some related ones
+    if (category) {
+      const allCategories = [
+        "Sustainability", 
+        "Designer Spotlight", 
+        "Fashion History", 
+        "Style Guide", 
+        "Craftsmanship",
+        "Fashion"
+      ];
+      
+      // Filter out the current category
+      const otherCategories = allCategories.filter(cat => cat !== category);
+      
+      // Get 2-3 random related categories
+      const randomRelated = [...otherCategories]
+        .sort(() => 0.5 - Math.random())
+        .slice(0, Math.floor(Math.random() * 2) + 2);
+      
+      // Add current category first, then the random related ones
+      setRelatedCategories([category, ...randomRelated]);
+    } else {
+      setRelatedCategories(defaultCategories);
+    }
+  }, [category]);
+
   const handleShare = (platform: string) => {
     const currentUrl = postUrl || window.location.href;
     const title = postTitle || document.title;
@@ -69,12 +103,15 @@ const BlogSidebar = ({ author, authorImage, category, postTitle, postUrl }: Blog
       <div className="mb-8">
         <h3 className="font-display text-xl mb-4">Related Categories</h3>
         <div className="flex flex-wrap gap-2">
-          <span className="bg-yemalin-grey-100 px-3 py-1 text-xs font-medium">
-            {category}
-          </span>
-          <span className="bg-yemalin-grey-100 px-3 py-1 text-xs font-medium">
-            Fashion
-          </span>
+          {relatedCategories.map((relatedCategory, index) => (
+            <a 
+              key={index} 
+              href={`/blog?category=${encodeURIComponent(relatedCategory)}`}
+              className="bg-yemalin-grey-100 px-3 py-1 text-xs font-medium hover:bg-gray-200 transition-colors"
+            >
+              {relatedCategory}
+            </a>
+          ))}
         </div>
       </div>
       
