@@ -43,25 +43,28 @@ const Hero = () => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 
+  // Animation duration reduced from 700ms to 400ms
+  const animationDuration = 400;
+
   const goToSlide = (index: number) => {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrentSlide(index);
-    setTimeout(() => setIsAnimating(false), 700); // Match transition duration
+    setTimeout(() => setIsAnimating(false), animationDuration);
   };
 
   const nextSlide = () => {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrentSlide((prev) => (prev === heroImages.length - 1 ? 0 : prev + 1));
-    setTimeout(() => setIsAnimating(false), 700); // Match transition duration
+    setTimeout(() => setIsAnimating(false), animationDuration);
   };
 
   const prevSlide = () => {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrentSlide((prev) => (prev === 0 ? heroImages.length - 1 : prev - 1));
-    setTimeout(() => setIsAnimating(false), 700); // Match transition duration
+    setTimeout(() => setIsAnimating(false), animationDuration);
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -97,9 +100,10 @@ const Hero = () => {
   useEffect(() => {
     if (autoplayPaused) return;
     
+    // Autoplay interval reduced from 7000ms to 5000ms
     const interval = setInterval(() => {
       nextSlide();
-    }, 7000); // Change slide every 7 seconds
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [currentSlide, autoplayPaused]);
@@ -118,14 +122,14 @@ const Hero = () => {
         {heroImages.map((image, index) => (
           <div
             key={index}
-            className={`absolute inset-0 bg-black/10 transition-opacity duration-700 ease-in-out ${
+            className={`absolute inset-0 bg-black/10 transition-opacity duration-${animationDuration} ease-in-out ${
               currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0'
             }`}
           >
             <img
               src={image.url}
               alt={`Luxury Fashion ${index + 1}`}
-              className={`w-full h-full object-cover object-center transition-transform duration-700 ${
+              className={`w-full h-full object-cover object-center transition-transform duration-${animationDuration} ${
                 currentSlide === index ? 'scale-100' : 'scale-110'
               }`}
             />
