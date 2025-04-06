@@ -25,6 +25,7 @@ import Career from "./pages/Career";
 import Press from "./pages/Press";
 import FAQ from "./pages/FAQ";
 import ShippingReturns from "./pages/ShippingReturns";
+import ContactUs from "./pages/ContactUs";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ const App = () => (
             <Route path="/press" element={<Press />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/shipping" element={<ShippingReturns />} />
+            <Route path="/contact" element={<ContactUs />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

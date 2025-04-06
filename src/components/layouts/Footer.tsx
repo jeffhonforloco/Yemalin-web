@@ -26,10 +26,11 @@ const Footer = () => {
             <ul className="space-y-3">
               <li><Link to="/faq" className="text-sm text-gray-600 hover:text-black transition-colors">FAQ</Link></li>
               <li><Link to="/shipping" className="text-sm text-gray-600 hover:text-black transition-colors">Shipping & Returns</Link></li>
+              <li><Link to="/contact" className="text-sm text-gray-600 hover:text-black transition-colors">Contact Us</Link></li>
               <li><a href="#" onClick={(e) => {
                 e.preventDefault();
                 contactSupport();
-              }} className="text-sm text-gray-600 hover:text-black transition-colors">Contact Us</a></li>
+              }} className="text-sm text-gray-600 hover:text-black transition-colors">Email Support</a></li>
               <li><Link to="/privacy" className="text-sm text-gray-600 hover:text-black transition-colors">Privacy Policy</Link></li>
               <li><Link to="/terms" className="text-sm text-gray-600 hover:text-black transition-colors">Terms & Conditions</Link></li>
             </ul>
@@ -72,7 +73,7 @@ const Footer = () => {
                 <Twitter size={20} />
                 <span className="sr-only">Twitter</span>
               </a>
-              <a href="mailto:hello@yemalin.com" className="text-gray-600 hover:text-black transition-colors">
+              <a href="mailto:Admin@yemalin.com" className="text-gray-600 hover:text-black transition-colors">
                 <Mail size={20} />
                 <span className="sr-only">Email</span>
               </a>
