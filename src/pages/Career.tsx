@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import MainLayout from '../components/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,6 +11,9 @@ const Career = () => {
   // State for job application form dialog
   const [applicationFormOpen, setApplicationFormOpen] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<string>('');
+  
+  // Reference to the openings section
+  const openingsSectionRef = useRef<HTMLElement>(null);
 
   // Sample job listings
   const jobListings = [
@@ -61,6 +64,10 @@ const Career = () => {
     setApplicationFormOpen(true);
   };
 
+  const scrollToOpenings = () => {
+    openingsSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <MainLayout>
       {/* Hero Section */}
@@ -71,7 +78,7 @@ const Career = () => {
             Be part of shaping the future of sustainable and ethical fashion with Yemalin.
             Discover meaningful career opportunities with us.
           </p>
-          <Button size="lg" className="font-medium" onClick={() => handleApplyClick()}>
+          <Button size="lg" className="font-medium" onClick={scrollToOpenings}>
             View Open Positions
           </Button>
         </div>
@@ -143,7 +150,7 @@ const Career = () => {
       </section>
 
       {/* Current Openings Section */}
-      <section className="py-16 md:py-20 bg-gray-50">
+      <section ref={openingsSectionRef} className="py-16 md:py-20 bg-gray-50">
         <div className="luxury-container">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Current Openings</h2>
@@ -255,7 +262,7 @@ const Career = () => {
             </Button>
             <Button 
               className="bg-white text-black hover:bg-gray-200"
-              onClick={() => handleApplyClick()}
+              onClick={scrollToOpenings}
             >
               View All Positions
             </Button>
