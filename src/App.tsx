@@ -21,6 +21,7 @@ import Auth from "./pages/Auth";
 import DesignerApplication from "./pages/DesignerApplication";
 import BlogManagement from "./pages/BlogManagement";
 import Sustainability from "./pages/Sustainability";
+import Career from "./pages/Career";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/blog" element={<Blog />} />
             <Route path="/about" element={<About />} />
             <Route path="/sustainability" element={<Sustainability />} />
+            <Route path="/careers" element={<Career />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
