@@ -109,6 +109,8 @@ const BlogPreview = () => {
               author={post.author || 'Editorial Team'}
               authorImage={post.author_image || '/placeholder.svg'}
               category={post.category || 'Uncategorized'}
+              postTitle={post.title}
+              postUrl={window.location.href} 
             />
           </div>
         </div>

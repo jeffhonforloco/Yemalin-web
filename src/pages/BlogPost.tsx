@@ -90,6 +90,8 @@ const BlogPost = () => {
               author={post.author}
               authorImage={post.author_image || post.authorImage}
               category={post.category}
+              postTitle={post.title}
+              postUrl={window.location.href}
             />
           </div>
         </div>
