@@ -1,6 +1,8 @@
 
 import MainLayout from "@/components/layouts/MainLayout";
 import { Card, CardContent } from "@/components/ui/card";
+import { Mail } from "lucide-react";
+import { contactSupport } from "@/utils/contactHelpers";
 
 const Terms = () => {
   return (
@@ -84,7 +86,18 @@ const Terms = () => {
               If you have any questions about these Terms & Conditions, please contact us:
             </p>
             <p className="mb-4">
-              Email address: <a href="mailto:Admin@yemalin.com" className="text-blue-600 hover:underline">Admin@yemalin.com</a>
+              Email address: 
+              <a 
+                href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  contactSupport();
+                }} 
+                className="text-blue-600 hover:underline inline-flex items-center ml-1"
+              >
+                Admin@yemalin.com
+                <Mail className="ml-1 h-4 w-4" />
+              </a>
             </p>
             <p className="mb-4">
               Postal address: 123 Fashion Avenue, Suite 500, New York, NY 10001, United States
