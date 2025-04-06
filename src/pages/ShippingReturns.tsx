@@ -5,6 +5,7 @@ import { Truck, Package, RefreshCw, Clock, Globe, CreditCard } from 'lucide-reac
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { contactSupport } from '@/utils/contactHelpers';
 
 const ShippingReturns = () => {
   return (
@@ -307,7 +308,10 @@ const ShippingReturns = () => {
             <p className="text-gray-700 mb-6">
               Still have questions about shipping or returns?
             </p>
-            <Button className="px-8">
+            <Button 
+              className="px-8"
+              onClick={() => contactSupport()}
+            >
               Contact Customer Support
             </Button>
           </div>

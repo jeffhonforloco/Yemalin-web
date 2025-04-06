@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import MainLayout from '../components/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Briefcase, User, Users, Mail, MapPin, Building, GraduationCap, Newspaper } from 'lucide-react';
 import JobApplicationForm from '../components/career/JobApplicationForm';
+import { contactSupport } from '@/utils/contactHelpers';
 
 const Career = () => {
   // State for job application form dialog

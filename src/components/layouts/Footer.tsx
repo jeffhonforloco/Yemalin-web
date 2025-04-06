@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import YemalinLogo from '../YemalinLogo';
 import { Instagram, Facebook, Twitter, Mail } from 'lucide-react';
+import { contactSupport } from '@/utils/contactHelpers';
 
 const Footer = () => {
   return (
@@ -25,7 +26,10 @@ const Footer = () => {
             <ul className="space-y-3">
               <li><Link to="/faq" className="text-sm text-gray-600 hover:text-black transition-colors">FAQ</Link></li>
               <li><Link to="/shipping" className="text-sm text-gray-600 hover:text-black transition-colors">Shipping & Returns</Link></li>
-              <li><Link to="/contact" className="text-sm text-gray-600 hover:text-black transition-colors">Contact Us</Link></li>
+              <li><a href="#" onClick={(e) => {
+                e.preventDefault();
+                contactSupport();
+              }} className="text-sm text-gray-600 hover:text-black transition-colors">Contact Us</a></li>
               <li><Link to="/privacy" className="text-sm text-gray-600 hover:text-black transition-colors">Privacy Policy</Link></li>
               <li><Link to="/terms" className="text-sm text-gray-600 hover:text-black transition-colors">Terms & Conditions</Link></li>
             </ul>
