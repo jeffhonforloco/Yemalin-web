@@ -32,6 +32,59 @@ const BlogPost = () => {
   const [post, setPost] = useState<BlogPostData | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // SEO effect - moved outside conditional rendering
+  useEffect(() => {
+    if (post) {
+      // Update page title for SEO
+      document.title = `${post.title} | Yemalin Journal`;
+      
+      // Add meta description
+      let metaDescription = document.querySelector('meta[name="description"]');
+      if (!metaDescription) {
+        metaDescription = document.createElement('meta');
+        metaDescription.setAttribute('name', 'description');
+        document.head.appendChild(metaDescription);
+      }
+      metaDescription.setAttribute('content', post.excerpt);
+      
+      // Set canonical link
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement('link');
+        canonicalLink.setAttribute('rel', 'canonical');
+        document.head.appendChild(canonicalLink);
+      }
+      canonicalLink.setAttribute('href', `${window.location.origin}/blog/${slug}`);
+
+      // Add Open Graph meta tags
+      const ogTags = {
+        'og:title': post.title,
+        'og:description': post.excerpt,
+        'og:type': 'article',
+        'og:url': window.location.href,
+        'og:image': post.image_url || post.image || '',
+      };
+
+      Object.entries(ogTags).forEach(([property, content]) => {
+        let ogTag = document.querySelector(`meta[property="${property}"]`);
+        if (!ogTag) {
+          ogTag = document.createElement('meta');
+          ogTag.setAttribute('property', property);
+          document.head.appendChild(ogTag);
+        }
+        ogTag.setAttribute('content', content);
+      });
+    } else {
+      // Reset title when no post is available
+      document.title = 'Yemalin';
+    }
+    
+    return () => {
+      // Reset title when component unmounts
+      document.title = 'Yemalin';
+    };
+  }, [post, slug]);
+
   useEffect(() => {
     fetchPost();
   }, [slug]);
@@ -43,36 +96,38 @@ const BlogPost = () => {
     if (slug !== 'preview') {
       try {
         // Generate likely slug format for database comparison
-        const formattedSlug = slug?.replace(/-/g, ' ');
-        
-        const { data, error } = await supabase
-          .from('blog_posts')
-          .select('*')
-          .or(`title.ilike.%${formattedSlug}%,id.eq.${slug}`)
-          .eq('status', 'published')
-          .limit(1);
+        if (typeof slug === 'string') {
+          const formattedSlug = slug.replace(/-/g, ' ');
           
-        if (error) throw error;
-        
-        if (data && data.length > 0) {
-          // Format the post data
-          setPost({
-            title: data[0].title,
-            excerpt: data[0].excerpt || "",
-            content: data[0].content || "",
-            image_url: data[0].image_url,
-            category: data[0].category,
-            author: data[0].author,
-            author_image: data[0].author_image,
-            date: new Date(data[0].published_at || data[0].created_at).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            }),
-            read_time: data[0].read_time
-          });
-          setLoading(false);
-          return;
+          const { data, error } = await supabase
+            .from('blog_posts')
+            .select('*')
+            .or(`title.ilike.%${formattedSlug}%`)
+            .eq('status', 'published')
+            .limit(1);
+            
+          if (error) throw error;
+          
+          if (data && data.length > 0) {
+            // Format the post data
+            setPost({
+              title: data[0].title,
+              excerpt: data[0].excerpt || "",
+              content: data[0].content || "",
+              image_url: data[0].image_url,
+              category: data[0].category,
+              author: data[0].author,
+              author_image: data[0].author_image,
+              date: new Date(data[0].published_at || data[0].created_at).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              }),
+              read_time: data[0].read_time
+            });
+            setLoading(false);
+            return;
+          }
         }
       } catch (error) {
         console.error("Error fetching from Supabase:", error);
@@ -99,7 +154,10 @@ const BlogPost = () => {
       });
       
       if (foundPost) {
-        setPost(foundPost);
+        setPost({
+          ...foundPost,
+          content: foundPost.excerpt || "" // Ensure content is present
+        });
       }
     }
     
@@ -133,54 +191,6 @@ const BlogPost = () => {
       </MainLayout>
     );
   }
-
-  // For SEO optimization
-  useEffect(() => {
-    // Update page title for SEO
-    document.title = `${post.title} | Yemalin Journal`;
-    
-    // Add meta description
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (!metaDescription) {
-      metaDescription = document.createElement('meta');
-      metaDescription.setAttribute('name', 'description');
-      document.head.appendChild(metaDescription);
-    }
-    metaDescription.setAttribute('content', post.excerpt);
-    
-    // Set canonical link
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (!canonicalLink) {
-      canonicalLink = document.createElement('link');
-      canonicalLink.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonicalLink);
-    }
-    canonicalLink.setAttribute('href', `${window.location.origin}/blog/${slug}`);
-
-    // Add Open Graph meta tags
-    const ogTags = {
-      'og:title': post.title,
-      'og:description': post.excerpt,
-      'og:type': 'article',
-      'og:url': window.location.href,
-      'og:image': post.image_url || post.image || '',
-    };
-
-    Object.entries(ogTags).forEach(([property, content]) => {
-      let ogTag = document.querySelector(`meta[property="${property}"]`);
-      if (!ogTag) {
-        ogTag = document.createElement('meta');
-        ogTag.setAttribute('property', property);
-        document.head.appendChild(ogTag);
-      }
-      ogTag.setAttribute('content', content);
-    });
-    
-    return () => {
-      // Reset title when component unmounts
-      document.title = 'Yemalin';
-    };
-  }, [post]);
 
   return (
     <MainLayout>

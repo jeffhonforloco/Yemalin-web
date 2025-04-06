@@ -22,6 +22,16 @@ interface BlogPost {
 const BlogPreview = () => {
   const navigate = useNavigate();
   const [post, setPost] = useState<BlogPost | null>(null);
+  
+  // SEO effect for preview - always call useEffect
+  useEffect(() => {
+    // Set a temporary preview title
+    document.title = post ? `Preview: ${post.title} | Yemalin Journal` : 'Preview | Yemalin Journal';
+    
+    return () => {
+      document.title = 'Yemalin';
+    };
+  }, [post]);
 
   useEffect(() => {
     const previewData = localStorage.getItem('preview_post');
