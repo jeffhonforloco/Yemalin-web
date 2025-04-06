@@ -18,6 +18,21 @@ const heroImages = [
     url: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
     title: "Elevate Your Style",
     subtitle: "Timeless elegance meets contemporary design for the discerning client"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    title: "Modern Sophistication",
+    subtitle: "Embrace the future of fashion with cutting-edge designs and innovative materials"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    title: "Runway to Reality",
+    subtitle: "From catwalk to closet, experience the latest trends in high fashion"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    title: "Digital Elegance",
+    subtitle: "Where technology meets fashion in our exclusive online collections"
   }
 ];
 
@@ -86,7 +101,7 @@ const Hero = () => {
       </button>
       
       {/* Indicator dots */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-wrap justify-center gap-2 max-w-full px-4">
         {heroImages.map((_, index) => (
           <button
             key={index}
