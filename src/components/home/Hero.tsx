@@ -39,6 +39,16 @@ const heroImages = [
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [autoplayPaused, setAutoplayPaused] = useState(false);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  const goToSlide = (index: number) => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrentSlide(index);
+    setTimeout(() => setIsAnimating(false), 700); // Match transition duration
+  };
 
   const nextSlide = () => {
     if (isAnimating) return;
@@ -54,16 +64,55 @@ const Hero = () => {
     setTimeout(() => setIsAnimating(false), 700); // Match transition duration
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+    setAutoplayPaused(true);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStart - touchEnd > 75) {
+      // Swipe left
+      nextSlide();
+    } else if (touchEnd - touchStart > 75) {
+      // Swipe right
+      prevSlide();
+    }
+    
+    // Resume autoplay after 5 seconds of inactivity
+    setTimeout(() => setAutoplayPaused(false), 5000);
+  };
+
+  const handleMouseEnter = () => {
+    setAutoplayPaused(true);
+  };
+
+  const handleMouseLeave = () => {
+    setAutoplayPaused(false);
+  };
+
   useEffect(() => {
+    if (autoplayPaused) return;
+    
     const interval = setInterval(() => {
       nextSlide();
     }, 7000); // Change slide every 7 seconds
 
     return () => clearInterval(interval);
-  }, [currentSlide]);
+  }, [currentSlide, autoplayPaused]);
 
   return (
-    <section className="relative h-[80vh] min-h-[600px] overflow-hidden">
+    <section 
+      className="relative h-[80vh] min-h-[600px] overflow-hidden"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Slide images */}
       <div className="absolute inset-0 w-full h-full">
         {heroImages.map((image, index) => (
@@ -105,12 +154,7 @@ const Hero = () => {
         {heroImages.map((_, index) => (
           <button
             key={index}
-            onClick={() => {
-              if (isAnimating) return;
-              setIsAnimating(true);
-              setCurrentSlide(index);
-              setTimeout(() => setIsAnimating(false), 700);
-            }}
+            onClick={() => goToSlide(index)}
             className={`w-2 h-2 rounded-full transition-all duration-300 ${
               currentSlide === index ? 'bg-white w-6' : 'bg-white/50'
             }`}
