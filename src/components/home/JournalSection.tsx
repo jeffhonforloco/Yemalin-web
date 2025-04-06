@@ -5,7 +5,7 @@ import { ArrowRight, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { blogPosts } from '@/data/mockBlogPosts';
+import { blogPosts } from '@/data/mockBlogPostsData';
 
 const JournalSection = () => {
   // Display only the latest 3 blog posts
@@ -26,7 +26,7 @@ const JournalSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {recentPosts.map(post => (
             <Card key={post.id} className="overflow-hidden border-none shadow-sm group">
-              <Link to={post.link} className="block">
+              <Link to={post.link.substring(1)} className="block">
                 <div className="h-60 overflow-hidden">
                   <img 
                     src={post.image}

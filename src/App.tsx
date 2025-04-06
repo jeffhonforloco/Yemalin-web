@@ -16,6 +16,7 @@ import Shop from "./pages/Shop";
 import Designers from "./pages/Designers";
 import Collections from "./pages/Collections";
 import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
 import DesignerAuth from "./pages/DesignerAuth";
@@ -55,6 +56,7 @@ const App = () => (
             <Route path="/designers/apply" element={<DesignerApplication />} />
             <Route path="/collections" element={<Collections />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/about" element={<About />} />
             <Route path="/sustainability" element={<Sustainability />} />
             <Route path="/careers" element={<Career />} />
