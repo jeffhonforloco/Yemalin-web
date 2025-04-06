@@ -7,12 +7,20 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import YemalinLogo from '@/components/YemalinLogo';
 import { ChevronDown, Menu, ShoppingBag, User, Pencil } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
+import CartDrawer from '@/components/cart/CartDrawer';
 
 const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const { user, signOut } = useAuth();
   const location = useLocation();
+  const { totalItems, setIsCartOpen } = useCart();
+
+  const handleCartClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsCartOpen(true);
+  };
 
   return (
     <div className="bg-white border-b sticky top-0 z-50">
@@ -42,8 +50,18 @@ const Navbar = () => {
 
         {/* Desktop Action Buttons */}
         <div className="hidden md:flex items-center space-x-4">
-          <Button variant="ghost" size="icon">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            className="relative" 
+            onClick={handleCartClick}
+          >
             <ShoppingBag className="h-5 w-5" />
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                {totalItems > 99 ? '99+' : totalItems}
+              </span>
+            )}
           </Button>
           
           {user ? (
@@ -98,8 +116,18 @@ const Navbar = () => {
 
         {/* Mobile Navigation Trigger */}
         <div className="flex md:hidden items-center space-x-2">
-          <Button variant="ghost" size="icon">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="relative"
+            onClick={handleCartClick}
+          >
             <ShoppingBag className="h-5 w-5" />
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                {totalItems > 99 ? '99+' : totalItems}
+              </span>
+            )}
           </Button>
           <Sheet>
             <SheetTrigger asChild>
@@ -168,6 +196,9 @@ const Navbar = () => {
           </Sheet>
         </div>
       </div>
+      
+      {/* Cart Drawer */}
+      <CartDrawer />
     </div>
   );
 };

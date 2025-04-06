@@ -8,6 +8,7 @@ import { featuredProducts, newArrivals } from '@/data/mockProducts';
 import ProductGrid from '@/components/products/ProductGrid';
 import { Product } from '@/components/products/ProductCard';
 import NotFound from './NotFound';
+import { useCart } from '@/contexts/CartContext';
 
 const ProductDetail = () => {
   const { slug } = useParams();
@@ -15,6 +16,9 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [quantity, setQuantity] = useState(1);
+  
+  // Use the cart context
+  const { addItem } = useCart();
   
   // Combine all products
   const allProducts = [...featuredProducts, ...newArrivals];
@@ -46,8 +50,10 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    console.log(`Added ${quantity} of ${product?.name} to cart`);
-    // Here we would normally dispatch to a cart context or store
+    if (product) {
+      addItem(product, quantity);
+      console.info(`Added ${quantity} of ${product.name} to cart`);
+    }
   };
 
   if (loading) {

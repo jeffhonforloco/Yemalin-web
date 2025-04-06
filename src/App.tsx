@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { CartProvider } from "./contexts/CartContext";
 
 // Import pages
 import Index from "./pages/Index";
@@ -42,42 +43,44 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/designer-login" element={<DesignerAuth />} />
-            <Route path="/designers/login" element={<DesignerAuth />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dashboard/products" element={<DashboardProducts />} />
-            <Route path="/dashboard/orders" element={<DashboardOrders />} />
-            <Route path="/dashboard/analytics" element={<DashboardAnalytics />} />
-            <Route path="/dashboard/blog" element={<BlogManagement />} />
-            <Route path="/dashboard/blog/new" element={<BlogEditor />} />
-            <Route path="/dashboard/blog/edit/:id" element={<BlogEditor />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/shop/:slug" element={<ProductDetail />} />
-            <Route path="/designers" element={<Designers />} />
-            <Route path="/designers/apply" element={<DesignerApplication />} />
-            <Route path="/collections" element={<Collections />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/preview" element={<BlogPreview />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/sustainability" element={<Sustainability />} />
-            <Route path="/careers" element={<Career />} />
-            <Route path="/press" element={<Press />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/shipping" element={<ShippingReturns />} />
-            <Route path="/contact" element={<ContactUs />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <CartProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/designer-login" element={<DesignerAuth />} />
+              <Route path="/designers/login" element={<DesignerAuth />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard/products" element={<DashboardProducts />} />
+              <Route path="/dashboard/orders" element={<DashboardOrders />} />
+              <Route path="/dashboard/analytics" element={<DashboardAnalytics />} />
+              <Route path="/dashboard/blog" element={<BlogManagement />} />
+              <Route path="/dashboard/blog/new" element={<BlogEditor />} />
+              <Route path="/dashboard/blog/edit/:id" element={<BlogEditor />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/shop/:slug" element={<ProductDetail />} />
+              <Route path="/designers" element={<Designers />} />
+              <Route path="/designers/apply" element={<DesignerApplication />} />
+              <Route path="/collections" element={<Collections />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/preview" element={<BlogPreview />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/sustainability" element={<Sustainability />} />
+              <Route path="/careers" element={<Career />} />
+              <Route path="/press" element={<Press />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/shipping" element={<ShippingReturns />} />
+              <Route path="/contact" element={<ContactUs />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </CartProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
