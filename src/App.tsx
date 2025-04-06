@@ -22,6 +22,7 @@ import DesignerApplication from "./pages/DesignerApplication";
 import BlogManagement from "./pages/BlogManagement";
 import Sustainability from "./pages/Sustainability";
 import Career from "./pages/Career";
+import Press from "./pages/Press";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/sustainability" element={<Sustainability />} />
             <Route path="/careers" element={<Career />} />
+            <Route path="/press" element={<Press />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
