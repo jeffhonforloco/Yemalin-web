@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -477,7 +478,13 @@ const BlogManagement = () => {
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 {date?.from ? (
-                  format(date.from, "PPP")} - {date?.to ? format(date.to, "PPP") : format(date.from, "PPP")
+                  date?.to ? (
+                    <>
+                      {format(date.from, "PPP")} - {format(date.to, "PPP")}
+                    </>
+                  ) : (
+                    format(date.from, "PPP")
+                  )
                 ) : (
                   <span>Pick a date</span>
                 )}

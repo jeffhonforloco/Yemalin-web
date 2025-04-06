@@ -63,6 +63,60 @@ export type Database = {
         }
         Relationships: []
       }
+      designer_applications: {
+        Row: {
+          bio: string | null
+          brand_name: string | null
+          created_at: string | null
+          design_philosophy: string | null
+          designer_name: string | null
+          email: string | null
+          established: string | null
+          id: string
+          location: string | null
+          portfolio: string | null
+          social_media: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+          website: string | null
+        }
+        Insert: {
+          bio?: string | null
+          brand_name?: string | null
+          created_at?: string | null
+          design_philosophy?: string | null
+          designer_name?: string | null
+          email?: string | null
+          established?: string | null
+          id?: string
+          location?: string | null
+          portfolio?: string | null
+          social_media?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          bio?: string | null
+          brand_name?: string | null
+          created_at?: string | null
+          design_philosophy?: string | null
+          designer_name?: string | null
+          email?: string | null
+          established?: string | null
+          id?: string
+          location?: string | null
+          portfolio?: string | null
+          social_media?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
