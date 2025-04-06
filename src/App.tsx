@@ -20,6 +20,7 @@ import About from "./pages/About";
 import Auth from "./pages/Auth";
 import DesignerApplication from "./pages/DesignerApplication";
 import BlogManagement from "./pages/BlogManagement";
+import Sustainability from "./pages/Sustainability";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const App = () => (
             <Route path="/collections" element={<Collections />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/about" element={<About />} />
+            <Route path="/sustainability" element={<Sustainability />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
