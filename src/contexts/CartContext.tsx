@@ -17,6 +17,9 @@ interface CartContextType {
   totalPrice: number;
   isCartOpen: boolean;
   setIsCartOpen: (isOpen: boolean) => void;
+  likedProducts: string[];
+  toggleLikeProduct: (productId: string) => void;
+  isProductLiked: (productId: string) => boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -31,18 +34,24 @@ export const useCart = (): CartContextType => {
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [likedProducts, setLikedProducts] = useState<string[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { toast } = useToast();
 
-  // Load cart from localStorage when component mounts
+  // Load cart and likes from localStorage when component mounts
   useEffect(() => {
     try {
       const savedCart = localStorage.getItem('yemalin-cart');
       if (savedCart) {
         setItems(JSON.parse(savedCart));
       }
+      
+      const savedLikes = localStorage.getItem('yemalin-likes');
+      if (savedLikes) {
+        setLikedProducts(JSON.parse(savedLikes));
+      }
     } catch (error) {
-      console.error('Failed to load cart from localStorage:', error);
+      console.error('Failed to load data from localStorage:', error);
     }
   }, []);
 
@@ -54,6 +63,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Failed to save cart to localStorage:', error);
     }
   }, [items]);
+  
+  // Save likes to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem('yemalin-likes', JSON.stringify(likedProducts));
+    } catch (error) {
+      console.error('Failed to save likes to localStorage:', error);
+    }
+  }, [likedProducts]);
 
   // Calculate total items and price
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
@@ -125,6 +143,33 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       description: "All items have been removed from your shopping bag",
     });
   };
+  
+  // Like functionality
+  const toggleLikeProduct = (productId: string) => {
+    setLikedProducts(prevLikes => {
+      const isCurrentlyLiked = prevLikes.includes(productId);
+      
+      if (isCurrentlyLiked) {
+        // Remove from likes
+        toast({
+          title: "Removed from favorites",
+          description: "Item removed from your favorites",
+        });
+        return prevLikes.filter(id => id !== productId);
+      } else {
+        // Add to likes
+        toast({
+          title: "Added to favorites",
+          description: "Item added to your favorites",
+        });
+        return [...prevLikes, productId];
+      }
+    });
+  };
+  
+  const isProductLiked = (productId: string): boolean => {
+    return likedProducts.includes(productId);
+  };
 
   return (
     <CartContext.Provider
@@ -137,7 +182,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         totalItems,
         totalPrice,
         isCartOpen,
-        setIsCartOpen
+        setIsCartOpen,
+        likedProducts,
+        toggleLikeProduct,
+        isProductLiked
       }}
     >
       {children}

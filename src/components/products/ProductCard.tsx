@@ -1,6 +1,7 @@
 
 import { Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useCart } from '@/contexts/CartContext';
 
 export interface Product {
   id: string;
@@ -32,6 +33,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
     isNew,
     isSale
   } = product;
+  
+  const { toggleLikeProduct, isProductLiked } = useCart();
+  const isLiked = isProductLiked(id);
 
   // Format price based on currency
   const formatPrice = (amount: number) => {
@@ -41,6 +45,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
+  };
+  
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleLikeProduct(id);
   };
 
   return (
@@ -71,10 +81,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
         {/* Quick actions */}
         <div className="absolute top-2 right-2">
           <button 
-            aria-label="Add to wishlist"
-            className="bg-white p-2 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-50"
+            aria-label={isLiked ? "Remove from favorites" : "Add to favorites"}
+            className={`bg-white p-2 rounded-full shadow-sm transition-all ${isLiked ? 'opacity-100 bg-pink-50' : 'opacity-0 group-hover:opacity-100'} hover:bg-gray-50`}
+            onClick={handleLikeClick}
           >
-            <Heart size={18} />
+            <Heart 
+              size={18} 
+              fill={isLiked ? "currentColor" : "none"} 
+              className={isLiked ? "text-pink-500" : ""} 
+            />
           </button>
         </div>
         

@@ -9,6 +9,7 @@ import ProductGrid from '@/components/products/ProductGrid';
 import { Product } from '@/components/products/ProductCard';
 import NotFound from './NotFound';
 import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/hooks/use-toast';
 
 const ProductDetail = () => {
   const { slug } = useParams();
@@ -18,7 +19,8 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   
   // Use the cart context
-  const { addItem } = useCart();
+  const { addItem, toggleLikeProduct, isProductLiked } = useCart();
+  const { toast } = useToast();
   
   // Combine all products
   const allProducts = [...featuredProducts, ...newArrivals];
@@ -53,6 +55,47 @@ const ProductDetail = () => {
     if (product) {
       addItem(product, quantity);
       console.info(`Added ${quantity} of ${product.name} to cart`);
+    }
+  };
+  
+  const handleToggleLike = () => {
+    if (product) {
+      toggleLikeProduct(product.id);
+    }
+  };
+  
+  const handleShare = () => {
+    if (navigator.share && product) {
+      navigator.share({
+        title: product.name,
+        text: `Check out this ${product.name} from ${product.brand}`,
+        url: window.location.href
+      })
+      .then(() => {
+        toast({
+          title: "Shared successfully",
+          description: "Product has been shared",
+        });
+      })
+      .catch((error) => {
+        console.error('Error sharing:', error);
+        
+        // Fallback for browsers that don't support navigator.share
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          toast({
+            title: "Link copied",
+            description: "Product link has been copied to clipboard",
+          });
+        });
+      });
+    } else if (product) {
+      // Fallback for browsers that don't support navigator.share
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        toast({
+          title: "Link copied",
+          description: "Product link has been copied to clipboard",
+        });
+      });
     }
   };
 
@@ -167,10 +210,22 @@ const ProductDetail = () => {
                   <ShoppingBag className="mr-2" size={16} />
                   Add to Bag
                 </Button>
-                <Button variant="outline" className="border-black">
-                  <Heart size={16} />
+                <Button 
+                  variant="outline" 
+                  className={`border-black ${isProductLiked(product.id) ? 'bg-pink-50' : ''}`}
+                  onClick={handleToggleLike}
+                >
+                  <Heart 
+                    size={16} 
+                    fill={isProductLiked(product.id) ? "currentColor" : "none"} 
+                    className={isProductLiked(product.id) ? "text-pink-500" : ""}
+                  />
                 </Button>
-                <Button variant="outline" className="border-black">
+                <Button 
+                  variant="outline" 
+                  className="border-black"
+                  onClick={handleShare}
+                >
                   <Share2 size={16} />
                 </Button>
               </div>
