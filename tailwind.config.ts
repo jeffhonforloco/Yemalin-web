@@ -61,6 +61,8 @@ export default {
         yemalin: {
           black: "#000000",
           white: "#FFFFFF",
+          cream: "#F8F7F4",
+          sand: "#E6E2D7",
           grey: {
             100: "#F7F7F7",
             200: "#E6E6E6",
@@ -72,7 +74,9 @@ export default {
             800: "#333333",
             900: "#1A1A1A",
           },
-          accent: "#B8860B", // A touch of gold for luxury accent
+          accent: "#B8860B", // Gold for luxury accent
+          secondaryAccent: "#8A7968", // Sophisticated taupe as a secondary accent
+          tertiaryAccent: "#D4C9BE", // Soft beige as a subtle accent
         },
       },
       borderRadius: {
@@ -101,6 +105,14 @@ export default {
           "0%": { transform: "translateY(10px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
+        "slide-in-right": {
+          "0%": { transform: "translateX(100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        "zoom-in": {
+          "0%": { transform: "scale(0.95)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -108,8 +120,18 @@ export default {
         "fade-in": "fade-in 0.3s ease-out",
         "fade-out": "fade-out 0.3s ease-out",
         "slide-up": "slide-up 0.4s ease-out",
+        "slide-in-right": "slide-in-right 0.4s ease-out",
+        "zoom-in": "zoom-in 0.4s ease-out",
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            'blockquote p:first-of-type::before': { content: 'none' },
+            'blockquote p:last-of-type::after': { content: 'none' },
+          },
+        },
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require('@tailwindcss/typography')],
 } satisfies Config;
