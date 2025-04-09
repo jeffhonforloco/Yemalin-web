@@ -1,6 +1,4 @@
 
-import { useState } from 'react';
-import { subscribeToNewsletter } from '@/utils/subscriptionUtils';
 import { useToast } from '@/components/ui/use-toast';
 import EmailMarketingSignup from '../marketing/EmailMarketingSignup';
 

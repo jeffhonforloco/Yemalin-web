@@ -23,6 +23,8 @@ import SocialFeed from '@/components/social/SocialFeed';
 import ContentToProductSection from '../components/products/ContentToProductSection';
 import CollaborationTeaser from '../components/home/CollaborationTeaser';
 import EmailMarketingSignup from '../components/marketing/EmailMarketingSignup';
+import DesignerSpotlight from '../components/home/DesignerSpotlight';
+import MaterialStories from '../components/home/MaterialStories';
 
 const Index = () => {
   // Sample editorial content for the content-to-product section
@@ -57,6 +59,12 @@ const Index = () => {
         description="Get early access to new collections and exclusive offers when you join our community."
         source="Homepage Popup"
       />
+      
+      {/* New Section: Designer Spotlight */}
+      <DesignerSpotlight />
+      
+      {/* New Section: Material Stories */}
+      <MaterialStories />
       
       {/* New Section: Collaboration Teaser - Influencer & Guest Designer Drops */}
       <CollaborationTeaser />
