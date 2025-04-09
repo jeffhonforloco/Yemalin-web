@@ -18,15 +18,15 @@ interface ContentToProductSectionProps {
 }
 
 /**
- * ContentToProductSection - A versatile section that combines editorial content
- * with product showcases, creating a smooth transition between content and commerce.
+ * ContentToProductSection - A section that weaves narrative and product discovery together,
+ * creating an immersive journey from inspiration to aspiration.
  */
 const ContentToProductSection = ({
   title,
   subtitle,
   content,
   product,
-  ctaText = "Shop now",
+  ctaText = "Explore this narrative",
   ctaLink = "/shop",
   reversed = false,
   className = ''

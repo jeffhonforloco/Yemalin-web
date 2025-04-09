@@ -6,33 +6,33 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 const heroImages = [
   {
     url: "https://images.unsplash.com/photo-1509631179647-0177331693ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1288&q=80",
-    title: "Discover Curated Luxury",
-    subtitle: "Exclusive designer collections from the world's most prestigious fashion houses",
-    cta: "SS24 Collection"
+    title: "The Art of Self-Expression",
+    subtitle: "Discover pieces that tell your story through meticulous craftsmanship and timeless design",
+    cta: "Explore Our Philosophy"
   },
   {
     url: "https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
-    title: "Artisan Craftsmanship",
-    subtitle: "Meticulous attention to detail and exceptional quality in every piece",
-    cta: "Discover Artisans"
+    title: "Heritage Meets Innovation",
+    subtitle: "Where traditional artisan techniques blend with contemporary vision to create tomorrow's classics",
+    cta: "Meet Our Artisans"
   },
   {
     url: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-    title: "Elevate Your Style",
-    subtitle: "Timeless elegance meets contemporary design for the discerning client",
-    cta: "Style Guide"
+    title: "Curated For Your Journey",
+    subtitle: "Thoughtfully selected pieces that evolve with you, becoming cherished chapters in your personal narrative",
+    cta: "Style Stories"
   },
   {
     url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-    title: "Modern Sophistication",
-    subtitle: "Embrace the future of fashion with cutting-edge designs and innovative materials",
-    cta: "Upcoming Drops"
+    title: "Conscious Elegance",
+    subtitle: "Embrace a lifestyle that values intention, quality, and the quiet luxury of mindful choices",
+    cta: "Our Values"
   },
   {
     url: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-    title: "Runway to Reality",
-    subtitle: "From catwalk to closet, experience the latest trends in high fashion",
-    cta: "Runway Looks"
+    title: "Beyond Fashion",
+    subtitle: "A vision of living artfully—where your wardrobe becomes an extension of your authentic self",
+    cta: "Lifestyle Journal"
   }
 ];
 
@@ -123,7 +123,7 @@ const Hero = () => {
           >
             <img
               src={image.url}
-              alt={`Luxury Fashion ${index + 1}`}
+              alt={`Yemalin Lifestyle ${index + 1}`}
               className={`w-full h-full object-cover object-center transition-transform duration-${animationDuration} ${
                 currentSlide === index ? 'scale-100' : 'scale-110'
               }`}
@@ -165,7 +165,7 @@ const Hero = () => {
       {/* Hero content */}
       <div className="absolute inset-0 flex items-center justify-center z-20">
         <div className="text-center px-4 max-w-2xl animate-fade-in">
-          <p className="text-white text-sm uppercase tracking-widest mb-3 opacity-80">Yemalin Presents</p>
+          <p className="text-white text-sm uppercase tracking-widest mb-3 opacity-80">The Yemalin Experience</p>
           <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-white mb-4 drop-shadow-md">
             {heroImages[currentSlide].title}
           </h1>
@@ -177,7 +177,7 @@ const Hero = () => {
               to="/shop" 
               className="bg-white text-black px-8 py-3 text-sm font-medium hover:bg-black hover:text-white transition-colors"
             >
-              Shop Collection
+              Discover Collections
             </Link>
             <Link 
               to="/blog" 

@@ -16,8 +16,8 @@ interface EmailMarketingSignupProps {
 }
 
 const EmailMarketingSignup = ({
-  title = "Join Our Community",
-  description = "Sign up to receive updates on new releases, collaborations, and exclusive content",
+  title = "Elevate Your Style",
+  description = "Join our curated world of fashion inspiration, artisanal craftsmanship, and cultural discovery",
   buttonText = "Subscribe",
   source = "Generic Form",
   compact = false,
@@ -40,8 +40,8 @@ const EmailMarketingSignup = ({
       
       if (success) {
         toast({
-          title: "Subscription successful!",
-          description: "Thank you for subscribing to our newsletter.",
+          title: "Welcome to the Yemalin community",
+          description: "You've taken the first step in your style evolution journey.",
           variant: "default",
         });
         setEmail('');
@@ -49,8 +49,8 @@ const EmailMarketingSignup = ({
     } catch (error) {
       console.error('Error:', error);
       toast({
-        title: "Subscription failed",
-        description: "Please try again later.",
+        title: "Subscription couldn't be completed",
+        description: "Please try again shortly.",
         variant: "destructive",
       });
     } finally {
@@ -85,7 +85,7 @@ const EmailMarketingSignup = ({
           className={compact ? 'px-4' : ''}
           variant={darkMode ? "outline" : "default"}
         >
-          {isSubmitting ? 'Subscribing...' : buttonText}
+          {isSubmitting ? 'Joining...' : buttonText}
         </Button>
       </form>
     </div>

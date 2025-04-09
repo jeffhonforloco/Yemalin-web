@@ -7,18 +7,19 @@ const OurJourney = () => {
       <div className="luxury-container">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
+            <p className="text-yemalin-accent font-medium mb-2">Our Story</p>
             <h2 className="text-2xl md:text-3xl font-display mb-6">The Yemalin Journey</h2>
             <p className="mb-4">
-              Yemalin was born from founder Isabella Chen's vision to create a digital destination that rivals the experience of the world's finest boutiques, while providing independent designers with a platform to reach a global audience.
+              Yemalin began as a whispered idea in founder Isabella Chen's mind—a vision of creating not just another fashion platform, but a living narrative where exceptional design and authentic storytelling intertwine.
             </p>
             <p className="mb-4">
-              After years working in luxury fashion, Isabella saw a gap in the market for a truly curated online space that could connect discerning customers with extraordinary independent designers whose work might otherwise remain undiscovered.
+              After years immersed in luxury fashion houses from Paris to Tokyo, Isabella recognized a void in the digital landscape. She envisioned a space that could capture the intimate experience of discovering a hidden boutique while wandering cobblestone streets—that moment when you find something extraordinarily personal amidst the ordinary.
             </p>
             <p className="mb-4">
-              The name "Yemalin" combines elements from multiple languages, reflecting our global perspective and the diverse influences that shape contemporary luxury.
+              The name "Yemalin" draws from ancient words for "artful living" and "enduring beauty," embodying our belief that true style transcends seasons and trends to become part of your evolving personal story.
             </p>
             <p>
-              Today, we're proud to feature designers from over 20 countries, each bringing their unique cultural heritage and creative vision to our carefully curated collections.
+              Today, we curate not just garments but the stories behind them—connecting discerning individuals with independent visionaries across five continents whose creations become chapters in your own unfolding narrative.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4">

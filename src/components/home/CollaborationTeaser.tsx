@@ -12,21 +12,21 @@ const upcomingCollaborations = [
   {
     id: 1,
     name: "Sofia Rodriguez",
-    type: "Influencer",
+    type: "Cultural Curator",
     image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&auto=format&fit=crop",
-    collectionName: "Summer Essentials",
+    collectionName: "Mediterranean Memoir",
     dropDate: "June 15, 2025",
-    description: "A curated collection of sustainable summer pieces inspired by Mediterranean travels.",
+    description: "A sensory journey through coastal villages and sun-drenched afternoons, translated into pieces that capture the essence of unhurried living.",
     link: "/landing/product-launch",
   },
   {
     id: 2,
     name: "Marcus Chen",
-    type: "Guest Designer",
+    type: "Visionary Designer",
     image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=256&auto=format&fit=crop",
-    collectionName: "Urban Explorer",
+    collectionName: "Urban Sanctuary",
     dropDate: "July 24, 2025",
-    description: "Innovative streetwear designed for the modern city dweller with sustainability at its core.",
+    description: "Thoughtfully created pieces that provide moments of tranquility and conscious expression for those navigating the modern metropolitan landscape.",
     link: "/landing/product-launch",
   },
 ];
@@ -38,9 +38,9 @@ const CollaborationTeaser = () => {
     <section className="py-16 bg-yemalin-cream">
       <div className="luxury-container">
         <div className="mb-12 text-center">
-          <h2 className="font-display text-3xl md:text-4xl mb-3">Upcoming Collaborations</h2>
+          <h2 className="font-display text-3xl md:text-4xl mb-3">Creative Dialogues</h2>
           <p className="text-yemalin-grey-600 max-w-2xl mx-auto">
-            Exclusive drops created in partnership with leading fashion influencers and guest designers
+            Immersive collections born from conversations between visionary minds and diverse cultural perspectives
           </p>
         </div>
         
@@ -57,26 +57,26 @@ const CollaborationTeaser = () => {
                 </Avatar>
                 <div>
                   <h3 className="font-medium text-lg md:text-xl">{collab.name}</h3>
-                  <p className="text-yemalin-accent text-sm">{collab.type} Collaboration</p>
+                  <p className="text-yemalin-accent text-sm">{collab.type}</p>
                 </div>
               </div>
               
               <Separator className="mb-6" />
               
               <h4 className="text-xl md:text-2xl font-display mb-2">
-                The {collab.collectionName} Collection
+                {collab.collectionName}
               </h4>
               <p className="text-sm text-gray-600 mb-4">{collab.description}</p>
               
               <div className="flex items-center text-sm mb-6">
                 <Calendar size={16} className="mr-2 text-yemalin-accent" />
-                <span>Dropping {collab.dropDate}</span>
+                <span>Unveiling {collab.dropDate}</span>
               </div>
               
               <div className="flex flex-col sm:flex-row items-center gap-3">
                 <Button asChild className="w-full sm:w-auto">
                   <Link to={collab.link} className="flex items-center justify-center">
-                    Get Early Access <ArrowRight size={16} className="ml-2" />
+                    Join the Preview <ArrowRight size={16} className="ml-2" />
                   </Link>
                 </Button>
                 
@@ -84,7 +84,7 @@ const CollaborationTeaser = () => {
                   variant="outline" 
                   className="w-full sm:w-auto border-yemalin-black hover:bg-yemalin-black hover:text-white"
                 >
-                  <Bell size={16} className="mr-2" /> Notify Me
+                  <Bell size={16} className="mr-2" /> Reserve Your Experience
                 </Button>
               </div>
             </div>
@@ -94,7 +94,7 @@ const CollaborationTeaser = () => {
         <div className="mt-10 text-center">
           <Button asChild variant="outline" size={isMobile ? "default" : "lg"} className="border-yemalin-black hover:bg-yemalin-black hover:text-white">
             <Link to="/collaborations">
-              View All Upcoming Collaborations <ArrowRight size={16} className="ml-2" />
+              Explore All Creative Dialogues <ArrowRight size={16} className="ml-2" />
             </Link>
           </Button>
         </div>
