@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import SocialShareButtons from "../social/SocialShareButtons";
+import { Link } from "react-router-dom";
 
 interface BlogSidebarProps {
   author?: string;
@@ -80,13 +81,13 @@ const BlogSidebar = ({
         <h3 className="font-display text-xl mb-4">Related Categories</h3>
         <div className="flex flex-wrap gap-2">
           {relatedCategories.map((relatedCategory, index) => (
-            <a 
+            <Link 
               key={index} 
-              href={`/blog?category=${encodeURIComponent(relatedCategory)}`}
+              to={`/blog/category/${encodeURIComponent(relatedCategory)}`}
               className="bg-yemalin-grey-100 px-3 py-1 text-xs font-medium hover:bg-gray-200 transition-colors"
             >
               {relatedCategory}
-            </a>
+            </Link>
           ))}
         </div>
       </div>
