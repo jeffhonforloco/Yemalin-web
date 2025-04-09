@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
 
 const ExclusiveDrop = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,16 +39,19 @@ const ExclusiveDrop = () => {
             </p>
             <div className="flex flex-wrap gap-4">
               <Button 
-                onClick={() => setIsOpen(true)}
+                component={Link}
+                to="/early-access"
                 className="bg-white text-black hover:bg-yemalin-accent hover:text-white transition-colors"
+                asChild
               >
-                Get Early Access
+                <Link to="/early-access">Get Early Access</Link>
               </Button>
               <Button 
                 variant="outline" 
                 className="text-white border-white hover:bg-white hover:text-black"
+                onClick={() => setIsOpen(true)}
               >
-                Learn More
+                Join Waitlist
               </Button>
             </div>
             

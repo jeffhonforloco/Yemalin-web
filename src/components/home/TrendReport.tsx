@@ -2,6 +2,8 @@
 import React from 'react';
 import { LeadMagnet } from '@/components/marketing/LeadMagnet';
 import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const TrendReport = () => {
   return (
@@ -35,6 +37,15 @@ const TrendReport = () => {
                 <span>Practical styling tips for incorporating trends</span>
               </li>
             </ul>
+            
+            <Button 
+              className="bg-yemalin-black hover:bg-yemalin-grey-800"
+              asChild
+            >
+              <Link to="/trend-report">
+                Learn More & Download
+              </Link>
+            </Button>
           </div>
           
           <div className="bg-yemalin-grey-100 p-8">

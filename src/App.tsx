@@ -36,6 +36,8 @@ import ShippingReturns from "./pages/ShippingReturns";
 import ContactUs from "./pages/ContactUs";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import EarlyAccessLanding from "./pages/EarlyAccessLanding";
+import TrendReportLanding from "./pages/TrendReportLanding";
 
 const queryClient = new QueryClient();
 
@@ -77,6 +79,11 @@ const App = () => (
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
+              
+              {/* Landing Pages */}
+              <Route path="/early-access" element={<EarlyAccessLanding />} />
+              <Route path="/trend-report" element={<TrendReportLanding />} />
+              
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
