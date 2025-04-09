@@ -3,6 +3,13 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import analytics from '../utils/analytics';
 
+// Add this declaration to handle the custom property on Window interface
+declare global {
+  interface Window {
+    yemalin_engagement_tracking?: boolean;
+  }
+}
+
 /**
  * Hook to track page views and provide analytics utilities
  */
@@ -18,10 +25,9 @@ const useAnalytics = () => {
   // Start tracking engagement time on component mount
   useEffect(() => {
     // Start engagement tracking only once
-    const engagementTrackingKey = 'yemalin_engagement_tracking';
-    if (!window[engagementTrackingKey as any]) {
+    if (!window.yemalin_engagement_tracking) {
       analytics.trackEngagementTime();
-      window[engagementTrackingKey as any] = true;
+      window.yemalin_engagement_tracking = true;
     }
   }, []);
   

@@ -5,7 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
 import useAnalytics from '@/hooks/useAnalytics';
-import { PollIcon } from 'lucide-react';
+import { BarChart3 } from 'lucide-react';
 
 export interface PollOption {
   id: string;
@@ -84,7 +84,7 @@ const StylePoll = ({
   return (
     <div className={`border rounded-lg p-6 bg-white ${className}`}>
       <div className="flex items-center gap-2 mb-4">
-        <PollIcon className="h-5 w-5" />
+        <BarChart3 className="h-5 w-5" />
         <h3 className="text-lg font-medium">{question}</h3>
       </div>
       
