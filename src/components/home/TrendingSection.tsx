@@ -63,8 +63,8 @@ const TrendingSection = () => {
                 </div>
                 <CardContent className="pt-4">
                   <p className="text-sm text-yemalin-grey-600 mb-3">{topic.description}</p>
-                  <div className="flex items-center text-yemalin-accent text-sm">
-                    <span className="mr-1">Read More</span>
+                  <div className="flex items-center text-yemalin-accent text-sm font-medium">
+                    <span className="mr-1">Explore Articles</span>
                     <ArrowRight size={14} />
                   </div>
                 </CardContent>
