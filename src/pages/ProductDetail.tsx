@@ -10,6 +10,8 @@ import { Product } from '@/components/products/ProductCard';
 import NotFound from './NotFound';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
+import useAnalytics from '@/hooks/useAnalytics';
+import SocialShareButtons from '@/components/social/SocialShareButtons';
 
 const ProductDetail = () => {
   const { slug } = useParams();
@@ -17,10 +19,12 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [quantity, setQuantity] = useState(1);
+  const [showShareOptions, setShowShareOptions] = useState(false);
   
-  // Use the cart context
+  // Use the cart context and analytics
   const { addItem, toggleLikeProduct, isProductLiked } = useCart();
   const { toast } = useToast();
+  const { trackEvent, trackSocialInteraction } = useAnalytics();
   
   // Combine all products
   const allProducts = [...featuredProducts, ...newArrivals];
@@ -44,6 +48,18 @@ const ProductDetail = () => {
     setLoading(false);
   }, [slug]);
 
+  useEffect(() => {
+    // Track product detail view
+    if (product) {
+      trackEvent('product_detail_view', {
+        product_id: product.id,
+        product_name: product.name,
+        product_brand: product.brand,
+        product_price: product.price
+      });
+    }
+  }, [product]);
+
   const handleQuantityChange = (change: number) => {
     const newQuantity = quantity + change;
     if (newQuantity >= 1 && newQuantity <= 10) {
@@ -54,6 +70,13 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (product) {
       addItem(product, quantity);
+      trackEvent('add_to_cart', {
+        product_id: product.id,
+        product_name: product.name,
+        product_brand: product.brand,
+        product_price: product.price,
+        quantity
+      });
       console.info(`Added ${quantity} of ${product.name} to cart`);
     }
   };
@@ -61,40 +84,20 @@ const ProductDetail = () => {
   const handleToggleLike = () => {
     if (product) {
       toggleLikeProduct(product.id);
+      trackSocialInteraction(isProductLiked(product.id) ? 'like' : 'unlike', {
+        product_id: product.id,
+        product_name: product.name
+      });
     }
   };
   
-  const handleShare = () => {
-    if (navigator.share && product) {
-      navigator.share({
-        title: product.name,
-        text: `Check out this ${product.name} from ${product.brand}`,
-        url: window.location.href
-      })
-      .then(() => {
-        toast({
-          title: "Shared successfully",
-          description: "Product has been shared",
-        });
-      })
-      .catch((error) => {
-        console.error('Error sharing:', error);
-        
-        // Fallback for browsers that don't support navigator.share
-        navigator.clipboard.writeText(window.location.href).then(() => {
-          toast({
-            title: "Link copied",
-            description: "Product link has been copied to clipboard",
-          });
-        });
-      });
-    } else if (product) {
-      // Fallback for browsers that don't support navigator.share
-      navigator.clipboard.writeText(window.location.href).then(() => {
-        toast({
-          title: "Link copied",
-          description: "Product link has been copied to clipboard",
-        });
+  const toggleShareOptions = () => {
+    setShowShareOptions(!showShareOptions);
+    
+    if (!showShareOptions && product) {
+      trackEvent('product_share_options_opened', {
+        product_id: product.id,
+        product_name: product.name
       });
     }
   };
@@ -224,11 +227,28 @@ const ProductDetail = () => {
                 <Button 
                   variant="outline" 
                   className="border-black"
-                  onClick={handleShare}
+                  onClick={toggleShareOptions}
                 >
                   <Share2 size={16} />
                 </Button>
               </div>
+              
+              {/* Social sharing section */}
+              {showShareOptions && (
+                <div className="mb-8 p-4 bg-gray-50 rounded-lg">
+                  <h3 className="text-sm font-medium mb-3">Share this {product.name}</h3>
+                  <SocialShareButtons 
+                    contentType="product"
+                    contentId={product.id}
+                    url={window.location.href}
+                    title={`${product.brand} - ${product.name}`}
+                    description={`Check out this amazing ${product.name} from ${product.brand}`}
+                    imageUrl={product.imageUrl}
+                    showLabels
+                    className="flex-wrap"
+                  />
+                </div>
+              )}
               
               {/* Product details */}
               <div className="border-t border-gray-200 pt-6">

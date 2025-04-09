@@ -7,6 +7,7 @@ class AnalyticsService {
   private googleAnalyticsId?: string;
   private initialized: boolean = false;
   private interactionEvents: Set<string> = new Set();
+  private socialInteractions: Set<string> = new Set();
 
   /**
    * Initialize analytics with configuration
@@ -187,11 +188,59 @@ class AnalyticsService {
    * @param type Type of social interaction (like, share, comment)
    * @param data Additional data about the interaction
    */
-  trackSocialInteraction(type: 'like' | 'share' | 'comment' | 'poll_vote', data?: EventData) {
+  trackSocialInteraction(
+    type: 'like' | 'share' | 'comment' | 'poll_vote' | 'social_share',
+    data?: EventData
+  ) {
     this.trackEvent('social_interaction', {
       interaction_type: type,
       ...data
     });
+  }
+
+  /**
+   * Track social media shares
+   * @param platform Social media platform
+   * @param contentType Type of content being shared
+   * @param contentId Identifier of the content
+   */
+  trackSocialShare(platform: string, contentType: string, contentId: string, url: string) {
+    this.trackEvent('social_share', {
+      platform,
+      content_type: contentType,
+      content_id: contentId,
+      url
+    });
+
+    // Additional tracking for social interaction
+    this.trackSocialInteraction('social_share', {
+      platform,
+      content_type: contentType,
+      content_id: contentId
+    });
+  }
+
+  /**
+   * Setup social share buttons with tracking
+   * @param element Container element with social buttons
+   * @param contentType Type of content
+   * @param contentId Content identifier
+   */
+  setupSocialTracking(element: HTMLElement, contentType: string, contentId: string) {
+    if (this.socialInteractions.has(`${contentType}-${contentId}`)) return;
+    
+    const buttons = element.querySelectorAll('[data-social-platform]');
+    buttons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        const platform = (button as HTMLElement).dataset.socialPlatform;
+        if (platform) {
+          const url = (button as HTMLElement).dataset.shareUrl || window.location.href;
+          this.trackSocialShare(platform, contentType, contentId, url as string);
+        }
+      });
+    });
+    
+    this.socialInteractions.add(`${contentType}-${contentId}`);
   }
 }
 

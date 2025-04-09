@@ -19,6 +19,7 @@ import ExclusiveDrop from '../components/home/ExclusiveDrop';
 import ContentCalendar from '../components/blog/ContentCalendar';
 import TrendReport from '../components/home/TrendReport';
 import PopupLeadMagnet from '../components/marketing/PopupLeadMagnet';
+import SocialFeed from '@/components/social/SocialFeed';
 
 const Index = () => {
   return (
@@ -58,6 +59,17 @@ const Index = () => {
               </Button>
             </Link>
           </div>
+        </div>
+      </section>
+      
+      {/* Social Media Feed */}
+      <section className="py-20 bg-white">
+        <div className="luxury-container">
+          <SocialFeed 
+            title="Join Our Community" 
+            description="See what fashion enthusiasts are sharing about Yemalin on social media"
+            hashtag="YemalinStyle"
+          />
         </div>
       </section>
       

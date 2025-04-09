@@ -5,6 +5,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import useAnalytics from '@/hooks/useAnalytics';
+import ProductShareModal from '../social/ProductShareModal';
 
 export interface Product {
   id: string;
@@ -43,6 +44,7 @@ const ProductCard = ({ product, categoryContext }: ProductCardProps) => {
   const isLiked = isProductLiked(id);
   const [isHovered, setIsHovered] = useState(false);
   const { trackEvent } = useAnalytics();
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // Format price based on currency
   const formatPrice = (amount: number) => {
@@ -68,40 +70,17 @@ const ProductCard = ({ product, categoryContext }: ProductCardProps) => {
     });
   };
   
-  const handleShareClick = async (e: React.MouseEvent) => {
+  const handleShareClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    const shareUrl = `${window.location.origin}/shop/${slug}`;
-    const shareTitle = `${brand} - ${name}`;
+    // Open the share modal
+    setShowShareModal(true);
     
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: shareTitle,
-          url: shareUrl,
-        });
-        trackEvent('product_share', {
-          product_id: id,
-          product_name: name,
-          share_method: 'native'
-        });
-      } else {
-        // Fallback to clipboard
-        await navigator.clipboard.writeText(shareUrl);
-        toast({
-          title: "Link copied",
-          description: "Product link has been copied to clipboard",
-        });
-        trackEvent('product_share', {
-          product_id: id,
-          product_name: name,
-          share_method: 'clipboard'
-        });
-      }
-    } catch (error) {
-      console.error("Error sharing:", error);
-    }
+    trackEvent('product_share_open', {
+      product_id: id,
+      product_name: name
+    });
   };
 
   return (
@@ -201,6 +180,13 @@ const ProductCard = ({ product, categoryContext }: ProductCardProps) => {
           )}
         </div>
       </div>
+
+      {/* Share Modal */}
+      <ProductShareModal 
+        product={product} 
+        isOpen={showShareModal} 
+        onClose={() => setShowShareModal(false)} 
+      />
     </div>
   );
 };

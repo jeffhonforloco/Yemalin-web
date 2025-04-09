@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
@@ -14,14 +13,16 @@ import SEO from '@/components/SEO';
 import useAnalytics from '@/hooks/useAnalytics';
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
+import SocialShareButtons from '@/components/social/SocialShareButtons';
 
 const BlogPost = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { post, loading } = useBlogPost(slug);
-  const { trackEvent } = useAnalytics();
+  const { trackEvent, trackSocialInteraction } = useAnalytics();
   const [reactions, setReactions] = useState({ likes: 0, dislikes: 0 });
   const [userReaction, setUserReaction] = useState<'like' | 'dislike' | null>(null);
+  const [showShareOptions, setShowShareOptions] = useState(false);
   
   // Style poll sample data
   const pollData = {
@@ -99,7 +100,6 @@ const BlogPost = () => {
   if (loading) {
     return (
       <MainLayout>
-        {/* SEO for loading state */}
         <SEO 
           title="Loading Article"
           description="Loading Yemalin Journal article"
@@ -116,7 +116,6 @@ const BlogPost = () => {
   if (!post) {
     return (
       <MainLayout>
-        {/* SEO for 404 state */}
         <SEO 
           title="Article Not Found"
           description="We couldn't find the article you were looking for."
@@ -135,38 +134,18 @@ const BlogPost = () => {
     );
   }
 
-  // Function to handle sharing
-  const handleShare = async () => {
-    const shareUrl = window.location.href;
-    const shareTitle = post.title;
+  const toggleShareOptions = () => {
+    setShowShareOptions(!showShareOptions);
     
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: shareTitle,
-          url: shareUrl,
-        });
-        trackEvent('share_article', { 
-          title: shareTitle,
-          method: 'native_share'
-        });
-      } else {
-        // Fallback to clipboard
-        await navigator.clipboard.writeText(shareUrl);
-        alert("Article link copied to clipboard");
-        trackEvent('share_article', { 
-          title: shareTitle,
-          method: 'clipboard_copy'
-        });
-      }
-    } catch (error) {
-      console.error("Error sharing:", error);
+    if (!showShareOptions) {
+      trackEvent('share_options_opened', { 
+        content_type: 'article',
+        content_id: slug
+      });
     }
   };
   
-  // Handle user reactions (likes/dislikes)
   const handleReaction = (type: 'like' | 'dislike') => {
-    // If user already reacted with the same reaction, remove it
     if (userReaction === type) {
       setUserReaction(null);
       setReactions({
@@ -182,14 +161,12 @@ const BlogPost = () => {
       return;
     }
     
-    // If user is switching reactions
     if (userReaction) {
       setReactions({
         likes: userReaction === 'like' ? reactions.likes - 1 : reactions.likes + (type === 'like' ? 1 : 0),
         dislikes: userReaction === 'dislike' ? reactions.dislikes - 1 : reactions.dislikes + (type === 'dislike' ? 1 : 0)
       });
     } else {
-      // First time reacting
       setReactions({
         ...reactions,
         [type + 's']: reactions[type === 'like' ? 'likes' : 'dislikes'] + 1
@@ -198,7 +175,7 @@ const BlogPost = () => {
     
     setUserReaction(type);
     
-    trackEvent('post_reaction', { 
+    trackSocialInteraction('like', { 
       post_id: slug,
       reaction_type: type
     });
@@ -212,7 +189,6 @@ const BlogPost = () => {
 
   return (
     <MainLayout>
-      {/* SEO with structured data */}
       <SEO 
         title={post.title}
         description={post.excerpt}
@@ -223,7 +199,6 @@ const BlogPost = () => {
         structuredData={structuredData}
       />
       
-      {/* Hero Section */}
       <div className="w-full">
         <div className="relative h-[70vh] overflow-hidden">
           <img 
@@ -263,15 +238,28 @@ const BlogPost = () => {
                   {post.excerpt}
                 </p>
                 
-                <div className="flex items-center mb-2">
-                  <img 
-                    src={post.author_image || post.authorImage}
-                    alt={post.author}
-                    className="w-12 h-12 rounded-full mr-4 object-cover border-2 border-white/40"
-                  />
-                  <div>
-                    <p className="text-white font-medium">{post.author}</p>
-                    <p className="text-white/70 text-sm">Fashion Editor</p>
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center mb-2">
+                    <img 
+                      src={post.author_image || post.authorImage}
+                      alt={post.author}
+                      className="w-12 h-12 rounded-full mr-4 object-cover border-2 border-white/40"
+                    />
+                    <div>
+                      <p className="text-white font-medium">{post.author}</p>
+                      <p className="text-white/70 text-sm">Fashion Editor</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white/80 backdrop-blur-sm rounded-md p-2">
+                    <SocialShareButtons 
+                      contentType="article"
+                      contentId={slug || 'unknown'}
+                      title={post.title}
+                      description={post.excerpt}
+                      imageUrl={post.image_url || post.image}
+                      size="sm"
+                    />
                   </div>
                 </div>
               </div>
@@ -280,22 +268,34 @@ const BlogPost = () => {
         </div>
       </div>
       
-      {/* Article Content */}
       <div className="luxury-container py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Main Content */}
           <div className="lg:col-span-8">
-            {/* Share button for mobile */}
             <div className="flex justify-end mb-8 lg:hidden">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleShare}
-                className="flex items-center gap-2"
-                data-track="share_article_mobile"
-              >
-                <Share size={16} /> Share Article
-              </Button>
+              {showShareOptions ? (
+                <div className="w-full p-4 bg-gray-50 rounded-lg">
+                  <h4 className="text-sm font-medium mb-3">Share this article</h4>
+                  <SocialShareButtons 
+                    contentType="article"
+                    contentId={slug || 'unknown'}
+                    title={post.title}
+                    description={post.excerpt}
+                    imageUrl={post.image_url || post.image}
+                    showLabels
+                    size="sm"
+                  />
+                </div>
+              ) : (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={toggleShareOptions}
+                  className="flex items-center gap-2"
+                  data-track="share_article_mobile"
+                >
+                  <Share size={16} /> Share Article
+                </Button>
+              )}
             </div>
             
             <BlogContent
@@ -305,7 +305,6 @@ const BlogPost = () => {
               publishDate={post.date}
             />
             
-            {/* User reactions */}
             <div className="flex items-center justify-center gap-8 my-12 p-6 border rounded-lg bg-gray-50">
               <div className="text-center">
                 <Button 
@@ -334,7 +333,6 @@ const BlogPost = () => {
               </div>
             </div>
             
-            {/* Style Poll component */}
             <div className="my-12">
               <h3 className="text-xl font-medium mb-4">Reader Opinion</h3>
               <StylePoll 
@@ -345,7 +343,6 @@ const BlogPost = () => {
               />
             </div>
             
-            {/* Image Style Poll */}
             <div className="my-12">
               <h3 className="text-xl font-medium mb-4">Style Selection</h3>
               <StylePoll 
@@ -357,7 +354,20 @@ const BlogPost = () => {
               />
             </div>
             
-            {/* Article tags */}
+            <div className="my-12 p-6 bg-yemalin-grey-100 rounded-lg">
+              <h3 className="text-xl font-medium mb-4">Enjoyed this article? Share it!</h3>
+              <SocialShareButtons 
+                contentType="article"
+                contentId={slug || 'unknown'}
+                title={post.title}
+                description={post.excerpt}
+                imageUrl={post.image_url || post.image}
+                showLabels
+                size="md"
+                variant="default"
+              />
+            </div>
+            
             <div className="mt-12 pt-8 border-t">
               <h4 className="text-sm font-medium mb-3">Related Topics</h4>
               <div className="flex flex-wrap gap-2">
@@ -368,7 +378,6 @@ const BlogPost = () => {
               </div>
             </div>
             
-            {/* Comment Section component */}
             <Separator className="my-12" />
             <CommentSection 
               postId={slug || 'unknown'} 
@@ -376,7 +385,6 @@ const BlogPost = () => {
             />
           </div>
           
-          {/* Sidebar */}
           <div className="lg:col-span-4">
             <div className="sticky top-24">
               <BlogSidebar
@@ -385,17 +393,31 @@ const BlogPost = () => {
                 category={post.category}
                 postTitle={post.title}
                 postUrl={window.location.href}
+                postId={slug || 'unknown'}
               />
               
-              {/* Share button for desktop */}
               <div className="hidden lg:block mt-8">
                 <Button 
-                  onClick={handleShare}
+                  onClick={toggleShareOptions}
                   className="w-full flex items-center justify-center gap-2 bg-yemalin-black hover:bg-yemalin-grey-800"
                   data-track="share_article_desktop"
                 >
                   <Share size={16} /> Share This Article
                 </Button>
+                
+                {showShareOptions && (
+                  <div className="w-full mt-4 p-4 bg-gray-50 rounded-lg">
+                    <SocialShareButtons 
+                      contentType="article"
+                      contentId={slug || 'unknown'}
+                      title={post.title}
+                      description={post.excerpt}
+                      imageUrl={post.image_url || post.image}
+                      showLabels
+                      className="flex-wrap"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -403,7 +425,6 @@ const BlogPost = () => {
         
         <Separator className="my-16" />
         
-        {/* Newsletter Section */}
         <BlogNewsletter />
       </div>
     </MainLayout>
