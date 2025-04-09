@@ -30,10 +30,17 @@ const SocialShareButtons = ({
   className = '',
   platforms = ['twitter', 'facebook', 'linkedin', 'email']
 }: SocialShareButtonsProps) => {
-  const { shareToSocialMedia, socialTrackingRef } = useAnalytics();
+  const { shareToSocialMedia, trackSocialInteraction } = useAnalytics();
 
   const handleShare = (platform: 'twitter' | 'facebook' | 'linkedin' | 'pinterest' | 'email') => {
     shareToSocialMedia(platform, contentType, contentId, { url, title, description, imageUrl });
+    
+    // Track social sharing interaction
+    trackSocialInteraction('social_share', {
+      platform,
+      content_type: contentType,
+      content_id: contentId
+    });
   };
 
   const getIcon = (platform: string) => {
@@ -71,7 +78,6 @@ const SocialShareButtons = ({
   return (
     <div 
       className={`flex gap-2 ${className}`}
-      ref={socialTrackingRef}
       data-content-type={contentType}
       data-content-id={contentId}
     >

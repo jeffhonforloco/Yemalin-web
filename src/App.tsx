@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -42,6 +41,7 @@ import EarlyAccessLanding from "./pages/EarlyAccessLanding";
 import TrendReportLanding from "./pages/TrendReportLanding";
 import ConversionLandingPage from './pages/ConversionLandingPage';
 import ProductLaunchLandingPage from './pages/ProductLaunchLandingPage';
+import Showcase from './pages/Showcase';
 
 // Initialize analytics
 analytics.init({
@@ -95,6 +95,9 @@ const App = () => (
               <Route path="/trend-report" element={<TrendReportLanding />} />
               <Route path="/landing/conversion" element={<ConversionLandingPage />} />
               <Route path="/landing/product-launch" element={<ProductLaunchLandingPage />} />
+              
+              {/* New Showcase Page */}
+              <Route path="/showcase" element={<Showcase />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>

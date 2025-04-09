@@ -20,8 +20,24 @@ import ContentCalendar from '../components/blog/ContentCalendar';
 import TrendReport from '../components/home/TrendReport';
 import PopupLeadMagnet from '../components/marketing/PopupLeadMagnet';
 import SocialFeed from '@/components/social/SocialFeed';
+import ContentToProductSection from '../components/products/ContentToProductSection';
 
 const Index = () => {
+  // Sample editorial content for the content-to-product section
+  const editorialContent = (
+    <>
+      <h3 className="text-2xl font-display mb-4">The Future of Fashion</h3>
+      <p className="mb-4">
+        As we look to the future, Yemalin is pioneering a new approach to luxury fashion—one 
+        that seamlessly blends editorial content with curated products.
+      </p>
+      <p>
+        Our vision is to create a unified brand experience where inspiration and acquisition
+        are part of the same journey, not separate destinations.
+      </p>
+    </>
+  );
+
   return (
     <MainLayout>
       {/* Dynamic Hero Section with brand vision */}
@@ -39,6 +55,31 @@ const Index = () => {
         description="Get early access to new collections and exclusive offers when you join our community."
         source="Homepage Popup"
       />
+      
+      {/* Content to Product Showcase - NEW SECTION */}
+      <section className="py-16 bg-white">
+        <div className="luxury-container text-center mb-10">
+          <h2 className="font-display text-3xl md:text-4xl mb-3">Content Meets Commerce</h2>
+          <p className="text-yemalin-grey-600 max-w-2xl mx-auto mb-6">
+            Experience our innovative approach to blending editorial content with curated products
+          </p>
+          <Button asChild variant="outline" className="border-yemalin-black hover:bg-yemalin-black hover:text-white">
+            <Link to="/showcase">
+              Explore Our Showcase <ArrowRight size={16} className="ml-2" />
+            </Link>
+          </Button>
+        </div>
+        
+        <ContentToProductSection 
+          title="Featured Story"
+          content={editorialContent}
+          product={featuredProducts[0]}
+          ctaText="See More Examples"
+          ctaLink="/showcase"
+          reversed={true}
+          className="mt-10"
+        />
+      </section>
       
       {/* Featured Editorial Content */}
       <section className="py-20 bg-yemalin-cream">

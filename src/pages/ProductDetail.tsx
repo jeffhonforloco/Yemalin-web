@@ -1,4 +1,3 @@
-
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Heart, Share2, ShoppingBag } from 'lucide-react';
@@ -84,7 +83,7 @@ const ProductDetail = () => {
   const handleToggleLike = () => {
     if (product) {
       toggleLikeProduct(product.id);
-      trackSocialInteraction(isProductLiked(product.id) ? 'like' : 'unlike', {
+      trackSocialInteraction('like', {
         product_id: product.id,
         product_name: product.name
       });
