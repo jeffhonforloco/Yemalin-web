@@ -12,10 +12,11 @@ import OurJourney from '../components/home/OurJourney';
 import JournalSection from '../components/home/JournalSection';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Calendar } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import TrendingSection from '../components/home/TrendingSection';
 import ExclusiveDrop from '../components/home/ExclusiveDrop';
+import ContentCalendar from '../components/blog/ContentCalendar';
 
 const Index = () => {
   return (
@@ -44,6 +45,27 @@ const Index = () => {
                 Explore Our Journal
               </Button>
             </Link>
+          </div>
+        </div>
+      </section>
+      
+      {/* Content Calendar Preview */}
+      <section className="py-16 bg-white">
+        <div className="luxury-container">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-10">
+            <div>
+              <h2 className="font-display text-2xl md:text-3xl mb-2">Upcoming Features</h2>
+              <p className="text-yemalin-grey-600">Stay ahead with our editorial calendar</p>
+            </div>
+            <Link to="/blog" className="mt-4 md:mt-0">
+              <Button variant="outline" className="flex items-center gap-2 border-yemalin-black">
+                <Calendar size={16} /> View Full Calendar
+              </Button>
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <ContentCalendar />
           </div>
         </div>
       </section>
