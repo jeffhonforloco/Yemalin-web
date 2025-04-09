@@ -11,12 +11,19 @@ export interface CartItem {
   quantity: number;
   size?: string;
   color?: string;
+  brand?: string;
+  currency?: string;
+  imageUrl?: string;
+  slug?: string;
 }
 
 export interface CartContextType {
   cart: CartItem[];
+  items: CartItem[]; // Added for compatibility with CartDrawer
   addToCart: (item: CartItem) => void;
+  addItem: (product: any, quantity: number) => void; // Added for compatibility with ProductDetail
   removeFromCart: (id: string) => void;
+  removeItem: (id: string) => void; // Added for compatibility with CartDrawer
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   isCartOpen: boolean;
@@ -25,7 +32,9 @@ export interface CartContextType {
   totalPrice: number;
   likedItems: string[];
   toggleLikeItem: (id: string) => void;
+  toggleLikeProduct: (id: string) => void; // Added for compatibility with ProductCard/Detail
   isItemLiked: (id: string) => boolean;
+  isProductLiked: (id: string) => boolean; // Added for compatibility with ProductCard/Detail
   totalLikedItems: number;
 }
 
@@ -99,6 +108,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  // Add compatibility method for ProductDetail component
+  const addItem = (product: any, quantity: number) => {
+    const item: CartItem = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.imageUrl || '',
+      imageUrl: product.imageUrl || '',
+      brand: product.brand,
+      currency: product.currency,
+      slug: product.slug,
+      quantity: quantity
+    };
+    addToCart(item);
+  };
+
   const removeFromCart = (id: string) => {
     setCart(prevCart => {
       const newCart = prevCart.filter(item => item.id !== id);
@@ -109,8 +134,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  // Add alias for removeFromCart for compatibility
+  const removeItem = removeFromCart;
+
   const updateQuantity = (id: string, quantity: number) => {
     setCart(prevCart => {
+      if (quantity <= 0) {
+        return prevCart.filter(item => item.id !== id);
+      }
+      
       const updatedCart = prevCart.map(item => 
         item.id === id ? { ...item, quantity } : item
       );
@@ -134,16 +166,25 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     });
   };
+
+  // Add alias for toggleLikeItem for compatibility
+  const toggleLikeProduct = toggleLikeItem;
   
   const isItemLiked = (id: string) => {
     return likedItems.includes(id);
   };
+  
+  // Add alias for isItemLiked for compatibility
+  const isProductLiked = isItemLiked;
 
   return (
     <CartContext.Provider value={{ 
       cart, 
+      items: cart, // Add items alias for CartDrawer
       addToCart, 
+      addItem, // Add for ProductDetail
       removeFromCart, 
+      removeItem, // Add for CartDrawer
       updateQuantity, 
       clearCart, 
       isCartOpen, 
@@ -152,7 +193,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       totalPrice,
       likedItems,
       toggleLikeItem,
+      toggleLikeProduct, // Add for ProductCard/Detail
       isItemLiked,
+      isProductLiked, // Add for ProductCard/Detail
       totalLikedItems
     }}>
       {children}

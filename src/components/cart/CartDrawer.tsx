@@ -14,7 +14,8 @@ const CartDrawer = () => {
     removeItem, 
     updateQuantity,
     isCartOpen,
-    setIsCartOpen
+    setIsCartOpen,
+    clearCart
   } = useCart();
 
   // Format price based on currency
@@ -65,7 +66,7 @@ const CartDrawer = () => {
                         onClick={() => setIsCartOpen(false)}
                       >
                         <img 
-                          src={item.imageUrl}
+                          src={item.imageUrl || item.image}
                           alt={item.name}
                           className="h-full w-full object-cover object-center"
                         />
@@ -146,7 +147,7 @@ const CartDrawer = () => {
                     className="w-full text-red-600 hover:bg-red-50 hover:text-red-700 flex items-center justify-center"
                     onClick={() => {
                       if (items.length > 0 && confirm('Are you sure you want to clear your cart?')) {
-                        useCart().clearCart();
+                        clearCart();
                       }
                     }}
                   >
