@@ -1,3 +1,4 @@
+
 import MainLayout from '@/components/layouts/MainLayout';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
@@ -12,10 +13,9 @@ import {
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { Clock, User, Calendar, BookOpen } from 'lucide-react';
+import { Clock, BookOpen, Calendar } from 'lucide-react';
 import BlogNewsletter from '@/components/blog/BlogNewsletter';
 import ContentCalendar from '@/components/blog/ContentCalendar';
-import FeaturedAuthors from '@/components/blog/FeaturedAuthors';
 import {
   Pagination,
   PaginationContent,
@@ -337,13 +337,6 @@ const Blog = () => {
           
           <div className="w-full md:w-1/4">
             <div className="sticky top-24">
-              <div className="mb-8 bg-white p-6 shadow-sm">
-                <h3 className="text-lg font-medium mb-6 flex items-center">
-                  <User size={18} className="mr-2" /> Featured Designers
-                </h3>
-                <FeaturedAuthors />
-              </div>
-              
               <div className="mb-8 bg-white p-6 shadow-sm">
                 <h3 className="text-lg font-medium mb-4 flex items-center">
                   <BookOpen size={18} className="mr-2" /> Reading Lists
