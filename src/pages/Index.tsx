@@ -21,6 +21,8 @@ import TrendReport from '../components/home/TrendReport';
 import PopupLeadMagnet from '../components/marketing/PopupLeadMagnet';
 import SocialFeed from '@/components/social/SocialFeed';
 import ContentToProductSection from '../components/products/ContentToProductSection';
+import CollaborationTeaser from '../components/home/CollaborationTeaser';
+import EmailMarketingSignup from '../components/marketing/EmailMarketingSignup';
 
 const Index = () => {
   // Sample editorial content for the content-to-product section
@@ -56,7 +58,10 @@ const Index = () => {
         source="Homepage Popup"
       />
       
-      {/* Content to Product Showcase - NEW SECTION */}
+      {/* New Section: Collaboration Teaser - Influencer & Guest Designer Drops */}
+      <CollaborationTeaser />
+      
+      {/* Content to Product Showcase */}
       <section className="py-16 bg-white">
         <div className="luxury-container text-center mb-10">
           <h2 className="font-display text-3xl md:text-4xl mb-3">Content Meets Commerce</h2>
@@ -111,6 +116,41 @@ const Index = () => {
             description="See what fashion enthusiasts are sharing about Yemalin on social media"
             hashtag="YemalinStyle"
           />
+        </div>
+      </section>
+      
+      {/* Enhanced Email Marketing Integration */}
+      <section className="py-16 bg-yemalin-accent text-white">
+        <div className="luxury-container">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-display mb-4">Be The First To Know</h2>
+              <p className="mb-6">
+                Join our exclusive list to receive early access to upcoming collections, 
+                collaborations with designers and influencers, and special events.
+              </p>
+              <div className="flex flex-wrap gap-3 mb-6">
+                <span className="bg-white/20 px-3 py-1 text-sm rounded">Early Access</span>
+                <span className="bg-white/20 px-3 py-1 text-sm rounded">Limited Editions</span>
+                <span className="bg-white/20 px-3 py-1 text-sm rounded">Exclusive Content</span>
+              </div>
+              
+              <EmailMarketingSignup 
+                title="Subscribe to Our Newsletter"
+                description="Never miss a drop or collaboration announcement"
+                buttonText="Join Now"
+                source="Homepage Feature Section"
+                darkMode={true}
+              />
+            </div>
+            <div className="hidden md:block">
+              <img 
+                src="https://images.unsplash.com/photo-1588117260148-b47818741c74?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=700&q=80"
+                alt="Fashion Newsletter"
+                className="w-full h-[400px] object-cover"
+              />
+            </div>
+          </div>
         </div>
       </section>
       
