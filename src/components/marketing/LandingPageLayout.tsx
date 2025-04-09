@@ -2,7 +2,7 @@
 import { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { LeadMagnet } from '@/components/marketing/LeadMagnet';
-import { YemalinLogo } from '@/components/YemalinLogo';
+import YemalinLogo from '@/components/YemalinLogo';
 import { Link } from 'react-router-dom';
 import { ArrowRight, X } from 'lucide-react';
 

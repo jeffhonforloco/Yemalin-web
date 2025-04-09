@@ -39,8 +39,6 @@ const ExclusiveDrop = () => {
             </p>
             <div className="flex flex-wrap gap-4">
               <Button 
-                component={Link}
-                to="/early-access"
                 className="bg-white text-black hover:bg-yemalin-accent hover:text-white transition-colors"
                 asChild
               >
