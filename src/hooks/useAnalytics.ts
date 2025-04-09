@@ -15,11 +15,31 @@ const useAnalytics = () => {
     analytics.pageView(location.pathname + location.search, currentTitle);
   }, [location.pathname, location.search]);
   
+  // Start tracking engagement time on component mount
+  useEffect(() => {
+    // Start engagement tracking only once
+    const engagementTrackingKey = 'yemalin_engagement_tracking';
+    if (!window[engagementTrackingKey as any]) {
+      analytics.trackEngagementTime();
+      window[engagementTrackingKey as any] = true;
+    }
+  }, []);
+  
   /**
    * Track user interaction events
    */
   const trackEvent = (eventName: string, data?: Record<string, any>) => {
     analytics.trackEvent(eventName, data);
+  };
+  
+  /**
+   * Track social interactions with content
+   */
+  const trackSocialInteraction = (
+    type: 'like' | 'share' | 'comment' | 'poll_vote',
+    data?: Record<string, any>
+  ) => {
+    analytics.trackSocialInteraction(type, data);
   };
   
   /**
@@ -34,7 +54,7 @@ const useAnalytics = () => {
     }
   };
   
-  return { trackEvent, trackElementClick };
+  return { trackEvent, trackElementClick, trackSocialInteraction };
 };
 
 export default useAnalytics;

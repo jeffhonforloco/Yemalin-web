@@ -3,19 +3,60 @@ import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Share, ChevronLeft, Calendar, Clock } from 'lucide-react';
+import { Share, ChevronLeft, Calendar, Clock, ThumbsUp, ThumbsDown, MessageCircle } from 'lucide-react';
 import BlogNewsletter from '@/components/blog/BlogNewsletter';
 import BlogContent from '@/components/blog/BlogContent';
 import BlogSidebar from '@/components/blog/BlogSidebar';
+import CommentSection from '@/components/blog/CommentSection';
+import StylePoll from '@/components/blog/StylePoll';
 import useBlogPost from '@/hooks/useBlogPost';
 import SEO from '@/components/SEO';
 import useAnalytics from '@/hooks/useAnalytics';
+import { useState } from 'react';
+import { toast } from '@/hooks/use-toast';
 
 const BlogPost = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { post, loading } = useBlogPost(slug);
   const { trackEvent } = useAnalytics();
+  const [reactions, setReactions] = useState({ likes: 0, dislikes: 0 });
+  const [userReaction, setUserReaction] = useState<'like' | 'dislike' | null>(null);
+  
+  // Style poll sample data
+  const pollData = {
+    id: '1',
+    question: 'Which trend do you prefer for the coming season?',
+    options: [
+      { id: '1', text: 'Sustainable minimalism', votes: 42 },
+      { id: '2', text: 'Bold statement pieces', votes: 28 },
+      { id: '3', text: 'Vintage inspired looks', votes: 35 },
+      { id: '4', text: 'Athleisure evolution', votes: 19 }
+    ],
+    totalVotes: 124
+  };
+
+  // Image poll data
+  const imagePollData = {
+    id: '2',
+    question: 'Which accessory style speaks to you?',
+    options: [
+      { 
+        id: '1', 
+        text: 'Modern Geometric', 
+        imageUrl: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3',
+        votes: 56 
+      },
+      { 
+        id: '2', 
+        text: 'Classic Elegance',
+        imageUrl: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3', 
+        votes: 62 
+      },
+    ],
+    totalVotes: 118,
+    pollType: 'image'
+  };
   
   // Create structured data for blog post if we have a post
   const structuredData = post ? {
@@ -40,7 +81,19 @@ const BlogPost = () => {
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `${window.location.origin}/blog/${slug}`
-    }
+    },
+    "interactionStatistic": [
+      {
+        "@type": "InteractionCounter",
+        "interactionType": "https://schema.org/CommentAction",
+        "userInteractionCount": 2
+      },
+      {
+        "@type": "InteractionCounter",
+        "interactionType": "https://schema.org/LikeAction",
+        "userInteractionCount": reactions.likes
+      }
+    ]
   } : undefined;
 
   if (loading) {
@@ -109,6 +162,52 @@ const BlogPost = () => {
     } catch (error) {
       console.error("Error sharing:", error);
     }
+  };
+  
+  // Handle user reactions (likes/dislikes)
+  const handleReaction = (type: 'like' | 'dislike') => {
+    // If user already reacted with the same reaction, remove it
+    if (userReaction === type) {
+      setUserReaction(null);
+      setReactions({
+        ...reactions,
+        [type + 's']: reactions[type === 'like' ? 'likes' : 'dislikes'] - 1
+      });
+      
+      trackEvent('remove_reaction', { 
+        post_id: slug,
+        reaction_type: type
+      });
+      
+      return;
+    }
+    
+    // If user is switching reactions
+    if (userReaction) {
+      setReactions({
+        likes: userReaction === 'like' ? reactions.likes - 1 : reactions.likes + (type === 'like' ? 1 : 0),
+        dislikes: userReaction === 'dislike' ? reactions.dislikes - 1 : reactions.dislikes + (type === 'dislike' ? 1 : 0)
+      });
+    } else {
+      // First time reacting
+      setReactions({
+        ...reactions,
+        [type + 's']: reactions[type === 'like' ? 'likes' : 'dislikes'] + 1
+      });
+    }
+    
+    setUserReaction(type);
+    
+    trackEvent('post_reaction', { 
+      post_id: slug,
+      reaction_type: type
+    });
+    
+    toast({
+      title: type === 'like' ? 'Thanks for your feedback!' : 'We appreciate your opinion',
+      description: 'Your reaction has been recorded',
+      variant: "default"
+    });
   };
 
   return (
@@ -206,6 +305,58 @@ const BlogPost = () => {
               publishDate={post.date}
             />
             
+            {/* User reactions */}
+            <div className="flex items-center justify-center gap-8 my-12 p-6 border rounded-lg bg-gray-50">
+              <div className="text-center">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  onClick={() => handleReaction('like')}
+                  className={`rounded-full w-16 h-16 flex flex-col items-center justify-center ${userReaction === 'like' ? 'bg-green-50 border-green-200' : ''}`}
+                  data-track="like_article"
+                >
+                  <ThumbsUp size={24} className={userReaction === 'like' ? 'text-green-500' : ''} />
+                </Button>
+                <p className="text-sm mt-2 font-medium">{reactions.likes}</p>
+              </div>
+              
+              <div className="text-center">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  onClick={() => handleReaction('dislike')}
+                  className={`rounded-full w-16 h-16 flex flex-col items-center justify-center ${userReaction === 'dislike' ? 'bg-red-50 border-red-200' : ''}`}
+                  data-track="dislike_article"
+                >
+                  <ThumbsDown size={24} className={userReaction === 'dislike' ? 'text-red-500' : ''} />
+                </Button>
+                <p className="text-sm mt-2 font-medium">{reactions.dislikes}</p>
+              </div>
+            </div>
+            
+            {/* Style Poll component */}
+            <div className="my-12">
+              <h3 className="text-xl font-medium mb-4">Reader Opinion</h3>
+              <StylePoll 
+                id={pollData.id}
+                question={pollData.question}
+                options={pollData.options}
+                totalVotes={pollData.totalVotes}
+              />
+            </div>
+            
+            {/* Image Style Poll */}
+            <div className="my-12">
+              <h3 className="text-xl font-medium mb-4">Style Selection</h3>
+              <StylePoll 
+                id={imagePollData.id}
+                question={imagePollData.question}
+                options={imagePollData.options as any}
+                totalVotes={imagePollData.totalVotes}
+                pollType="image"
+              />
+            </div>
+            
             {/* Article tags */}
             <div className="mt-12 pt-8 border-t">
               <h4 className="text-sm font-medium mb-3">Related Topics</h4>
@@ -216,6 +367,13 @@ const BlogPost = () => {
                 <Button variant="outline" size="sm" className="rounded-full">{post.category}</Button>
               </div>
             </div>
+            
+            {/* Comment Section component */}
+            <Separator className="my-12" />
+            <CommentSection 
+              postId={slug || 'unknown'} 
+              postTitle={post.title} 
+            />
           </div>
           
           {/* Sidebar */}
