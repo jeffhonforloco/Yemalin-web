@@ -17,6 +17,8 @@ import { Separator } from '@/components/ui/separator';
 import TrendingSection from '../components/home/TrendingSection';
 import ExclusiveDrop from '../components/home/ExclusiveDrop';
 import ContentCalendar from '../components/blog/ContentCalendar';
+import TrendReport from '../components/home/TrendReport';
+import PopupLeadMagnet from '../components/marketing/PopupLeadMagnet';
 
 const Index = () => {
   return (
@@ -26,6 +28,16 @@ const Index = () => {
       
       {/* Exclusive Product Drop Teaser */}
       <ExclusiveDrop />
+      
+      {/* Popup Lead Magnet - triggers after 5 seconds or exit intent */}
+      <PopupLeadMagnet 
+        delay={5000} 
+        exitIntent={true} 
+        offer="early-access" 
+        title="Join Our Style Insider List"
+        description="Get early access to new collections and exclusive offers when you join our community."
+        source="Homepage Popup"
+      />
       
       {/* Featured Editorial Content */}
       <section className="py-20 bg-yemalin-cream">
@@ -48,6 +60,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+      
+      {/* Free Fashion Trend Report Lead Magnet */}
+      <TrendReport />
       
       {/* Content Calendar Preview */}
       <section className="py-16 bg-white">
