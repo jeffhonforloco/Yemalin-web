@@ -7,32 +7,32 @@ const heroImages = [
   {
     url: "https://images.unsplash.com/photo-1509631179647-0177331693ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1288&q=80",
     title: "Discover Curated Luxury",
-    subtitle: "Exclusive designer collections from the world's most prestigious fashion houses"
+    subtitle: "Exclusive designer collections from the world's most prestigious fashion houses",
+    cta: "SS24 Collection"
   },
   {
     url: "https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
     title: "Artisan Craftsmanship",
-    subtitle: "Meticulous attention to detail and exceptional quality in every piece"
+    subtitle: "Meticulous attention to detail and exceptional quality in every piece",
+    cta: "Discover Artisans"
   },
   {
     url: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
     title: "Elevate Your Style",
-    subtitle: "Timeless elegance meets contemporary design for the discerning client"
+    subtitle: "Timeless elegance meets contemporary design for the discerning client",
+    cta: "Style Guide"
   },
   {
     url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
     title: "Modern Sophistication",
-    subtitle: "Embrace the future of fashion with cutting-edge designs and innovative materials"
+    subtitle: "Embrace the future of fashion with cutting-edge designs and innovative materials",
+    cta: "Upcoming Drops"
   },
   {
     url: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
     title: "Runway to Reality",
-    subtitle: "From catwalk to closet, experience the latest trends in high fashion"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-    title: "Digital Elegance",
-    subtitle: "Where technology meets fashion in our exclusive online collections"
+    subtitle: "From catwalk to closet, experience the latest trends in high fashion",
+    cta: "Runway Looks"
   }
 ];
 
@@ -43,7 +43,6 @@ const Hero = () => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 
-  // Animation duration reduced from 700ms to 400ms
   const animationDuration = 400;
 
   const goToSlide = (index: number) => {
@@ -78,14 +77,11 @@ const Hero = () => {
 
   const handleTouchEnd = () => {
     if (touchStart - touchEnd > 75) {
-      // Swipe left
       nextSlide();
     } else if (touchEnd - touchStart > 75) {
-      // Swipe right
       prevSlide();
     }
     
-    // Resume autoplay after 5 seconds of inactivity
     setTimeout(() => setAutoplayPaused(false), 5000);
   };
 
@@ -100,7 +96,6 @@ const Hero = () => {
   useEffect(() => {
     if (autoplayPaused) return;
     
-    // Autoplay interval reduced from 7000ms to 5000ms
     const interval = setInterval(() => {
       nextSlide();
     }, 5000);
@@ -110,7 +105,7 @@ const Hero = () => {
 
   return (
     <section 
-      className="relative h-[80vh] min-h-[600px] overflow-hidden"
+      className="relative h-[90vh] min-h-[700px] overflow-hidden"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
@@ -170,6 +165,7 @@ const Hero = () => {
       {/* Hero content */}
       <div className="absolute inset-0 flex items-center justify-center z-20">
         <div className="text-center px-4 max-w-2xl animate-fade-in">
+          <p className="text-white text-sm uppercase tracking-widest mb-3 opacity-80">Yemalin Presents</p>
           <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-white mb-4 drop-shadow-md">
             {heroImages[currentSlide].title}
           </h1>
@@ -181,13 +177,13 @@ const Hero = () => {
               to="/shop" 
               className="bg-white text-black px-8 py-3 text-sm font-medium hover:bg-black hover:text-white transition-colors"
             >
-              Shop Now
+              Shop Collection
             </Link>
             <Link 
-              to="/designers" 
+              to="/blog" 
               className="bg-transparent border border-white text-white px-8 py-3 text-sm font-medium hover:bg-white hover:text-black transition-colors"
             >
-              Discover Designers
+              {heroImages[currentSlide].cta}
             </Link>
           </div>
         </div>

@@ -6,21 +6,50 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import YemalinLogo from '@/components/YemalinLogo';
-import { ChevronDown, Menu, ShoppingBag, User, Pencil } from 'lucide-react';
+import { ChevronDown, Menu, ShoppingBag, User, Pencil, Heart } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import CartDrawer from '@/components/cart/CartDrawer';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const { user, signOut } = useAuth();
   const location = useLocation();
-  const { totalItems, setIsCartOpen } = useCart();
+  const { totalItems, setIsCartOpen, totalLikedItems } = useCart();
 
   const handleCartClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsCartOpen(true);
   };
+
+  // Fashion Categories Dropdown
+  const fashionCategories = [
+    { title: "Women's Fashion", href: "/shop?category=women" },
+    { title: "Men's Fashion", href: "/shop?category=men" },
+    { title: "Accessories", href: "/shop?category=accessories" },
+    { title: "Footwear", href: "/shop?category=footwear" },
+    { title: "New Arrivals", href: "/shop?category=new" },
+    { title: "View All", href: "/shop" }
+  ];
+
+  // Editorial Content Categories
+  const editorialCategories = [
+    { title: "Fashion Trends", href: "/blog/category/fashion-trends" },
+    { title: "Style Tips", href: "/blog/category/style-tips" },
+    { title: "Industry Insights", href: "/blog/category/industry-insights" },
+    { title: "Designer Profiles", href: "/blog/category/designer-profiles" },
+    { title: "Runway Reviews", href: "/blog/category/runway-reviews" },
+    { title: "View All Articles", href: "/blog" }
+  ];
 
   return (
     <div className="bg-white border-b sticky top-0 z-50">
@@ -30,26 +59,80 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-10">
-          <Link to="/shop" className={`nav-link ${location.pathname === '/shop' ? 'border-black' : 'border-transparent'}`}>
-            Shop
-          </Link>
-          <Link to="/designers" className={`nav-link ${location.pathname === '/designers' ? 'border-black' : 'border-transparent'}`}>
-            Designers
-          </Link>
-          <Link to="/collections" className={`nav-link ${location.pathname === '/collections' ? 'border-black' : 'border-transparent'}`}>
-            Collections
-          </Link>
-          <Link to="/blog" className={`nav-link ${location.pathname === '/blog' ? 'border-black' : 'border-transparent'}`}>
-            Journal
-          </Link>
-          <Link to="/about" className={`nav-link ${location.pathname === '/about' ? 'border-black' : 'border-transparent'}`}>
-            About
-          </Link>
+        <div className="hidden md:flex items-center space-x-6">
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-sm uppercase tracking-wider">Shop</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[400px] gap-3 p-4">
+                    {fashionCategories.map((category) => (
+                      <li key={category.title} className="row-span-1">
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to={category.href}
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100"
+                          >
+                            <div className="text-sm font-medium">{category.title}</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-sm uppercase tracking-wider">Journal</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[500px] grid-cols-2 gap-3 p-4">
+                    {editorialCategories.map((category) => (
+                      <li key={category.title}>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to={category.href}
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100"
+                          >
+                            <div className="text-sm font-medium">{category.title}</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <Link to="/designers" className={`block py-2 px-3 text-sm uppercase tracking-wider ${location.pathname === '/designers' ? 'font-medium' : ''}`}>
+                  Designers
+                </Link>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <Link to="/about" className={`block py-2 px-3 text-sm uppercase tracking-wider ${location.pathname === '/about' ? 'font-medium' : ''}`}>
+                  About
+                </Link>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
 
         {/* Desktop Action Buttons */}
         <div className="hidden md:flex items-center space-x-4">
+          <Link 
+            to="/favorites"
+            className="relative"
+          >
+            <Button variant="ghost" size="icon">
+              <Heart className="h-5 w-5" />
+              {totalLikedItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-yemalin-accent text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                  {totalLikedItems > 99 ? '99+' : totalLikedItems}
+                </span>
+              )}
+            </Button>
+          </Link>
+          
           <Button 
             variant="ghost" 
             size="icon"
@@ -116,6 +199,17 @@ const Navbar = () => {
 
         {/* Mobile Navigation Trigger */}
         <div className="flex md:hidden items-center space-x-2">
+          <Link to="/favorites" className="relative">
+            <Button variant="ghost" size="icon">
+              <Heart className="h-5 w-5" />
+              {totalLikedItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-yemalin-accent text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                  {totalLikedItems > 99 ? '99+' : totalLikedItems}
+                </span>
+              )}
+            </Button>
+          </Link>
+          
           <Button 
             variant="ghost" 
             size="icon" 
@@ -141,36 +235,53 @@ const Navbar = () => {
                   <YemalinLogo className="h-8 mx-auto" />
                 </div>
                 <nav className="flex flex-col space-y-4 mt-8">
-                  <Link to="/shop" className="px-2 py-2 hover:bg-gray-100 rounded text-center">
-                    Shop
-                  </Link>
-                  <Link to="/designers" className="px-2 py-2 hover:bg-gray-100 rounded text-center">
+                  <div className="border-b pb-2">
+                    <p className="px-2 text-sm font-medium text-gray-500">Shop</p>
+                    {fashionCategories.map((category) => (
+                      <Link 
+                        key={category.title}
+                        to={category.href} 
+                        className="px-2 py-2 hover:bg-gray-100 rounded block"
+                      >
+                        {category.title}
+                      </Link>
+                    ))}
+                  </div>
+                  
+                  <div className="border-b pb-2">
+                    <p className="px-2 text-sm font-medium text-gray-500">Journal</p>
+                    {editorialCategories.map((category) => (
+                      <Link 
+                        key={category.title}
+                        to={category.href} 
+                        className="px-2 py-2 hover:bg-gray-100 rounded block"
+                      >
+                        {category.title}
+                      </Link>
+                    ))}
+                  </div>
+                  
+                  <Link to="/designers" className="px-2 py-2 hover:bg-gray-100 rounded">
                     Designers
                   </Link>
-                  <Link to="/collections" className="px-2 py-2 hover:bg-gray-100 rounded text-center">
-                    Collections
-                  </Link>
-                  <Link to="/blog" className="px-2 py-2 hover:bg-gray-100 rounded text-center">
-                    Journal
-                  </Link>
-                  <Link to="/about" className="px-2 py-2 hover:bg-gray-100 rounded text-center">
+                  <Link to="/about" className="px-2 py-2 hover:bg-gray-100 rounded">
                     About
                   </Link>
                   
                   {user && (
                     <>
                       <div className="h-px bg-gray-200 my-2"></div>
-                      <Link to="/account" className="px-2 py-2 hover:bg-gray-100 rounded text-center">
+                      <Link to="/account" className="px-2 py-2 hover:bg-gray-100 rounded">
                         Account
                       </Link>
-                      <Link to="/dashboard" className="px-2 py-2 hover:bg-gray-100 rounded text-center">
+                      <Link to="/dashboard" className="px-2 py-2 hover:bg-gray-100 rounded">
                         Dashboard
                       </Link>
-                      <Link to="/dashboard/blog" className="px-2 py-2 hover:bg-gray-100 rounded text-center">
+                      <Link to="/dashboard/blog" className="px-2 py-2 hover:bg-gray-100 rounded">
                         Blog Management
                       </Link>
                       <button
-                        className="px-2 py-2 hover:bg-gray-100 rounded text-center text-red-600"
+                        className="px-2 py-2 hover:bg-gray-100 rounded text-left text-red-600"
                         onClick={signOut}
                       >
                         Sign Out
@@ -181,10 +292,10 @@ const Navbar = () => {
                   {!user && (
                     <>
                       <div className="h-px bg-gray-200 my-2"></div>
-                      <Link to="/auth" className="px-2 py-2 hover:bg-gray-100 rounded text-center">
+                      <Link to="/auth" className="px-2 py-2 hover:bg-gray-100 rounded">
                         Sign In
                       </Link>
-                      <Link to="/designer-login" className="px-2 py-2 hover:bg-gray-100 rounded text-center flex items-center justify-center space-x-1">
+                      <Link to="/designer-login" className="px-2 py-2 hover:bg-gray-100 rounded flex items-center space-x-1">
                         <Pencil className="h-3 w-3" />
                         <span>Designer Portal</span>
                       </Link>

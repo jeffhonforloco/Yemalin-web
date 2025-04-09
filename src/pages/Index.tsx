@@ -14,21 +14,26 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import TrendingSection from '../components/home/TrendingSection';
+import ExclusiveDrop from '../components/home/ExclusiveDrop';
 
 const Index = () => {
   return (
     <MainLayout>
-      {/* Updated Hero Section with stronger brand messaging */}
+      {/* Dynamic Hero Section with brand vision */}
       <Hero />
       
+      {/* Exclusive Product Drop Teaser */}
+      <ExclusiveDrop />
+      
       {/* Featured Editorial Content */}
-      <section className="bg-yemalin-grey-100 py-16">
+      <section className="py-20 bg-yemalin-cream">
         <div className="luxury-container">
-          <div className="flex items-center justify-between mb-10">
-            <h2 className="text-2xl md:text-3xl font-display">Latest Stories</h2>
-            <Link to="/blog" className="flex items-center text-sm hover:underline">
-              View All Articles <ArrowRight size={16} className="ml-1" />
-            </Link>
+          <div className="mb-12 text-center">
+            <h2 className="font-display text-3xl md:text-4xl mb-3">Curated Content</h2>
+            <p className="text-yemalin-grey-600 max-w-2xl mx-auto">
+              Explore our collection of fashion insights, trends, and exclusive interviews with industry leaders
+            </p>
           </div>
           
           <JournalSection />
@@ -43,21 +48,25 @@ const Index = () => {
         </div>
       </section>
       
-      {/* New Arrivals with updated design */}
-      <div className="py-16">
+      {/* Trending Fashion Topics */}
+      <TrendingSection />
+      
+      {/* New Arrivals */}
+      <div className="py-20">
         <div className="luxury-container">
-          <h2 className="text-2xl md:text-3xl font-display mb-2 text-center">New Arrivals</h2>
-          <p className="text-center text-gray-600 mb-10 max-w-xl mx-auto">
-            The latest additions to our curated collection, showcasing this season's most coveted pieces
-          </p>
+          <div className="mb-12 text-center">
+            <h2 className="font-display text-3xl md:text-4xl mb-3">New Arrivals</h2>
+            <p className="text-yemalin-grey-600 max-w-2xl mx-auto">
+              The latest additions to our curated collection, showcasing this season's most coveted pieces
+            </p>
+          </div>
           
           <ProductGrid 
             products={newArrivals.slice(0, 4)}
             columns={4}
-            showTitle={false}
           />
           
-          <div className="mt-10 text-center">
+          <div className="mt-12 text-center">
             <Link to="/shop">
               <Button className="bg-yemalin-black hover:bg-yemalin-grey-800">
                 Shop New Arrivals
@@ -74,7 +83,7 @@ const Index = () => {
       <FeaturedCategories />
       
       {/* Content-focused section: Style Insights */}
-      <section className="py-16">
+      <section className="py-20 bg-yemalin-cream">
         <div className="luxury-container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1">
@@ -85,18 +94,18 @@ const Index = () => {
                 Each featured item represents our commitment to quality craftsmanship and sustainable fashion practices.
               </p>
               <Separator className="my-6" />
-              <div className="flex flex-col sm:flex-row gap-4 mt-4">
-                <Link to="/blog/sustainable-fashion">
+              <div className="flex flex-wrap gap-4 mt-4">
+                <Link to="/blog/category/sustainable-fashion">
                   <Button variant="outline" className="border-yemalin-black hover:bg-yemalin-black hover:text-white">
                     Sustainability
                   </Button>
                 </Link>
-                <Link to="/blog/design-process">
+                <Link to="/blog/category/design-process">
                   <Button variant="outline" className="border-yemalin-black hover:bg-yemalin-black hover:text-white">
                     Design Process
                   </Button>
                 </Link>
-                <Link to="/blog/style-guides">
+                <Link to="/blog/category/style-guides">
                   <Button variant="outline" className="border-yemalin-black hover:bg-yemalin-black hover:text-white">
                     Style Guides
                   </Button>
@@ -120,35 +129,11 @@ const Index = () => {
       {/* Featured Collections */}
       <FeaturedCollections />
       
-      {/* Featured Products - Curated Selection */}
-      <div className="py-16">
-        <div className="luxury-container">
-          <h2 className="text-2xl md:text-3xl font-display mb-2 text-center">Featured Selections</h2>
-          <p className="text-center text-gray-600 mb-10 max-w-xl mx-auto">
-            Handpicked pieces from our luxury collections, representing the essence of contemporary elegance
-          </p>
-          
-          <ProductGrid 
-            products={featuredProducts.slice(0, 4)}
-            columns={4}
-            showTitle={false}
-          />
-          
-          <div className="mt-10 text-center">
-            <Link to="/shop">
-              <Button className="bg-yemalin-black hover:bg-yemalin-grey-800">
-                View All Products
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
+      {/* Email Signup - Newsletter */}
+      <Newsletter />
       
       {/* Social Proof - Testimonials */}
       <Testimonials />
-      
-      {/* Email Signup - Newsletter */}
-      <Newsletter />
     </MainLayout>
   );
 };
