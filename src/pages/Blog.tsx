@@ -1,4 +1,3 @@
-
 import MainLayout from '@/components/layouts/MainLayout';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
@@ -28,7 +27,6 @@ import {
 } from "@/components/ui/pagination";
 import { allBlogPosts } from '@/data/mockBlogPostsData';
 
-// Categories for filtering
 const categories = [
   'All',
   'Sustainability',
@@ -39,27 +37,21 @@ const categories = [
 ];
 
 const Blog = () => {
-  // Featured post is the first post in our list
   const featuredPost = allBlogPosts[0];
   
-  // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
   
-  // Calculate pagination values
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = allBlogPosts.slice(1).slice(indexOfFirstPost, indexOfLastPost);
   const totalPages = Math.ceil((allBlogPosts.length - 1) / postsPerPage);
   
-  // Function to handle page changes
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    // Scroll to top when changing page
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
-  // Generate page numbers for pagination
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
@@ -67,7 +59,6 @@ const Blog = () => {
   
   return (
     <MainLayout>
-      {/* Hero Section with Featured Post */}
       <div className="w-full">
         <div className="relative h-[70vh] overflow-hidden">
           <img 
@@ -113,7 +104,6 @@ const Blog = () => {
         </div>
       </div>
       
-      {/* Content Calendar Section */}
       <section className="bg-yemalin-cream py-12">
         <div className="luxury-container">
           <div className="flex flex-col md:flex-row items-center justify-between mb-8">
@@ -128,19 +118,15 @@ const Blog = () => {
             </div>
           </div>
           
-          {/* Content Calendar Component */}
           <ContentCalendar />
         </div>
       </section>
       
-      {/* Blog Posts Section */}
       <div className="luxury-container py-16">
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Main Content Column */}
           <div className="w-full md:w-3/4">
             <h2 className="text-2xl font-display mb-10">Journal</h2>
             
-            {/* Category Tabs */}
             <Tabs defaultValue="All" className="w-full mb-12">
               <TabsList className="w-full justify-start overflow-x-auto flex-nowrap pb-2 mb-8">
                 {categories.map(category => (
@@ -154,7 +140,6 @@ const Blog = () => {
                 ))}
               </TabsList>
               
-              {/* Tab Content - All Posts */}
               <TabsContent value="All" className="mt-0">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {currentPosts.map(post => (
@@ -201,7 +186,6 @@ const Blog = () => {
                   ))}
                 </div>
                 
-                {/* Pagination */}
                 <Pagination className="mt-12">
                   <PaginationContent>
                     {currentPage > 1 && (
@@ -246,7 +230,6 @@ const Blog = () => {
                 </Pagination>
               </TabsContent>
               
-              {/* Tab Content - Category Specific Posts */}
               {categories.slice(1).map(category => (
                 <TabsContent key={category} value={category} className="mt-0">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -352,18 +335,15 @@ const Blog = () => {
             </Tabs>
           </div>
           
-          {/* Sidebar */}
           <div className="w-full md:w-1/4">
             <div className="sticky top-24">
-              {/* Featured Authors Section */}
               <div className="mb-8 bg-white p-6 shadow-sm">
                 <h3 className="text-lg font-medium mb-6 flex items-center">
-                  <User size={18} className="mr-2" /> Featured Contributors
+                  <User size={18} className="mr-2" /> Featured Designers
                 </h3>
                 <FeaturedAuthors />
               </div>
               
-              {/* Editorial Calendar Highlight */}
               <div className="mb-8 bg-white p-6 shadow-sm">
                 <h3 className="text-lg font-medium mb-4 flex items-center">
                   <BookOpen size={18} className="mr-2" /> Reading Lists
@@ -390,7 +370,6 @@ const Blog = () => {
                 </div>
               </div>
               
-              {/* Newsletter Signup */}
               <div className="bg-yemalin-grey-100 p-6">
                 <h3 className="text-lg font-medium mb-3">Subscribe</h3>
                 <p className="text-sm text-gray-600 mb-4">Get our weekly fashion digest straight to your inbox</p>
@@ -409,7 +388,6 @@ const Blog = () => {
           </div>
         </div>
         
-        {/* Newsletter Section */}
         <BlogNewsletter />
       </div>
     </MainLayout>
