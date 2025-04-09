@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -38,6 +37,8 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import EarlyAccessLanding from "./pages/EarlyAccessLanding";
 import TrendReportLanding from "./pages/TrendReportLanding";
+import ConversionLandingPage from './pages/ConversionLandingPage';
+import ProductLaunchLandingPage from './pages/ProductLaunchLandingPage';
 
 const queryClient = new QueryClient();
 
@@ -83,6 +84,8 @@ const App = () => (
               {/* Landing Pages */}
               <Route path="/early-access" element={<EarlyAccessLanding />} />
               <Route path="/trend-report" element={<TrendReportLanding />} />
+              <Route path="/landing/conversion" element={<ConversionLandingPage />} />
+              <Route path="/landing/product-launch" element={<ProductLaunchLandingPage />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>
