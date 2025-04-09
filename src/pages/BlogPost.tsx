@@ -5,28 +5,52 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Share, ChevronLeft, Calendar, Clock } from 'lucide-react';
 import BlogNewsletter from '@/components/blog/BlogNewsletter';
-import BlogHeader from '@/components/blog/BlogHeader';
 import BlogContent from '@/components/blog/BlogContent';
 import BlogSidebar from '@/components/blog/BlogSidebar';
 import useBlogPost from '@/hooks/useBlogPost';
-import useBlogSeo from '@/hooks/useBlogSeo';
+import SEO from '@/components/SEO';
+import useAnalytics from '@/hooks/useAnalytics';
 
 const BlogPost = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { post, loading } = useBlogPost(slug);
+  const { trackEvent } = useAnalytics();
   
-  // Use SEO hook - always called regardless of post existence
-  useBlogSeo({
-    title: post?.title,
-    description: post?.excerpt,
-    imageUrl: post?.image_url || post?.image,
-    slug
-  });
+  // Create structured data for blog post if we have a post
+  const structuredData = post ? {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": post.excerpt,
+    "image": post.image_url || post.image,
+    "datePublished": post.date || new Date().toISOString(),
+    "author": {
+      "@type": "Person",
+      "name": post.author
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Yemalin",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${window.location.origin}/logo.png`
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `${window.location.origin}/blog/${slug}`
+    }
+  } : undefined;
 
   if (loading) {
     return (
       <MainLayout>
+        {/* SEO for loading state */}
+        <SEO 
+          title="Loading Article"
+          description="Loading Yemalin Journal article"
+        />
         <div className="luxury-container py-16">
           <div className="flex items-center justify-center h-96">
             <div className="animate-pulse text-2xl font-display">Loading article...</div>
@@ -39,6 +63,12 @@ const BlogPost = () => {
   if (!post) {
     return (
       <MainLayout>
+        {/* SEO for 404 state */}
+        <SEO 
+          title="Article Not Found"
+          description="We couldn't find the article you were looking for."
+          robots="noindex, follow"
+        />
         <div className="luxury-container py-16">
           <div className="text-center py-16">
             <h1 className="text-3xl font-display mb-4">Article Not Found</h1>
@@ -63,10 +93,18 @@ const BlogPost = () => {
           title: shareTitle,
           url: shareUrl,
         });
+        trackEvent('share_article', { 
+          title: shareTitle,
+          method: 'native_share'
+        });
       } else {
         // Fallback to clipboard
         await navigator.clipboard.writeText(shareUrl);
         alert("Article link copied to clipboard");
+        trackEvent('share_article', { 
+          title: shareTitle,
+          method: 'clipboard_copy'
+        });
       }
     } catch (error) {
       console.error("Error sharing:", error);
@@ -75,6 +113,17 @@ const BlogPost = () => {
 
   return (
     <MainLayout>
+      {/* SEO with structured data */}
+      <SEO 
+        title={post.title}
+        description={post.excerpt}
+        ogImage={post.image_url || post.image}
+        canonicalUrl={`${window.location.origin}/blog/${slug}`}
+        ogType="article"
+        keywords={`${post.category}, fashion, yemalin, luxury fashion`}
+        structuredData={structuredData}
+      />
+      
       {/* Hero Section */}
       <div className="w-full">
         <div className="relative h-[70vh] overflow-hidden">
@@ -144,6 +193,7 @@ const BlogPost = () => {
                 size="sm" 
                 onClick={handleShare}
                 className="flex items-center gap-2"
+                data-track="share_article_mobile"
               >
                 <Share size={16} /> Share Article
               </Button>
@@ -152,6 +202,8 @@ const BlogPost = () => {
             <BlogContent
               excerpt={post.excerpt}
               content={post.content}
+              category={post.category}
+              publishDate={post.date}
             />
             
             {/* Article tags */}
@@ -182,6 +234,7 @@ const BlogPost = () => {
                 <Button 
                   onClick={handleShare}
                   className="w-full flex items-center justify-center gap-2 bg-yemalin-black hover:bg-yemalin-grey-800"
+                  data-track="share_article_desktop"
                 >
                   <Share size={16} /> Share This Article
                 </Button>

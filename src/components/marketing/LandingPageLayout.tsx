@@ -6,6 +6,8 @@ import YemalinLogo from '@/components/YemalinLogo';
 import { Link } from 'react-router-dom';
 import { ArrowRight, X } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import SEO from '@/components/SEO';
+import useAnalytics from '@/hooks/useAnalytics';
 
 interface LandingPageLayoutProps {
   children: ReactNode;
@@ -18,6 +20,9 @@ interface LandingPageLayoutProps {
   backgroundImage?: string;
   showLogo?: boolean;
   showClose?: boolean;
+  seoDescription?: string;
+  seoKeywords?: string;
+  seoImage?: string;
 }
 
 const LandingPageLayout = ({
@@ -31,11 +36,39 @@ const LandingPageLayout = ({
   backgroundImage,
   showLogo = true,
   showClose = true,
+  seoDescription,
+  seoKeywords,
+  seoImage,
 }: LandingPageLayoutProps) => {
   const isMobile = useIsMobile();
+  const { trackEvent } = useAnalytics();
+  
+  // Handle CTA clicks for analytics tracking
+  const handleCtaClick = () => {
+    trackEvent('landing_page_cta_click', { 
+      cta_text: ctaText,
+      page_title: title
+    });
+  };
+  
+  const handleSecondaryCtaClick = () => {
+    trackEvent('landing_page_secondary_cta_click', { 
+      cta_text: secondaryCtaText,
+      page_title: title
+    });
+  };
   
   return (
     <div className="min-h-screen flex flex-col">
+      {/* SEO Configuration */}
+      <SEO 
+        title={title}
+        description={seoDescription || subtitle || `Explore ${title} - Yemalin Luxury Fashion`}
+        ogImage={seoImage || backgroundImage}
+        keywords={seoKeywords}
+        ogType="website"
+      />
+      
       {/* Responsive Header */}
       <header className="py-3 md:py-4 px-4 md:px-6 flex justify-between items-center bg-white border-b border-gray-100">
         {showLogo && (
@@ -79,6 +112,8 @@ const LandingPageLayout = ({
               size={isMobile ? "default" : "lg"} 
               className="bg-yemalin-accent hover:bg-yemalin-accent/90 text-white w-full sm:w-auto"
               asChild
+              onClick={handleCtaClick}
+              data-track="primary_cta"
             >
               <a href={ctaLink}>{ctaText} <ArrowRight size={16} className="ml-2" /></a>
             </Button>
@@ -89,6 +124,8 @@ const LandingPageLayout = ({
                 size={isMobile ? "default" : "lg"}
                 className={`border-2 mt-3 sm:mt-0 w-full sm:w-auto ${backgroundImage ? 'border-white text-white hover:bg-white/10' : 'border-yemalin-grey-800 hover:bg-yemalin-grey-100'}`}
                 asChild
+                onClick={handleSecondaryCtaClick}
+                data-track="secondary_cta"
               >
                 <Link to={secondaryCtaLink}>{secondaryCtaText}</Link>
               </Button>

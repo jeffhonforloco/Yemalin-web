@@ -17,6 +17,7 @@ import { toast } from '@/hooks/use-toast';
 import MainLayout from '@/components/layouts/MainLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import SEO from '@/components/SEO';
 
 interface BlogPost {
   id: string;
@@ -33,6 +34,26 @@ interface BlogPost {
   read_time?: string;
   published_at?: string;
   created_at?: string;
+}
+
+// Extended interface for database posts that might not have SEO fields
+interface DatabasePost {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  image_url?: string;
+  category?: string;
+  status?: string;
+  author?: string;
+  author_image?: string;
+  read_time?: string;
+  published_at?: string;
+  created_at?: string;
+  updated_at?: string;
+  user_id?: string;
+  seo_title?: string;
+  seo_description?: string;
 }
 
 const DEFAULT_CONTENT = `<h2>Introduction</h2>
@@ -95,10 +116,11 @@ const BlogEditor = () => {
       if (error) throw error;
       
       if (data) {
+        const dbPost = data as DatabasePost;
         setPost({
-          ...data,
-          seo_title: data.seo_title || data.title,
-          seo_description: data.seo_description || data.excerpt
+          ...dbPost,
+          seo_title: dbPost.seo_title || dbPost.title,
+          seo_description: dbPost.seo_description || dbPost.excerpt
         });
       }
     } catch (error: any) {
@@ -206,6 +228,7 @@ const BlogEditor = () => {
   if (isLoading) {
     return (
       <MainLayout>
+        <SEO title="Loading Editor" />
         <div className="luxury-container py-16">
           <div className="flex items-center justify-center h-96">
             <div className="animate-pulse text-2xl">Loading editor...</div>
@@ -217,6 +240,11 @@ const BlogEditor = () => {
 
   return (
     <MainLayout>
+      <SEO 
+        title={id ? `Edit: ${post.title}` : "Create New Blog Post"}
+        description="Content management system for Yemalin Journal"
+        robots="noindex, nofollow" // Don't index admin pages
+      />
       <div className="luxury-container py-10">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-display">

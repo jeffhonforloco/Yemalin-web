@@ -1,10 +1,13 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from "react-router-dom";
+import { useEffect } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
+import analytics from "./utils/analytics";
 
 // Import pages
 import Index from "./pages/Index";
@@ -39,6 +42,12 @@ import EarlyAccessLanding from "./pages/EarlyAccessLanding";
 import TrendReportLanding from "./pages/TrendReportLanding";
 import ConversionLandingPage from './pages/ConversionLandingPage';
 import ProductLaunchLandingPage from './pages/ProductLaunchLandingPage';
+
+// Initialize analytics
+analytics.init({
+  // Add your Google Analytics ID here when ready for production
+  // googleAnalyticsId: 'G-XXXXXXXXXX'
+});
 
 const queryClient = new QueryClient();
 
@@ -95,5 +104,13 @@ const App = () => (
     </TooltipProvider>
   </QueryClientProvider>
 );
+
+// Add TypeScript definitions for window object
+declare global {
+  interface Window {
+    dataLayer: any[];
+    gtag: (...args: any[]) => void;
+  }
+}
 
 export default App;

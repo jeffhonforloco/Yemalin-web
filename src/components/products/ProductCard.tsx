@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import useAnalytics from '@/hooks/useAnalytics';
 
 export interface Product {
   id: string;
@@ -20,9 +21,10 @@ export interface Product {
 
 interface ProductCardProps {
   product: Product;
+  categoryContext?: string;
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, categoryContext }: ProductCardProps) => {
   const {
     id,
     name,
@@ -40,6 +42,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { toggleLikeProduct, isProductLiked } = useCart();
   const isLiked = isProductLiked(id);
   const [isHovered, setIsHovered] = useState(false);
+  const { trackEvent } = useAnalytics();
 
   // Format price based on currency
   const formatPrice = (amount: number) => {
@@ -55,6 +58,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
     e.preventDefault();
     e.stopPropagation();
     toggleLikeProduct(id);
+    
+    // Track like/unlike event
+    trackEvent(isLiked ? 'product_unlike' : 'product_like', {
+      product_id: id,
+      product_name: name,
+      product_brand: brand,
+      product_price: price
+    });
   };
   
   const handleShareClick = async (e: React.MouseEvent) => {
@@ -70,12 +81,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
           title: shareTitle,
           url: shareUrl,
         });
+        trackEvent('product_share', {
+          product_id: id,
+          product_name: name,
+          share_method: 'native'
+        });
       } else {
         // Fallback to clipboard
         await navigator.clipboard.writeText(shareUrl);
         toast({
           title: "Link copied",
           description: "Product link has been copied to clipboard",
+        });
+        trackEvent('product_share', {
+          product_id: id,
+          product_name: name,
+          share_method: 'clipboard'
         });
       }
     } catch (error) {
@@ -93,8 +114,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <Link to={`/shop/${slug}`}>
           <img
             src={imageUrl}
-            alt={name}
+            alt={`${brand} - ${name} - ${categoryContext || 'Fashion Item'}`}
             className="product-image w-full h-[400px] object-cover object-center transition-transform duration-700"
+            loading="lazy" // Add lazy loading for performance
+            width="400" // Add dimensions for better image loading
+            height="400"
           />
           
           {/* Hover overlay with gradient */}
@@ -122,6 +146,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             aria-label={isLiked ? "Remove from favorites" : "Add to favorites"}
             className={`bg-white p-2 rounded-full shadow-sm transition-all ${isLiked ? 'opacity-100' : isHovered ? 'opacity-100' : 'opacity-0'} hover:bg-gray-50`}
             onClick={handleLikeClick}
+            data-track={isLiked ? "product_unlike" : "product_like"}
           >
             <Heart 
               size={18} 
@@ -135,6 +160,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             aria-label="Share product"
             className={`bg-white p-2 rounded-full shadow-sm transition-all ${isHovered ? 'opacity-100' : 'opacity-0'} hover:bg-gray-50`}
             onClick={handleShareClick}
+            data-track="product_share"
           >
             <Share size={18} />
           </button>
@@ -142,7 +168,17 @@ const ProductCard = ({ product }: ProductCardProps) => {
         
         {/* Quick shop overlay (appears on hover) */}
         <div className={`absolute bottom-0 left-0 right-0 bg-white bg-opacity-90 py-3 transition-transform duration-300 ${isHovered ? 'translate-y-0' : 'translate-y-full'}`}>
-          <Link to={`/shop/${slug}`} className="w-full block text-center text-sm font-medium tracking-wide">
+          <Link 
+            to={`/shop/${slug}`} 
+            className="w-full block text-center text-sm font-medium tracking-wide"
+            onClick={() => {
+              trackEvent('product_quick_view', {
+                product_id: id,
+                product_name: name,
+                product_brand: brand
+              });
+            }}
+          >
             View Details
           </Link>
         </div>
