@@ -73,7 +73,7 @@ export function LeadMagnet({
       case 'trend-report':
         return 'Stay ahead of the curve with our curated insights on upcoming fashion trends and designer innovations.';
       case 'early-access':
-        return 'Be the first to shop new arrivals and limited edition pieces before they're available to the public.';
+        return "Be the first to shop new arrivals and limited edition pieces before they're available to the public.";
       case 'style-guide':
         return 'Learn how to build a timeless wardrobe with our expert styling tips and seasonal recommendations.';
       case 'newsletter':
