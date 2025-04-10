@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
@@ -112,7 +113,7 @@ const BlogPost = () => {
         <SEOMeta 
           title="Article Not Found"
           description="We couldn't find the article you were looking for."
-          robots="noindex, follow"
+          noIndex={true}
         />
         <div className="luxury-container py-16">
           <div className="text-center py-16">
@@ -180,6 +181,9 @@ const BlogPost = () => {
     });
   };
 
+  // Convert keywords string to array for SEOMeta
+  const keywordsArray = `${post.category}, fashion, yemalin, luxury fashion`.split(', ');
+
   return (
     <MainLayout>
       <SEOMeta 
@@ -188,7 +192,7 @@ const BlogPost = () => {
         ogImage={post.image_url || post.image}
         canonicalUrl={`${window.location.origin}/blog/${slug}`}
         ogType="article"
-        keywords={`${post.category}, fashion, yemalin, luxury fashion`}
+        keywords={keywordsArray}
         structuredData={structuredData}
       />
       

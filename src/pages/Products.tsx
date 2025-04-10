@@ -7,7 +7,7 @@ import { useWordPressProducts, useWordPressCategories } from '@/hooks/useWordPre
 import SEOMeta from '@/components/SEO/SEOMeta';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ChevronDown, Filter } from 'lucide-react';
+import { ChevronDown, Filter, MoreHorizontal } from 'lucide-react';
 import {
   Pagination,
   PaginationContent,
@@ -16,6 +16,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+
+// Add the missing PaginationEllipsis component
+const PaginationEllipsis = ({
+  className,
+  ...props
+}: React.ComponentProps<"span">) => (
+  <span
+    aria-hidden
+    className={`flex h-9 w-9 items-center justify-center ${className || ''}`}
+    {...props}
+  >
+    <MoreHorizontal className="h-4 w-4" />
+    <span className="sr-only">More pages</span>
+  </span>
+);
 
 const Products = () => {
   const { categorySlug } = useParams();
@@ -62,12 +77,15 @@ const Products = () => {
     ? `Explore our collection of ${currentCategory.toLowerCase()} products. Luxury fashion pieces curated for the discerning buyer.`
     : 'Browse Yemalin\'s curated collection of luxury fashion products from emerging designers. Sustainable, ethical, and unique pieces.';
 
+  // Convert keywords string to array for SEOMeta
+  const keywordsArray = `${currentCategory}, luxury fashion, sustainable fashion, designer brands, yemalin`.split(', ');
+
   return (
     <MainLayout>
       <SEOMeta 
         title={title}
         description={description}
-        keywords={`${currentCategory}, luxury fashion, sustainable fashion, designer brands, yemalin`}
+        keywords={keywordsArray}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",

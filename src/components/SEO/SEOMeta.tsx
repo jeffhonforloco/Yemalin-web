@@ -10,6 +10,7 @@ interface SEOMetaProps {
   keywords?: string[];
   structuredData?: Record<string, any>;
   noIndex?: boolean;
+  robots?: string; // Add robots prop to match usage in BlogPost.tsx
 }
 
 const SEOMeta = ({
@@ -20,7 +21,8 @@ const SEOMeta = ({
   ogType = "website",
   keywords = [],
   structuredData,
-  noIndex = false
+  noIndex = false,
+  robots
 }: SEOMetaProps) => {
   const fullTitle = title ? `${title} | Yemalin` : 'Yemalin | Luxury Fashion Marketplace';
   const keywordsString = keywords.join(', ');
@@ -42,7 +44,9 @@ const SEOMeta = ({
       {keywordsString && <meta name="keywords" content={keywordsString} />}
       
       {/* Robots meta tags */}
-      {noIndex ? (
+      {robots ? (
+        <meta name="robots" content={robots} />
+      ) : noIndex ? (
         <meta name="robots" content="noindex, nofollow" />
       ) : (
         <meta name="robots" content="index, follow" />
@@ -72,3 +76,4 @@ const SEOMeta = ({
 };
 
 export default SEOMeta;
+export type { SEOMetaProps };
