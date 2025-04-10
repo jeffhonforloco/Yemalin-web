@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/pagination";
 import { useWordPressPosts, useWordPressCategories } from '@/hooks/useWordPress';
 import SEOMeta from '@/components/SEO/SEOMeta';
+import { blogCategories } from '@/data/blogCategoriesData';
 
 const Blog = () => {
   const location = useLocation();
@@ -77,21 +78,36 @@ const Blog = () => {
       setSelectedCategoryName('All');
       navigate('/blog');
     } else {
+      // Using WordPress categories if available, otherwise use our custom categories
       const category = categories.find(cat => cat.name === categoryName);
       if (category) {
         setSelectedCategoryId(category.id);
         setSelectedCategoryName(category.name);
         navigate(`/blog/category/${category.slug}`);
+      } else {
+        // If we can't find it in WordPress categories, use our custom categories
+        const customCategory = blogCategories.find(cat => cat.name === categoryName);
+        if (customCategory) {
+          setSelectedCategoryId(undefined); // No WordPress ID for our custom category
+          setSelectedCategoryName(customCategory.name);
+          navigate(`/blog/category/${customCategory.slug}`);
+        }
       }
     }
     setCurrentPage(1); // Reset to first page when changing category
   };
   
-  // Create a complete list of categories including "All"
-  const allCategories = [
-    { name: 'All', id: 0 }, 
-    ...(categories || [])
+  // Create a complete list of categories, combining WordPress and our custom categories
+  const combinedCategories = [
+    { name: 'All', id: 0, slug: '' }, 
+    ...(categories || []),
+    ...blogCategories.map(cat => ({ name: cat.name, id: -1, slug: cat.slug }))
   ];
+
+  // Remove duplicates based on name
+  const uniqueCategories = Array.from(
+    new Map(combinedCategories.map(item => [item.name, item])).values()
+  );
 
   return (
     <MainLayout>
@@ -167,9 +183,9 @@ const Blog = () => {
                 className="w-full mb-12"
               >
                 <TabsList className="w-full justify-start overflow-x-auto flex-nowrap pb-2 mb-8">
-                  {allCategories.map(category => (
+                  {uniqueCategories.map((category, index) => (
                     <TabsTrigger 
-                      key={category.id} 
+                      key={`${category.id}-${index}`} 
                       value={category.name}
                       className="px-4 py-2 whitespace-nowrap"
                     >
@@ -178,8 +194,8 @@ const Blog = () => {
                   ))}
                 </TabsList>
                 
-                {allCategories.map(category => (
-                  <TabsContent key={category.id} value={category.name} className="mt-0">
+                {uniqueCategories.map((category, index) => (
+                  <TabsContent key={`${category.id}-${index}`} value={category.name} className="mt-0">
                     {loadingPosts ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {[...Array(6)].map((_, index) => (
@@ -232,8 +248,32 @@ const Blog = () => {
                     )}
                     
                     {!loadingPosts && currentPosts.length === 0 && (
-                      <div className="text-center py-12">
-                        <p className="text-gray-500">No articles in this category yet.</p>
+                      <div>
+                        {category.name !== 'All' && category.name !== selectedCategoryName && (
+                          <div className="text-center py-12">
+                            <p className="text-gray-500">No articles in this category yet.</p>
+                          </div>
+                        )}
+                        
+                        {/* Show topic links for our custom categories */}
+                        {blogCategories.find(cat => cat.name === category.name) && (
+                          <div className="mt-8">
+                            <h3 className="font-medium text-lg mb-4">Popular Topics in {category.name}</h3>
+                            <div className="grid gap-4">
+                              {blogCategories
+                                .find(cat => cat.name === category.name)?.topics
+                                .map(topic => (
+                                  <Link 
+                                    key={topic.slug} 
+                                    to={`/blog/${topic.slug}`}
+                                    className="p-4 border border-gray-100 hover:border-gray-300 rounded-lg transition-colors"
+                                  >
+                                    <h4 className="font-medium">{topic.title}</h4>
+                                  </Link>
+                                ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
                     
@@ -294,24 +334,31 @@ const Blog = () => {
             <div className="sticky top-24">
               <div className="mb-8 bg-white p-6 shadow-sm">
                 <h3 className="text-lg font-medium mb-4 flex items-center">
-                  <BookOpen size={18} className="mr-2" /> Reading Lists
+                  <BookOpen size={18} className="mr-2" /> Featured Topics
                 </h3>
                 <div className="space-y-4">
-                  {!loadingCategories && categories
-                    .filter(cat => cat.count > 0)
-                    .slice(0, 3)
-                    .map(category => (
-                      <Link 
-                        key={category.id}
-                        to={`/blog/category/${category.slug}`} 
-                        className="block group"
+                  {blogCategories.slice(0, 3).map(category => (
+                    <div key={category.slug} className="mb-4">
+                      <Link
+                        to={`/blog/category/${category.slug}`}
+                        className="font-medium text-yemalin-black hover:text-yemalin-accent transition-colors"
                       >
-                        <div className="font-medium group-hover:text-yemalin-accent transition-colors">
-                          {category.name}
-                        </div>
-                        <p className="text-sm text-gray-500">{category.count} articles</p>
+                        {category.name}
                       </Link>
-                    ))}
+                      <ul className="mt-2 space-y-2">
+                        {category.topics.map(topic => (
+                          <li key={topic.slug}>
+                            <Link
+                              to={`/blog/${topic.slug}`}
+                              className="text-sm text-gray-600 hover:text-yemalin-accent transition-colors"
+                            >
+                              {topic.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
               </div>
               

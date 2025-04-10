@@ -4,44 +4,54 @@ import { Calendar, ChevronRight, BookOpen } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Link } from 'react-router-dom';
+import { blogCategories } from '@/data/blogCategoriesData';
 
-// Mock data for upcoming content
-const upcomingContent = [
-  {
-    id: 1,
-    date: 'April 15, 2025',
-    title: 'Spring/Summer Collection Reviews',
-    description: 'Exclusive coverage of the latest runway trends from major fashion houses',
-    category: 'Trend Report',
-    link: '/blog/spring-summer-collection-reviews'
-  },
-  {
-    id: 2,
-    date: 'April 22, 2025',
-    title: 'Designer Spotlight: Emma Chen',
-    description: 'An exclusive interview with the rising star of sustainable luxury',
-    category: 'Designer Spotlight',
-    link: '/blog/designer-spotlight-emma-chen'
-  },
-  {
-    id: 3,
-    date: 'May 1, 2025',
-    title: 'The Evolution of Fashion Tech',
-    description: 'How technology is transforming the future of fashion',
-    category: 'Fashion Tech',
-    link: '/blog/evolution-fashion-tech'
-  },
-  {
-    id: 4,
-    date: 'May 10, 2025',
-    title: 'Sustainable Fabrics Guide',
-    description: 'A comprehensive look at eco-friendly materials shaping the industry',
-    category: 'Sustainability',
-    link: '/blog/sustainable-fabrics-guide'
+// Generate upcoming dates for the content calendar
+const generateUpcomingDates = () => {
+  const dates = [];
+  const currentDate = new Date();
+  
+  for (let i = 0; i < 4; i++) {
+    const futureDate = new Date(currentDate);
+    futureDate.setDate(currentDate.getDate() + 7 + (i * 7)); // Weekly content, starting next week
+    dates.push(futureDate);
   }
-];
+  
+  return dates;
+};
+
+// Format date as "Month Day, Year"
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('en-US', { 
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+};
 
 const ContentCalendar: React.FC = () => {
+  // Get upcoming dates
+  const upcomingDates = generateUpcomingDates();
+  
+  // Match topics with dates
+  const upcomingContent = upcomingDates.map((date, index) => {
+    // Cycle through categories and topics
+    const categoryIndex = index % blogCategories.length;
+    const topicIndex = Math.floor(index / blogCategories.length) % 2; // Alternate between first and second topic
+    
+    const category = blogCategories[categoryIndex];
+    const topic = category.topics[topicIndex];
+    
+    return {
+      id: index + 1,
+      date: formatDate(date),
+      title: topic.title,
+      description: `Explore our insights on ${category.name.toLowerCase()}`,
+      category: category.name,
+      link: `/blog/${topic.slug}`
+    };
+  });
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {upcomingContent.map((item) => (
