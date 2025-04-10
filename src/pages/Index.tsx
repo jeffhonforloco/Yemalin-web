@@ -1,4 +1,3 @@
-
 import MainLayout from '../components/layouts/MainLayout';
 import Hero from '../components/home/Hero';
 import FeaturedCategories from '../components/home/FeaturedCategories';
@@ -25,6 +24,7 @@ import CollaborationTeaser from '../components/home/CollaborationTeaser';
 import EmailMarketingSignup from '../components/marketing/EmailMarketingSignup';
 import DesignerSpotlight from '../components/home/DesignerSpotlight';
 import MaterialStories from '../components/home/MaterialStories';
+import SEOMeta from '@/components/SEO/SEOMeta';
 
 const Index = () => {
   // Sample editorial content for the content-to-product section
@@ -44,6 +44,12 @@ const Index = () => {
 
   return (
     <MainLayout>
+      <SEOMeta 
+        title="Yemalin | Luxury Fashion Marketplace"
+        description="Exclusive shopping experience for high-end fashion enthusiasts. Discover luxury brands and boutique designers on Yemalin."
+        keywords={["luxury fashion", "designer clothing", "sustainable fashion", "boutique designers", "high-end fashion", "fashion marketplace"]}
+      />
+      
       {/* Dynamic Hero Section with brand vision */}
       <Hero />
       
