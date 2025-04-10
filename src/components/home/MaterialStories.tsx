@@ -10,28 +10,28 @@ const featuredMaterials = [
     id: "silk",
     name: "Mulberry Silk",
     origin: "China & Japan",
-    image: "https://images.unsplash.com/photo-1589394915835-964da87c1303?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    image: "/placeholder.svg",
     description: "Prized for its natural sheen, softness, and temperature-regulating properties, Mulberry silk has been treasured for millennia.",
     sustainability: "Renewable resource cultivated using traditional methods that preserve biodiversity.",
-    productImage: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+    productImage: "/placeholder.svg"
   },
   {
     id: "linen",
     name: "Belgian Linen",
     origin: "Belgium",
-    image: "https://images.unsplash.com/photo-1594761051656-73fefd47ad16?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    image: "/placeholder.svg",
     description: "Known for its exceptional durability and breathability, Belgian linen becomes more beautiful with age.",
     sustainability: "Flax requires minimal water and pesticides, making linen one of the most eco-friendly textile fibers.",
-    productImage: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+    productImage: "/placeholder.svg"
   },
   {
     id: "wool",
     name: "Merino Wool",
     origin: "Australia & New Zealand",
-    image: "https://images.unsplash.com/photo-1599974202733-c2b17594b1e9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    image: "/placeholder.svg",
     description: "Ultra-fine fibers create a luxuriously soft hand feel while providing natural temperature regulation.",
     sustainability: "Our merino is sourced from certified ethical farms prioritizing animal welfare and environmental stewardship.",
-    productImage: "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+    productImage: "/placeholder.svg"
   }
 ];
 
