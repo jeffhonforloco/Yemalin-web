@@ -14,8 +14,6 @@ interface BlogSidebarProps {
 }
 
 const BlogSidebar = ({ 
-  author, 
-  authorImage, 
   category, 
   postTitle, 
   postUrl,
@@ -56,26 +54,6 @@ const BlogSidebar = ({
 
   return (
     <div className="sticky top-24">
-      <div className="bg-yemalin-grey-100 p-6 mb-8">
-        <div className="flex items-center mb-4">
-          <img 
-            src={authorImage}
-            alt={author}
-            className="w-16 h-16 rounded-full mr-4 object-cover"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = '/placeholder.svg';
-            }}
-          />
-          <div>
-            <h3 className="font-medium text-lg">{author}</h3>
-          </div>
-        </div>
-        <p className="text-sm">
-          With over a decade of experience in luxury fashion journalism, {author} specializes in spotlighting emerging designers and sustainable practices in the industry.
-        </p>
-      </div>
-      
       <div className="mb-8">
         <h3 className="font-display text-xl mb-4">Related Categories</h3>
         <div className="flex flex-wrap gap-2">

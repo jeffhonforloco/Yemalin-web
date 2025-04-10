@@ -64,10 +64,6 @@ const BlogPost = () => {
     "description": post.excerpt,
     "image": post.image_url || post.image,
     "datePublished": new Date().toISOString(),
-    "author": {
-      "@type": "Person",
-      "name": post.author
-    },
     "publisher": {
       "@type": "Organization",
       "name": "Yemalin",
@@ -233,16 +229,7 @@ const BlogPost = () => {
                 </p>
                 
                 <div className="flex items-center justify-between flex-wrap gap-4">
-                  <div className="flex items-center mb-2">
-                    <img 
-                      src={post.author_image || post.authorImage}
-                      alt={post.author}
-                      className="w-12 h-12 rounded-full mr-4 object-cover border-2 border-white/40"
-                    />
-                    <div>
-                      <p className="text-white font-medium">{post.author}</p>
-                    </div>
-                  </div>
+                  <div></div>
                   
                   <div className="bg-white/80 backdrop-blur-sm rounded-md p-2">
                     <SocialShareButtons 
@@ -296,7 +283,6 @@ const BlogPost = () => {
               excerpt={post.excerpt}
               content={post.content}
               category={post.category}
-              publishDate={post.date}
             />
             
             <div className="flex items-center justify-center gap-8 my-12 p-6 border rounded-lg bg-gray-50">
@@ -382,8 +368,6 @@ const BlogPost = () => {
           <div className="lg:col-span-4">
             <div className="sticky top-24">
               <BlogSidebar
-                author={post.author}
-                authorImage={post.author_image || post.authorImage}
                 category={post.category}
                 postTitle={post.title}
                 postUrl={window.location.href}

@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layouts/MainLayout';
@@ -15,8 +16,6 @@ interface BlogPost {
   content: string;
   image_url?: string;
   category?: string;
-  author?: string;
-  author_image?: string;
   read_time?: string;
 }
 
@@ -92,13 +91,12 @@ const BlogPreview = () => {
             <BlogContent
               excerpt={post.excerpt}
               content={post.content}
+              category={post.category}
             />
           </div>
           
           <div className="lg:col-span-4">
             <BlogSidebar
-              author={post.author || 'Editorial Team'}
-              authorImage={post.author_image || '/placeholder.svg'}
               category={post.category || 'Uncategorized'}
               postTitle={post.title}
               postUrl={window.location.href} 
