@@ -45,7 +45,7 @@ const JournalSection = () => {
                 
                 {blogCategories.map(category => (
                   <DropdownMenuItem 
-                    key={category.name}
+                    key={category.slug}
                     className="cursor-pointer"
                     onClick={() => setSelectedCategory(category.name)}
                   >
