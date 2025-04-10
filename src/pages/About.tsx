@@ -4,41 +4,13 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { 
-  CheckCircle,
   Heart, 
   Globe, 
   Award, 
+  CheckCircle,
   Users,
   ShoppingBag 
 } from 'lucide-react';
-
-// Mock data for team members
-const teamMembers = [
-  {
-    name: 'Isabella Chen',
-    role: 'Founder & Creative Director',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=761&q=80',
-    bio: 'With over 15 years of experience in luxury fashion, Isabella founded Yemalin with a vision to create a platform that celebrates exceptional design and craftsmanship.'
-  },
-  {
-    name: 'Marcus Reid',
-    role: 'Chief Operating Officer',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80',
-    bio: 'Marcus oversees all business operations at Yemalin, bringing his expertise from previous leadership roles at global luxury retailers.'
-  },
-  {
-    name: 'Sophia Nguyen',
-    role: 'Head of Designer Relations',
-    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80',
-    bio: 'Sophia works closely with our designers, helping them grow their brands while maintaining Yemalin\'s curatorial standards.'
-  },
-  {
-    name: 'Alexander Palmer',
-    role: 'Technology Director',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80',
-    bio: 'Alexander leads our technology team, ensuring that both customers and designers have the best possible digital experience on our platform.'
-  }
-];
 
 // Mock data for value propositions
 const valueProps = [
@@ -153,31 +125,6 @@ const About = () => {
               alt="Craftsmanship"
               className="w-full h-auto object-cover object-center"
             />
-          </div>
-        </div>
-      </div>
-      
-      {/* Team Section */}
-      <div className="bg-yemalin-grey-100 py-20">
-        <div className="luxury-container">
-          <h2 className="text-2xl md:text-3xl font-display mb-12 text-center">Meet Our Team</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {teamMembers.map((member, index) => (
-              <div key={index} className="bg-white overflow-hidden group">
-                <div className="h-80 overflow-hidden">
-                  <img 
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-medium mb-1">{member.name}</h3>
-                  <p className="text-gray-600 text-sm mb-3">{member.role}</p>
-                  <p className="text-sm">{member.bio}</p>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>
