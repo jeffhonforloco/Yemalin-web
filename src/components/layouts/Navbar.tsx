@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import YemalinLogo from '@/components/YemalinLogo';
-import { ChevronDown, Menu, ShoppingBag, User, Pencil, Heart } from 'lucide-react';
+import { ChevronDown, Menu, ShoppingBag, User, Pencil, Heart, BookOpen } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import CartDrawer from '@/components/cart/CartDrawer';
 import {
@@ -18,6 +18,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import { blogCategories } from '@/data/blogCategoriesData';
 
 const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -41,14 +42,14 @@ const Navbar = () => {
     { title: "View All", href: "/shop" }
   ];
 
-  // Editorial Content Categories (removed Designer Profiles)
-  const editorialCategories = [
-    { title: "Fashion Trends", href: "/blog/category/fashion-trends" },
-    { title: "Style Tips", href: "/blog/category/style-tips" },
-    { title: "Industry Insights", href: "/blog/category/industry-insights" },
-    { title: "Runway Reviews", href: "/blog/category/runway-reviews" },
-    { title: "View All Articles", href: "/blog" }
-  ];
+  // Updated Editorial Content Categories based on blogCategoriesData
+  const editorialCategories = blogCategories.map(category => ({
+    title: category.name,
+    href: `/blog/category/${category.slug}`
+  }));
+  
+  // Add "View All Articles" to the end
+  editorialCategories.push({ title: "View All Articles", href: "/blog" });
   
   // Designer-related content
   const designerCategories = [
@@ -92,19 +93,49 @@ const Navbar = () => {
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-sm uppercase tracking-wider font-bold">Journal</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[500px] grid-cols-2 gap-3 p-4">
-                    {editorialCategories.map((category) => (
-                      <li key={category.title}>
+                  <ul className="grid w-[500px] grid-cols-1 gap-3 p-4">
+                    {/* Display Categories */}
+                    {blogCategories.map((category) => (
+                      <li key={category.slug} className="mb-2">
                         <NavigationMenuLink asChild>
                           <Link
-                            to={category.href}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100"
+                            to={`/blog/category/${category.slug}`}
+                            className="block select-none font-medium p-2 text-sm no-underline outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100"
                           >
-                            <div className="text-sm font-medium">{category.title}</div>
+                            {category.name}
                           </Link>
                         </NavigationMenuLink>
+                        
+                        {/* Display Topics under each category */}
+                        <ul className="ml-4 border-l border-gray-200 pl-3">
+                          {category.topics.map((topic) => (
+                            <li key={topic.slug} className="my-1">
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  to={`/blog/${topic.slug}`}
+                                  className="block select-none py-1 px-2 text-xs text-gray-600 no-underline outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100"
+                                >
+                                  <div className="flex items-center">
+                                    <BookOpen className="mr-2 h-3 w-3" />
+                                    {topic.title}
+                                  </div>
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          ))}
+                        </ul>
                       </li>
                     ))}
+                    <li className="mt-3 pt-3 border-t border-gray-200">
+                      <NavigationMenuLink asChild>
+                        <Link
+                          to="/blog"
+                          className="block select-none rounded-md p-2 text-sm font-medium no-underline outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100"
+                        >
+                          View All Articles
+                        </Link>
+                      </NavigationMenuLink>
+                    </li>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -271,15 +302,34 @@ const Navbar = () => {
                   
                   <div className="border-b pb-2">
                     <p className="px-2 text-sm font-medium text-gray-500">Journal</p>
-                    {editorialCategories.map((category) => (
-                      <Link 
-                        key={category.title}
-                        to={category.href} 
-                        className="px-2 py-2 hover:bg-gray-100 rounded block"
-                      >
-                        {category.title}
-                      </Link>
+                    {/* Updated mobile journal menu */}
+                    {blogCategories.map((category) => (
+                      <div key={category.slug}>
+                        <Link 
+                          to={`/blog/category/${category.slug}`} 
+                          className="px-2 py-2 hover:bg-gray-100 rounded block font-medium"
+                        >
+                          {category.name}
+                        </Link>
+                        {/* Display topics under each category with indentation */}
+                        {category.topics.map((topic) => (
+                          <Link
+                            key={topic.slug}
+                            to={`/blog/${topic.slug}`}
+                            className="px-2 py-1.5 pl-6 hover:bg-gray-100 rounded block text-sm flex items-center"
+                          >
+                            <BookOpen className="mr-2 h-3 w-3" />
+                            {topic.title}
+                          </Link>
+                        ))}
+                      </div>
                     ))}
+                    <Link 
+                      to="/blog" 
+                      className="mt-2 px-2 py-2 hover:bg-gray-100 rounded block font-medium"
+                    >
+                      View All Articles
+                    </Link>
                   </div>
                   
                   <div className="border-b pb-2">
