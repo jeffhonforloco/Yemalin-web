@@ -9,7 +9,7 @@ export type { SeoProps };
 export const ProductSEO = ({ 
   title, 
   description, 
-  imageUrl, 
+  ogImage, 
   productData, 
   ...props 
 }: SeoProps & { 
@@ -29,7 +29,7 @@ export const ProductSEO = ({
     "@type": "Product",
     "name": productData.name,
     "description": description,
-    "image": imageUrl,
+    "image": ogImage,
     ...(productData.brand && { "brand": {
       "@type": "Brand",
       "name": productData.brand
@@ -48,7 +48,7 @@ export const ProductSEO = ({
     <SEO 
       title={title}
       description={description}
-      ogImage={imageUrl}
+      ogImage={ogImage}
       structuredData={structuredData}
       {...props}
     />
@@ -58,7 +58,7 @@ export const ProductSEO = ({
 export const BlogPostSEO = ({ 
   title, 
   description, 
-  imageUrl, 
+  ogImage,
   publishDate,
   authorName,
   slug,
@@ -76,7 +76,7 @@ export const BlogPostSEO = ({
     "@type": "BlogPosting",
     "headline": title,
     "description": description,
-    "image": imageUrl,
+    "image": ogImage,
     "url": slug ? `${window.location.origin}/blog/${slug}` : window.location.href,
     "datePublished": publishDate || new Date().toISOString(),
     ...(authorName && {
@@ -102,7 +102,7 @@ export const BlogPostSEO = ({
     <SEO 
       title={title}
       description={description}
-      ogImage={imageUrl}
+      ogImage={ogImage}
       structuredData={structuredData}
       ogType="article"
       {...props}
@@ -113,7 +113,7 @@ export const BlogPostSEO = ({
 export const CollectionSEO = ({ 
   title, 
   description, 
-  imageUrl,
+  ogImage,
   products,
   ...props 
 }: SeoProps & { 
@@ -146,7 +146,7 @@ export const CollectionSEO = ({
     <SEO 
       title={title}
       description={description}
-      ogImage={imageUrl}
+      ogImage={ogImage}
       structuredData={structuredData}
       {...props}
     />
@@ -156,7 +156,7 @@ export const CollectionSEO = ({
 export const LocalBusinessSEO = ({ 
   title, 
   description, 
-  imageUrl, 
+  ogImage, 
   businessData,
   ...props 
 }: SeoProps & { 
@@ -180,7 +180,7 @@ export const LocalBusinessSEO = ({
     "@type": "LocalBusiness",
     "name": businessData.name,
     "description": description,
-    "image": imageUrl,
+    "image": ogImage,
     "address": {
       "@type": "PostalAddress",
       "streetAddress": businessData.address,
@@ -205,7 +205,7 @@ export const LocalBusinessSEO = ({
     <SEO 
       title={title}
       description={description}
-      ogImage={imageUrl}
+      ogImage={ogImage}
       structuredData={structuredData}
       {...props}
     />

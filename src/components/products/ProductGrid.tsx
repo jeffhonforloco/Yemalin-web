@@ -75,7 +75,6 @@ const ProductGrid = ({
             key={product.id} 
             product={product} 
             categoryContext={category}
-            collectionContext={collectionName}
           />
         ))}
       </div>
