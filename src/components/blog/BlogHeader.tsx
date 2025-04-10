@@ -1,12 +1,11 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface BlogHeaderProps {
   title: string;
   category?: string;
-  date?: string;
   readTime?: string;
   showBackButton?: boolean;
   backButtonText?: string;
@@ -16,7 +15,6 @@ interface BlogHeaderProps {
 const BlogHeader = ({
   title,
   category,
-  date,
   readTime,
   showBackButton = true,
   backButtonText = "Back to Journal",
@@ -44,20 +42,11 @@ const BlogHeader = ({
         )}
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-display mb-6">{title}</h1>
         
-        <div className="flex items-center gap-6 text-sm text-gray-600 mb-8">
-          {date && (
-            <div className="flex items-center">
-              <Calendar size={16} className="mr-2" />
-              <span>{date}</span>
-            </div>
-          )}
-          {readTime && (
-            <div className="flex items-center">
-              <Clock size={16} className="mr-2" />
-              <span>{readTime}</span>
-            </div>
-          )}
-        </div>
+        {readTime && (
+          <div className="text-sm text-gray-600 mb-8">
+            <span>{readTime} read</span>
+          </div>
+        )}
       </div>
     </>
   );

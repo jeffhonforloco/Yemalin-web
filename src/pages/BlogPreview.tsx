@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layouts/MainLayout';
@@ -18,7 +17,6 @@ interface BlogPost {
   category?: string;
   author?: string;
   author_image?: string;
-  date?: string;
   read_time?: string;
 }
 
@@ -26,7 +24,6 @@ const BlogPreview = () => {
   const navigate = useNavigate();
   const [post, setPost] = useState<BlogPost | null>(null);
   
-  // Use SEO hook - always called regardless of post existence
   useBlogSeo({
     title: post ? `Preview: ${post.title}` : 'Preview',
     description: post?.excerpt,
@@ -63,7 +60,6 @@ const BlogPreview = () => {
 
   return (
     <MainLayout>
-      {/* Hero Section */}
       <div className="w-full">
         <div className="relative h-[60vh] overflow-hidden">
           <img 
@@ -78,21 +74,17 @@ const BlogPreview = () => {
         </div>
       </div>
       
-      {/* PREVIEW Banner */}
       <div className="bg-yellow-100 text-yellow-800 py-2 px-4 text-center">
         <p className="font-medium">PREVIEW MODE - This is how your article will appear when published</p>
       </div>
       
-      {/* Article Content */}
       <div className="luxury-container py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Main Content */}
           <div className="lg:col-span-8">
             <BlogHeader
               title={post.title}
               category={post.category || 'Uncategorized'}
-              date={post.date || new Date().toLocaleDateString()}
-              readTime={post.read_time || '5 min read'}
+              readTime={post.read_time || '5 min'}
               backTo="/dashboard/blog"
               backButtonText="Back to Editor"
             />
@@ -103,7 +95,6 @@ const BlogPreview = () => {
             />
           </div>
           
-          {/* Sidebar */}
           <div className="lg:col-span-4">
             <BlogSidebar
               author={post.author || 'Editorial Team'}
@@ -117,7 +108,6 @@ const BlogPreview = () => {
         
         <Separator className="my-16" />
         
-        {/* Newsletter Section */}
         <BlogNewsletter />
       </div>
     </MainLayout>

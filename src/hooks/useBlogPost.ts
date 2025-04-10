@@ -14,7 +14,6 @@ interface BlogPostData {
   author?: string;
   authorImage?: string;
   author_image?: string;
-  date?: string;
   read_time?: string;
   link?: string;
 }
@@ -53,11 +52,6 @@ const useBlogPost = (slug: string | undefined) => {
                 category: data[0].category,
                 author: data[0].author,
                 author_image: data[0].author_image,
-                date: new Date(data[0].published_at || data[0].created_at).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                }),
                 read_time: data[0].read_time
               });
               setLoading(false);
