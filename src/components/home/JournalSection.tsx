@@ -8,8 +8,8 @@ import { Separator } from '@/components/ui/separator';
 import { blogPosts } from '@/data/mockBlogPostsData';
 
 const JournalSection = () => {
-  // Display only the latest 3 blog posts
-  const recentPosts = blogPosts.slice(0, 3);
+  // Display 6 blog posts instead of 3
+  const recentPosts = blogPosts.slice(0, 6);
   
   return (
     <section className="py-16 bg-white">
