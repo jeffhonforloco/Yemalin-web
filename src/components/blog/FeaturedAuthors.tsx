@@ -7,27 +7,27 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 const designers = [
   {
     id: 1,
-    name: 'Sophia Martinez',
-    role: 'Fashion Designer',
-    image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=256&auto=format&fit=crop',
+    name: "Sophia Martinez",
+    role: "Fashion Designer",
+    image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=256&auto=format&fit=crop",
     collections: 3,
-    link: '/designers/sophia-martinez'
+    link: "/designers/sophia-martinez"
   },
   {
     id: 2,
-    name: 'Elijah Park',
-    role: 'Accessories Designer',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&auto=format&fit=crop',
+    name: "Elijah Park",
+    role: "Accessories Designer",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&auto=format&fit=crop",
     collections: 2,
-    link: '/designers/elijah-park'
+    link: "/designers/elijah-park"
   },
   {
     id: 3,
-    name: 'Zoe Chen',
-    role: 'Sustainable Fashion Designer',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=256&auto=format&fit=crop',
+    name: "Zoe Chen",
+    role: "Sustainable Fashion Designer",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=256&auto=format&fit=crop",
     collections: 4,
-    link: '/designers/zoe-chen'
+    link: "/designers/zoe-chen"
   }
 ];
 

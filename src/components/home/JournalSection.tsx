@@ -48,18 +48,6 @@ const JournalSection = () => {
                   <CardDescription className="line-clamp-3 mb-4">
                     {post.excerpt}
                   </CardDescription>
-                  <Separator className="mb-4" />
-                  <div className="flex items-center">
-                    <img 
-                      src={post.authorImage}
-                      alt={post.author}
-                      className="w-8 h-8 rounded-full mr-2 object-cover"
-                    />
-                    <div>
-                      <p className="text-sm font-medium">{post.author}</p>
-                      <p className="text-xs text-gray-500">{post.date}</p>
-                    </div>
-                  </div>
                 </CardContent>
               </Link>
             </Card>
