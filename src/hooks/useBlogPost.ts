@@ -11,12 +11,8 @@ interface BlogPostData {
   image?: string;
   image_url?: string;
   category?: string;
-  author?: string;
-  authorImage?: string;
-  author_image?: string;
   read_time?: string;
   link?: string;
-  // No date property here
 }
 
 const useBlogPost = (slug: string | undefined) => {
@@ -51,8 +47,6 @@ const useBlogPost = (slug: string | undefined) => {
                 content: data[0].content || "",
                 image_url: data[0].image_url,
                 category: data[0].category,
-                author: data[0].author,
-                author_image: data[0].author_image,
                 read_time: data[0].read_time
               });
               setLoading(false);

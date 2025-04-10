@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Separator } from '@/components/ui/separator';
 import { LeadMagnet } from '@/components/marketing/LeadMagnet';
@@ -5,11 +6,10 @@ import { LeadMagnet } from '@/components/marketing/LeadMagnet';
 interface BlogContentProps {
   excerpt?: string;
   content: string;
-  category?: string; 
-  publishDate?: string;
+  category?: string;
 }
 
-const BlogContent = ({ excerpt, content, category, publishDate }: BlogContentProps) => {
+const BlogContent = ({ excerpt, content, category }: BlogContentProps) => {
   // Generate a drop cap for the first paragraph if we have an excerpt
   const renderContent = () => {
     if (content.startsWith('<')) {
