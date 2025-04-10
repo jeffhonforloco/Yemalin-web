@@ -15,10 +15,30 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { blogCategories } from '@/data/blogCategoriesData';
+import sampleArticleContent from '@/data/sampleArticleContent';
+
+// Create a list of topic slugs that we know have content
+const availableArticleSlugs = Object.keys(sampleArticleContent);
 
 const JournalSection = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const { posts, loading, error } = useWordPressPosts(1, 6); // Fetch 6 posts from first page
+  
+  // Filter sample articles based on selected category
+  const getSampleArticles = () => {
+    if (selectedCategory === 'All') {
+      return Object.values(sampleArticleContent).slice(0, 6);
+    }
+    
+    return Object.values(sampleArticleContent)
+      .filter(article => article.category === selectedCategory)
+      .slice(0, 6);
+  };
+  
+  const sampleArticles = getSampleArticles();
+  
+  // Use sample articles if WordPress API fails
+  const displayArticles = posts.length > 0 && !error ? posts : sampleArticles;
   
   return (
     <section className="py-16 bg-white">
@@ -78,49 +98,47 @@ const JournalSection = () => {
           </div>
         )}
         
-        {error && (
+        {error && !sampleArticles.length && (
           <div className="py-10 text-center">
             <p className="text-red-500">Failed to load journal entries. Please try again later.</p>
           </div>
         )}
         
-        {!loading && !error && (
+        {!loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts
-              .filter(post => selectedCategory === 'All' || post.category === selectedCategory)
-              .map(post => (
-                <Card key={post.id} className="overflow-hidden border-none shadow-sm group">
-                  <Link to={`/blog/${post.slug}`} className="block">
-                    <div className="h-60 overflow-hidden">
-                      <img 
-                        src={post.image_url || 'https://via.placeholder.com/800x600?text=Yemalin+Journal'}
-                        alt={post.title}
-                        className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                      />
+            {displayArticles.map(post => (
+              <Card key={post.id || post.slug} className="overflow-hidden border-none shadow-sm group">
+                <Link to={`/blog/${post.slug}`} className="block">
+                  <div className="h-60 overflow-hidden">
+                    <img 
+                      src={post.image_url || 'https://via.placeholder.com/800x600?text=Yemalin+Journal'}
+                      alt={post.title}
+                      className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-medium bg-yemalin-grey-100 px-2 py-1">
+                        {post.category}
+                      </span>
+                      <span className="flex items-center text-xs text-gray-500">
+                        <Clock size={14} className="mr-1" />
+                        {post.read_time}
+                      </span>
                     </div>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-medium bg-yemalin-grey-100 px-2 py-1">
-                          {post.category}
-                        </span>
-                        <span className="flex items-center text-xs text-gray-500">
-                          <Clock size={14} className="mr-1" />
-                          {post.read_time}
-                        </span>
-                      </div>
-                      <CardTitle className="line-clamp-2 mb-2">{post.title}</CardTitle>
-                      <CardDescription 
-                        className="line-clamp-3 mb-4"
-                        dangerouslySetInnerHTML={{ __html: post.excerpt }}
-                      />
-                    </CardContent>
-                  </Link>
-                </Card>
-              ))}
+                    <CardTitle className="line-clamp-2 mb-2">{post.title}</CardTitle>
+                    <CardDescription 
+                      className="line-clamp-3 mb-4"
+                      dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                    />
+                  </CardContent>
+                </Link>
+              </Card>
+            ))}
           </div>
         )}
         
-        {!loading && !error && posts.filter(post => selectedCategory === 'All' || post.category === selectedCategory).length === 0 && (
+        {!loading && displayArticles.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500">No articles in this category yet.</p>
           </div>

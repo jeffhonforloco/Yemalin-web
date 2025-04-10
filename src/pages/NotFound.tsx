@@ -3,7 +3,8 @@ import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import MainLayout from '../components/layouts/MainLayout';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Home, ShoppingBag } from "lucide-react";
+import { ArrowLeft, Home, ShoppingBag, BookOpen } from "lucide-react";
+import sampleArticleContent from "@/data/sampleArticleContent";
 
 const NotFound = () => {
   const location = useLocation();
@@ -15,10 +16,34 @@ const NotFound = () => {
     );
   }, [location.pathname]);
 
+  // Check if this might be a blog post that exists in our sample content
+  const checkForBlogPost = () => {
+    const path = location.pathname;
+    if (path.startsWith('/blog/')) {
+      const slug = path.replace('/blog/', '');
+      return sampleArticleContent[slug] !== undefined;
+    }
+    return false;
+  };
+
   // Determine if we're in a product-related path
   const isProductRelatedPath = location.pathname.includes('/shop') || 
                               location.pathname.includes('/products') ||
                               location.pathname.includes('/collections');
+  
+  // Determine if we're in a blog-related path
+  const isBlogRelatedPath = location.pathname.includes('/blog') || 
+                           location.pathname.includes('/journal');
+  
+  // Check if this could be a blog post in our sample content
+  const couldBeSamplePost = checkForBlogPost();
+  
+  // If this is a sample post that should exist, redirect to force a reload
+  useEffect(() => {
+    if (couldBeSamplePost) {
+      window.location.reload();
+    }
+  }, [couldBeSamplePost]);
 
   return (
     <MainLayout>
@@ -53,6 +78,19 @@ const NotFound = () => {
                 <Link to="/shop">
                   <ShoppingBag size={18} className="mr-2" />
                   Continue Shopping
+                </Link>
+              </Button>
+            )}
+            
+            {isBlogRelatedPath && (
+              <Button
+                variant="outline"
+                className="border-black"
+                asChild
+              >
+                <Link to="/blog">
+                  <BookOpen size={18} className="mr-2" />
+                  Browse Journal
                 </Link>
               </Button>
             )}

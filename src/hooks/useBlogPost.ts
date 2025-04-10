@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { allBlogPosts } from '@/data/mockBlogPostsData';
+import sampleArticleContent from '@/data/sampleArticleContent';
 
 interface BlogPostData {
   id?: string;
@@ -26,7 +27,22 @@ const useBlogPost = (slug: string | undefined) => {
       // First check if we have a real blog post from the database
       if (slug !== 'preview') {
         try {
-          // Generate likely slug format for database comparison
+          // Check if we have sample article content for this slug
+          if (slug && sampleArticleContent[slug]) {
+            const samplePost = sampleArticleContent[slug];
+            setPost({
+              title: samplePost.title,
+              excerpt: samplePost.excerpt,
+              content: samplePost.content,
+              image_url: samplePost.image_url,
+              category: samplePost.category,
+              read_time: samplePost.read_time
+            });
+            setLoading(false);
+            return;
+          }
+          
+          // Try to get content from Supabase
           if (typeof slug === 'string') {
             const formattedSlug = slug.replace(/-/g, ' ');
             
@@ -59,7 +75,7 @@ const useBlogPost = (slug: string | undefined) => {
         }
       }
   
-      // If we're here, try mock data or preview data
+      // If we're here, try preview data or mock data
       if (slug === 'preview') {
         // Use preview data from localStorage
         const previewData = localStorage.getItem('preview_post');

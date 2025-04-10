@@ -1,5 +1,6 @@
 
 import axios from 'axios';
+import sampleArticleContent from '@/data/sampleArticleContent';
 
 // Base URL for your WordPress site
 const WORDPRESS_API_URL = 'https://www.yemalin.com/wp-json/wp/v2';
@@ -58,6 +59,43 @@ const convertWpPostToAppPost = (wpPost: WordPressPost) => {
   };
 };
 
+// Get sample posts from our local data
+const getSamplePosts = (page = 1, perPage = 10, category?: string) => {
+  const allSamplePosts = Object.values(sampleArticleContent);
+  
+  // Filter by category if specified
+  const filteredPosts = category 
+    ? allSamplePosts.filter(post => post.category.toLowerCase() === category.toLowerCase())
+    : allSamplePosts;
+  
+  // Paginate
+  const startIndex = (page - 1) * perPage;
+  const endIndex = startIndex + perPage;
+  const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
+  
+  // Format posts for consistency with WordPress API
+  const posts = paginatedPosts.map(post => ({
+    id: post.slug,
+    title: post.title,
+    excerpt: post.excerpt,
+    content: post.content,
+    image_url: post.image_url,
+    category: post.category,
+    read_time: post.read_time,
+    slug: post.slug,
+    date: post.date || new Date().toLocaleDateString()
+  }));
+  
+  return {
+    posts,
+    pagination: {
+      totalPosts: filteredPosts.length,
+      totalPages: Math.ceil(filteredPosts.length / perPage),
+      currentPage: page
+    }
+  };
+};
+
 // Fetch blog posts from WordPress
 export const fetchWpPosts = async (page = 1, perPage = 10, category?: number) => {
   try {
@@ -86,20 +124,31 @@ export const fetchWpPosts = async (page = 1, perPage = 10, category?: number) =>
     };
   } catch (error) {
     console.error('Error fetching WordPress posts:', error);
-    return {
-      posts: [],
-      pagination: {
-        totalPosts: 0,
-        totalPages: 0,
-        currentPage: page
-      }
-    };
+    // Return sample posts as fallback
+    return getSamplePosts(page, perPage, category?.toString());
   }
 };
 
 // Fetch a single post by slug
 export const fetchWpPostBySlug = async (slug: string) => {
   try {
+    // Check first if we have a sample article with this slug
+    if (sampleArticleContent[slug]) {
+      const samplePost = sampleArticleContent[slug];
+      return {
+        id: slug,
+        title: samplePost.title,
+        excerpt: samplePost.excerpt,
+        content: samplePost.content,
+        image_url: samplePost.image_url,
+        category: samplePost.category,
+        read_time: samplePost.read_time,
+        slug: samplePost.slug,
+        date: samplePost.date || new Date().toLocaleDateString()
+      };
+    }
+    
+    // If not in samples, try WordPress API
     const response = await axios.get(`${WORDPRESS_API_URL}/posts?_embed&slug=${slug}`);
     
     if (response.data.length === 0) {
@@ -109,6 +158,23 @@ export const fetchWpPostBySlug = async (slug: string) => {
     return convertWpPostToAppPost(response.data[0]);
   } catch (error) {
     console.error('Error fetching WordPress post by slug:', error);
+    
+    // Check if there's a sample article with this slug as fallback
+    if (sampleArticleContent[slug]) {
+      const samplePost = sampleArticleContent[slug];
+      return {
+        id: slug,
+        title: samplePost.title,
+        excerpt: samplePost.excerpt,
+        content: samplePost.content,
+        image_url: samplePost.image_url,
+        category: samplePost.category,
+        read_time: samplePost.read_time,
+        slug: samplePost.slug,
+        date: samplePost.date || new Date().toLocaleDateString()
+      };
+    }
+    
     return null;
   }
 };
@@ -126,7 +192,14 @@ export const fetchWpCategories = async () => {
     }));
   } catch (error) {
     console.error('Error fetching WordPress categories:', error);
-    return [];
+    // Return our custom categories as fallback
+    return [
+      { id: 1, name: 'Luxury Trends', slug: 'luxury-trends', count: 2 },
+      { id: 2, name: 'Designer Spotlights', slug: 'designer-spotlights', count: 2 },
+      { id: 3, name: 'Styling Guides', slug: 'styling-guides', count: 2 },
+      { id: 4, name: 'Shopping Tips', slug: 'shopping-tips', count: 2 },
+      { id: 5, name: 'Curated Collections', slug: 'curated-collections', count: 2 }
+    ];
   }
 };
 

@@ -29,25 +29,49 @@ const formatDate = (date: Date) => {
   });
 };
 
+// Map of categories and topics that exist in our sample content
+const existingTopicSlugs = [
+  'top-luxury-fashion-trends-2025',
+  'future-of-luxury-technology-redefining-fashion',
+  'designer-world-signature-styles',
+  'emerging-luxury-labels-new-faces',
+  'elevate-your-look-luxury-wardrobe-tips',
+  'mixing-high-end-everyday-effortless-luxury',
+  'guide-buying-authentic-luxury-fashion-online',
+  'insider-secrets-designer-deals-quality',
+  'editors-choice-luxury-trusted-sellers',
+  'seasonal-spotlight-designer-pieces-spring-2025'
+];
+
 const ContentCalendar: React.FC = () => {
   // Get upcoming dates
   const upcomingDates = generateUpcomingDates();
   
-  // Match topics with dates
+  // Create array of topics that we have sample content for
+  const availableTopics = blogCategories.flatMap(category => 
+    category.topics.filter(topic => existingTopicSlugs.includes(topic.slug))
+      .map(topic => ({
+        slug: topic.slug,
+        title: topic.title,
+        category: category.name,
+        categorySlug: category.slug
+      }))
+  );
+  
+  // Match topics with dates, ensuring we only use topics that have sample content
   const upcomingContent = upcomingDates.map((date, index) => {
-    // Cycle through categories and topics
-    const categoryIndex = index % blogCategories.length;
-    const topicIndex = Math.floor(index / blogCategories.length) % 2; // Alternate between first and second topic
-    
-    const category = blogCategories[categoryIndex];
-    const topic = category.topics[topicIndex];
+    // Use modulo to cycle through available topics
+    const topicIndex = index % availableTopics.length;
+    const topic = availableTopics[topicIndex];
     
     return {
       id: index + 1,
       date: formatDate(date),
       title: topic.title,
-      description: `Explore our insights on ${category.name.toLowerCase()}`,
-      category: category.name,
+      description: `Explore our insights on ${topic.category.toLowerCase()}`,
+      category: topic.category,
+      categorySlug: topic.categorySlug,
+      slug: topic.slug,
       link: `/blog/${topic.slug}`
     };
   });
@@ -62,7 +86,9 @@ const ContentCalendar: React.FC = () => {
                 <Calendar size={16} className="mr-2" />
                 <span className="text-sm font-medium">{item.date}</span>
               </div>
-              <span className="text-xs px-2 py-1 bg-white/20 rounded-full">{item.category}</span>
+              <Link to={`/blog/category/${item.categorySlug}`} className="text-xs px-2 py-1 bg-white/20 rounded-full hover:bg-white/30 transition-colors">
+                {item.category}
+              </Link>
             </div>
             <div className="p-5">
               <h3 className="font-medium text-lg mb-2 line-clamp-2">{item.title}</h3>
@@ -70,7 +96,7 @@ const ContentCalendar: React.FC = () => {
               <Separator className="my-3" />
               <Link to={item.link} className="flex items-center text-sm font-medium text-yemalin-black hover:text-yemalin-grey-600 transition-colors">
                 <BookOpen size={16} className="mr-2" />
-                <span>See Preview</span>
+                <span>Read Article</span>
                 <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
