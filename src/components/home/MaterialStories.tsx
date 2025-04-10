@@ -11,28 +11,28 @@ const featuredMaterials = [
     id: "silk",
     name: "Mulberry Silk",
     origin: "China & Japan",
-    image: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1589394915835-964da87c1303?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     description: "Prized for its natural sheen, softness, and temperature-regulating properties, Mulberry silk has been treasured for millennia.",
     sustainability: "Renewable resource cultivated using traditional methods that preserve biodiversity.",
-    productImage: "/placeholder.svg"
+    productImage: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
   },
   {
     id: "linen",
     name: "Belgian Linen",
     origin: "Belgium",
-    image: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1594761051656-73fefd47ad16?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     description: "Known for its exceptional durability and breathability, Belgian linen becomes more beautiful with age.",
     sustainability: "Flax requires minimal water and pesticides, making linen one of the most eco-friendly textile fibers.",
-    productImage: "/placeholder.svg"
+    productImage: "https://images.unsplash.com/photo-1605618826115-fb9e775cf935?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
   },
   {
     id: "wool",
     name: "Merino Wool",
     origin: "Australia & New Zealand",
-    image: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1599974202733-c2b17594b1e9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     description: "Ultra-fine fibers create a luxuriously soft hand feel while providing natural temperature regulation.",
     sustainability: "Our merino is sourced from certified ethical farms prioritizing animal welfare and environmental stewardship.",
-    productImage: "/placeholder.svg"
+    productImage: "https://images.unsplash.com/photo-1583342093276-efa17116469d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
   }
 ];
 
@@ -51,7 +51,7 @@ const MaterialStories = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <div>
-            <div className="aspect-video relative overflow-hidden">
+            <div className="aspect-video relative overflow-hidden rounded-lg shadow-lg">
               <img 
                 src={selectedMaterial.image} 
                 alt={selectedMaterial.name}
@@ -69,7 +69,7 @@ const MaterialStories = () => {
               {featuredMaterials.map((material) => (
                 <div 
                   key={material.id}
-                  className={`aspect-square overflow-hidden cursor-pointer transition-all ${
+                  className={`aspect-square overflow-hidden rounded-md cursor-pointer transition-all ${
                     selectedMaterial.id === material.id ? 'ring-2 ring-yemalin-accent' : 'hover:ring-2 hover:ring-yemalin-accent/50'
                   }`}
                   onClick={() => setSelectedMaterial(material)}
@@ -103,7 +103,7 @@ const MaterialStories = () => {
             <div className="mb-8">
               <h4 className="font-medium mb-4">Crafted into Excellence</h4>
               <div className="flex gap-4 items-center">
-                <div className="w-20 h-20 flex-shrink-0">
+                <div className="w-20 h-20 flex-shrink-0 rounded-md overflow-hidden">
                   <img 
                     src={selectedMaterial.productImage}
                     alt="Product made with this material"
