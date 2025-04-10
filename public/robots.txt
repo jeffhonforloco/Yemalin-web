@@ -9,5 +9,28 @@ Disallow: /designer-login*
 Disallow: /designers/login*
 Disallow: /blog/preview*
 
+# Disallow temporary pages or testing areas
+Disallow: /*/draft/*
+Disallow: /*/test/*
+
+# Crawl-delay directive for all bots
+Crawl-delay: 10
+
 # Sitemap location
 Sitemap: https://yemalin.com/sitemap.xml
+
+# Image sitemap
+Sitemap: https://yemalin.com/image-sitemap.xml
+
+# Specific directives for major search engines
+User-agent: Googlebot
+Allow: /*.js$
+Allow: /*.css$
+
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /uploads/
+Allow: /assets/
+
+User-agent: Bingbot
+Crawl-delay: 15

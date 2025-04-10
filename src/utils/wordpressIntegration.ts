@@ -1,6 +1,6 @@
-
 import axios from 'axios';
 import sampleArticleContent from '@/data/sampleArticleContent';
+import { convertWpSeoToAppSeo } from './wpSeo';
 
 // Base URL for your WordPress site
 const WORDPRESS_API_URL = 'https://www.yemalin.com/wp-json/wp/v2';
@@ -9,6 +9,7 @@ const WORDPRESS_API_URL = 'https://www.yemalin.com/wp-json/wp/v2';
 interface WordPressPost {
   id: number;
   date: string;
+  modified: string;
   title: {
     rendered: string;
   };
@@ -29,7 +30,13 @@ interface WordPressPost {
       name: string;
       slug: string;
     }>>;
+    'author'?: Array<{
+      name: string;
+      url?: string;
+    }>;
   };
+  yoast_head_json?: any;
+  rank_math_head_json?: any;
 }
 
 // Convert WordPress posts to our application format
@@ -46,6 +53,9 @@ const convertWpPostToAppPost = (wpPost: WordPressPost) => {
   const words = contentText.split(/\s+/).length;
   const readTimeMinutes = Math.max(1, Math.ceil(words / 200));
   
+  // Extract SEO data
+  const seoData = convertWpSeoToAppSeo(wpPost);
+  
   return {
     id: wpPost.id.toString(),
     title: wpPost.title.rendered,
@@ -56,6 +66,9 @@ const convertWpPostToAppPost = (wpPost: WordPressPost) => {
     read_time: `${readTimeMinutes} min read`,
     slug: wpPost.slug,
     date: new Date(wpPost.date).toLocaleDateString(),
+    modified: new Date(wpPost.modified).toLocaleDateString(),
+    author: wpPost._embedded?.author?.[0]?.name || 'Yemalin',
+    seoData
   };
 };
 
@@ -248,9 +261,44 @@ export const fetchWpProducts = async (page = 1, perPage = 10, category?: number)
   }
 };
 
+// New function to fetch WordPress site settings
+export const fetchWpSiteSettings = async () => {
+  try {
+    const response = await axios.get(`${WORDPRESS_API_URL}`);
+    return {
+      name: response.data?.name || 'Yemalin',
+      description: response.data?.description || 'Luxury Fashion Marketplace',
+      url: response.data?.url || 'https://yemalin.com',
+      gmt_offset: response.data?.gmt_offset,
+      timezone: response.data?.timezone_string
+    };
+  } catch (error) {
+    console.error('Error fetching WordPress site settings:', error);
+    return {
+      name: 'Yemalin',
+      description: 'Luxury Fashion Marketplace',
+      url: 'https://yemalin.com'
+    };
+  }
+};
+
+// New function to fetch WordPress menus
+export const fetchWpMenus = async (menuLocation = 'primary') => {
+  try {
+    // This endpoint requires the WP REST API Menus plugin
+    const response = await axios.get(`${WORDPRESS_API_URL}/menus/v1/menus/${menuLocation}`);
+    return response.data.items || [];
+  } catch (error) {
+    console.error('Error fetching WordPress menus:', error);
+    return [];
+  }
+};
+
 export default {
   fetchWpPosts,
   fetchWpPostBySlug,
   fetchWpCategories,
-  fetchWpProducts
+  fetchWpProducts,
+  fetchWpSiteSettings,
+  fetchWpMenus
 };

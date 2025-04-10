@@ -1,16 +1,15 @@
-
 import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Share, ChevronLeft, Clock, ThumbsUp, ThumbsDown, MessageCircle } from 'lucide-react';
+import { Share, ChevronLeft, Clock, ThumbsUp, ThumbsDown } from 'lucide-react';
 import BlogNewsletter from '@/components/blog/BlogNewsletter';
 import BlogContent from '@/components/blog/BlogContent';
 import BlogSidebar from '@/components/blog/BlogSidebar';
 import CommentSection from '@/components/blog/CommentSection';
 import StylePoll from '@/components/blog/StylePoll';
-import { useWordPressPost } from '@/hooks/useWordPress';
-import SEOMeta from '@/components/SEO/SEOMeta';
+import useBlogPost from '@/hooks/useBlogPost';
+import UnifiedSEO from '@/components/SEO/UnifiedSEO';
 import useAnalytics from '@/hooks/useAnalytics';
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
@@ -19,7 +18,7 @@ import SocialShareButtons from '@/components/social/SocialShareButtons';
 const BlogPost = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { post, loading, error } = useWordPressPost(slug);
+  const { post, loading, error, source } = useBlogPost(slug);
   const { trackEvent, trackSocialInteraction } = useAnalytics();
   const [reactions, setReactions] = useState({ likes: 0, dislikes: 0 });
   const [userReaction, setUserReaction] = useState<'like' | 'dislike' | null>(null);
@@ -62,9 +61,15 @@ const BlogPost = () => {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": post.title,
+    "name": post.title,
     "description": post.excerpt,
     "image": post.image_url || post.image,
-    "datePublished": new Date().toISOString(),
+    "datePublished": post.date || new Date().toISOString(),
+    "dateModified": post.modified || post.date || new Date().toISOString(),
+    "author": {
+      "@type": "Person",
+      "name": post.author || "Yemalin"
+    },
     "publisher": {
       "@type": "Organization",
       "name": "Yemalin",
@@ -77,6 +82,8 @@ const BlogPost = () => {
       "@type": "WebPage",
       "@id": `${window.location.origin}/blog/${slug}`
     },
+    "isAccessibleForFree": "True",
+    "articleSection": post.category,
     "interactionStatistic": [
       {
         "@type": "InteractionCounter",
@@ -94,9 +101,10 @@ const BlogPost = () => {
   if (loading) {
     return (
       <MainLayout>
-        <SEOMeta 
+        <UnifiedSEO 
           title="Loading Article"
           description="Loading Yemalin Journal article"
+          noIndex={true}
         />
         <div className="luxury-container py-16">
           <div className="flex items-center justify-center h-96">
@@ -110,10 +118,11 @@ const BlogPost = () => {
   if (!post || error) {
     return (
       <MainLayout>
-        <SEOMeta 
+        <UnifiedSEO 
           title="Article Not Found"
           description="We couldn't find the article you were looking for."
           noIndex={true}
+          robots="noindex, nofollow"
         />
         <div className="luxury-container py-16">
           <div className="text-center py-16">
@@ -181,12 +190,14 @@ const BlogPost = () => {
     });
   };
 
-  // Convert keywords string to array for SEOMeta
   const keywordsArray = `${post.category}, fashion, yemalin, luxury fashion`.split(', ');
+
+  const publishDate = post.date ? new Date(post.date).toISOString() : new Date().toISOString();
+  const modifiedDate = post.modified ? new Date(post.modified).toISOString() : publishDate;
 
   return (
     <MainLayout>
-      <SEOMeta 
+      <UnifiedSEO 
         title={post.title}
         description={post.excerpt}
         ogImage={post.image_url || post.image}
@@ -194,6 +205,11 @@ const BlogPost = () => {
         ogType="article"
         keywords={keywordsArray}
         structuredData={structuredData}
+        wpSeoData={post.seoData}
+        publishDate={publishDate}
+        modifiedDate={modifiedDate}
+        author={post.author}
+        twitterCard="summary_large_image"
       />
       
       <div className="w-full">
