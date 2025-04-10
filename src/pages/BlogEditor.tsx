@@ -18,6 +18,8 @@ import MainLayout from '@/components/layouts/MainLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import SEO from '@/components/SEO';
+import BlogAIGenerator from '@/components/blog/BlogAIGenerator';
+import { sampleArticleContent } from '@/data/sampleArticleContent';
 
 interface BlogPost {
   id: string;
@@ -71,12 +73,13 @@ const DEFAULT_CONTENT = `<h2>Introduction</h2>
 <h2>Conclusion</h2>
 <p>Wrap up with a strong conclusion...</p>`;
 
+// Categories from the sample content
 const categories = [
-  'Sustainability',
-  'Designer Spotlight',
-  'Fashion History',
-  'Style Guide',
-  'Craftsmanship'
+  'Luxury Trends',
+  'Designer Spotlights',
+  'Styling Guides',
+  'Shopping Tips',
+  'Curated Collections: Top Picks from Our Trusted Sellers'
 ];
 
 const BlogEditor = () => {
@@ -96,8 +99,16 @@ const BlogEditor = () => {
     author: '',
     author_image: ''
   });
+  const [sampleTopics, setSampleTopics] = useState<string[]>([]);
 
   useEffect(() => {
+    // Load sample topics based on categories
+    const topics = Object.keys(sampleArticleContent).map(key => {
+      const article = sampleArticleContent[key as keyof typeof sampleArticleContent];
+      return article.title;
+    });
+    setSampleTopics(topics);
+
     if (id) {
       loadPost();
     } else {
@@ -225,6 +236,41 @@ const BlogEditor = () => {
     window.open(`/blog/preview`, '_blank');
   };
 
+  const handleUseSampleContent = (title: string) => {
+    // Find the sample content by title
+    const topicKey = Object.keys(sampleArticleContent).find(key => {
+      const article = sampleArticleContent[key as keyof typeof sampleArticleContent];
+      return article.title === title;
+    });
+
+    if (topicKey) {
+      const articleKey = topicKey as keyof typeof sampleArticleContent;
+      const sampleArticle = sampleArticleContent[articleKey];
+      
+      setPost(prev => ({
+        ...prev,
+        title: sampleArticle.title,
+        excerpt: sampleArticle.excerpt,
+        content: sampleArticle.content,
+        category: sampleArticle.category,
+        seo_title: sampleArticle.title,
+        seo_description: sampleArticle.excerpt
+      }));
+
+      toast({
+        title: "Sample content loaded",
+        description: `Loaded "${sampleArticle.title}" as a template`
+      });
+    }
+  };
+
+  const handleAIContentGenerated = (content: string) => {
+    setPost(prev => ({
+      ...prev,
+      content: content
+    }));
+  };
+
   if (isLoading) {
     return (
       <MainLayout>
@@ -269,6 +315,8 @@ const BlogEditor = () => {
         <Tabs defaultValue="content">
           <TabsList className="mb-6">
             <TabsTrigger value="content">Content</TabsTrigger>
+            <TabsTrigger value="ai">AI Generator</TabsTrigger>
+            <TabsTrigger value="templates">Templates</TabsTrigger>
             <TabsTrigger value="seo">SEO & Meta</TabsTrigger>
             <TabsTrigger value="media">Media</TabsTrigger>
           </TabsList>
@@ -424,6 +472,31 @@ const BlogEditor = () => {
             </div>
           </TabsContent>
 
+          <TabsContent value="ai" className="space-y-6">
+            <BlogAIGenerator onContentGenerated={handleAIContentGenerated} />
+            
+            <div className="bg-gray-50 p-4 rounded-md border">
+              <p className="text-sm mb-2">AI-generated content should be reviewed and edited before publishing to ensure it meets your standards and voice.</p>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="templates" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {sampleTopics.map((title, index) => (
+                <div key={index} className="border p-4 rounded-md hover:bg-gray-50">
+                  <h3 className="font-medium mb-2">{title}</h3>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleUseSampleContent(title)}
+                  >
+                    Use This Template
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+
           <TabsContent value="seo" className="space-y-6">
             <div>
               <Label htmlFor="seo_title">SEO Title</Label>
@@ -519,6 +592,31 @@ const BlogEditor = () => {
                   <li>Bottom of post: Add before the conclusion</li>
                   <li>Sidebar (automatically added in the template)</li>
                 </ol>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-md border mb-6">
+                <h3 className="font-medium mb-2">Sample Image URLs</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Use these placeholder images for your articles:
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                  <div className="border bg-white p-2 rounded">
+                    <code className="block mb-1 text-xs break-all">https://images.unsplash.com/photo-1649972904349-6e44c42644a7</code>
+                    <span className="text-xs">Woman with laptop on bed</span>
+                  </div>
+                  <div className="border bg-white p-2 rounded">
+                    <code className="block mb-1 text-xs break-all">https://images.unsplash.com/photo-1488590528505-98d2b5aba04b</code>
+                    <span className="text-xs">Laptop with code screen</span>
+                  </div>
+                  <div className="border bg-white p-2 rounded">
+                    <code className="block mb-1 text-xs break-all">https://images.unsplash.com/photo-1581091226825-a6a2a5aee158</code>
+                    <span className="text-xs">Woman using laptop</span>
+                  </div>
+                  <div className="border bg-white p-2 rounded">
+                    <code className="block mb-1 text-xs break-all">https://images.unsplash.com/photo-1531297484001-80022131f5a1</code>
+                    <span className="text-xs">Dark laptop on table</span>
+                  </div>
+                </div>
               </div>
             </div>
           </TabsContent>

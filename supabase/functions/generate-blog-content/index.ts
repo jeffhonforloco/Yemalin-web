@@ -3,6 +3,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 
 const SEOWRITING_API_KEY = Deno.env.get("SEOWRITING_API_KEY");
+const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -18,35 +19,23 @@ serve(async (req) => {
   try {
     const { topic, keywords, type, tone } = await req.json();
 
-    if (!SEOWRITING_API_KEY) {
-      throw new Error("SEOWRITING_API_KEY is not configured");
+    // Validate required fields
+    if (!topic) {
+      throw new Error("Topic is required");
     }
 
-    // Make a request to seowriting.ai API
-    const response = await fetch('https://api.seowriting.ai/v1/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${SEOWRITING_API_KEY}`
-      },
-      body: JSON.stringify({
-        topic,
-        keywords: keywords.split(',').map((k: string) => k.trim()),
-        contentType: type || 'blog',
-        tone: tone || 'professional',
-        length: 'medium',
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to generate content');
+    // If SEOWRITING_API_KEY is available, use that service
+    if (SEOWRITING_API_KEY) {
+      return await generateWithSEOWritingAPI(topic, keywords, type, tone, corsHeaders);
+    } 
+    // If OPENAI_API_KEY is available, use OpenAI
+    else if (OPENAI_API_KEY) {
+      return await generateWithOpenAI(topic, keywords, type, tone, corsHeaders);
+    } 
+    // If no API keys are available, return a fallback response
+    else {
+      return await generateFallbackContent(topic, type, tone, corsHeaders);
     }
-
-    return new Response(JSON.stringify(data), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
   } catch (error) {
     console.error('Error generating content:', error);
     return new Response(JSON.stringify({ error: error.message }), {
@@ -55,3 +44,104 @@ serve(async (req) => {
     });
   }
 });
+
+// Generate content with SEOWriting.ai API
+async function generateWithSEOWritingAPI(topic: string, keywords: string, type: string, tone: string, corsHeaders: HeadersInit) {
+  const response = await fetch('https://api.seowriting.ai/v1/generate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${SEOWRITING_API_KEY}`
+    },
+    body: JSON.stringify({
+      topic,
+      keywords: keywords ? keywords.split(',').map((k: string) => k.trim()) : [],
+      contentType: type || 'blog',
+      tone: tone || 'professional',
+      length: 'medium',
+    })
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to generate content with SEOWriting.ai');
+  }
+
+  return new Response(JSON.stringify(data), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+// Generate content with OpenAI API
+async function generateWithOpenAI(topic: string, keywords: string, type: string, tone: string, corsHeaders: HeadersInit) {
+  const keywordsList = keywords ? keywords.split(',').map((k: string) => k.trim()).join(", ") : "luxury, fashion, quality";
+  
+  const systemPrompt = `You are an expert luxury fashion writer that creates engaging, SEO-optimized content for blogs. 
+Write in a ${tone || 'professional'} tone with authoritative expertise. 
+Format the content with proper HTML tags including <h2>, <h3>, <p>, <blockquote>, etc. for web display.`;
+
+  const userPrompt = `Create a detailed ${type || 'blog post'} about "${topic}".
+Include the following keywords naturally throughout the text: ${keywordsList}.
+Structure the article with an introduction, several main sections with subheadings, and a conclusion.
+The length should be approximately 800-1000 words, properly formatted with HTML tags.`;
+
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${OPENAI_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.7
+    }),
+  });
+
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.error?.message || 'Failed to generate content with OpenAI');
+  }
+
+  return new Response(JSON.stringify({ 
+    content: data.choices[0].message.content,
+    title: topic
+  }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+// Generate fallback content when no API keys are available
+async function generateFallbackContent(topic: string, type: string, tone: string, corsHeaders: HeadersInit) {
+  // Create a simple HTML structure based on the topic
+  const content = `
+<h2>Introduction to ${topic}</h2>
+<p>This is a placeholder introduction for an article about ${topic}. In a real scenario, this would be generated by the SEOWriting.ai or OpenAI API. Currently, neither API key is configured in the environment variables.</p>
+
+<h2>Main Points About ${topic}</h2>
+<p>Here we would discuss the key aspects of ${topic} in detail, with researched information and expert insights.</p>
+
+<h3>Key Considerations</h3>
+<p>These would be important factors to consider regarding ${topic}, offering valuable information to readers.</p>
+
+<h2>Industry Trends Related to ${topic}</h2>
+<p>This section would analyze current and upcoming trends in the industry related to ${topic}, providing readers with forward-looking insights.</p>
+
+<h2>Conclusion</h2>
+<p>This conclusion would summarize the main points discussed about ${topic} and potentially offer some final thoughts or recommendations.</p>
+
+<p><em>Note: This is placeholder content. To generate real content, please configure either the SEOWRITING_API_KEY or OPENAI_API_KEY environment variable in your Supabase project.</em></p>`;
+
+  return new Response(JSON.stringify({ 
+    content,
+    title: topic,
+    message: "Using fallback content. For production-quality content, please configure API keys."
+  }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
