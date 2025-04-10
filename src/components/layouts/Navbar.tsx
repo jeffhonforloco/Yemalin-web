@@ -1,4 +1,3 @@
-
 // Import the required dependencies for this component
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -19,6 +18,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { blogCategories } from '@/data/blogCategoriesData';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -60,7 +60,7 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="bg-white border-b sticky top-0 z-50">
+    <div className="bg-white border-b sticky top-0 z-50 dark:bg-yemalin-grey-900 dark:border-yemalin-grey-800 transition-colors duration-200">
       <div className="luxury-container flex justify-between items-center py-2">
         <Link to="/" className="hover:opacity-80 transition-opacity pl-0 ml-0">
           <YemalinLogo className="h-14" />
@@ -171,6 +171,7 @@ const Navbar = () => {
 
         {/* Desktop Action Buttons */}
         <div className="hidden md:flex items-center space-x-4">
+          <ThemeToggle className="mr-2" />
           <Link 
             to="/favorites"
             className="relative"
@@ -251,6 +252,7 @@ const Navbar = () => {
 
         {/* Mobile Navigation Trigger */}
         <div className="flex md:hidden items-center space-x-2">
+          <ThemeToggle className="mr-2" />
           <Link to="/favorites" className="relative">
             <Button variant="ghost" size="icon">
               <Heart className="h-5 w-5" />

@@ -16,6 +16,7 @@ import {
   SidebarProvider
 } from "@/components/ui/sidebar";
 import { useLocation } from 'react-router-dom';
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -37,6 +38,9 @@ const MainLayout = ({ children, showSidebar = false }: MainLayoutProps) => {
           <div className="flex flex-1">
             <DashboardSidebar />
             <main className="flex-grow pb-16 pt-4 animate-fade-in px-4 md:px-6">
+              <div className="flex justify-end mb-4">
+                <ThemeToggle />
+              </div>
               {children}
             </main>
           </div>
