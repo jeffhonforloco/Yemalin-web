@@ -2,6 +2,8 @@
 import MainLayout from '@/components/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useState } from 'react';
 
 // Mock data for designers
 const designersList = [
@@ -74,6 +76,8 @@ const designersList = [
 ];
 
 const Designers = () => {
+  const [activeTab, setActiveTab] = useState("overview");
+
   return (
     <MainLayout>
       {/* Hero Section */}
@@ -87,61 +91,114 @@ const Designers = () => {
         </div>
       </div>
       
-      {/* Designers Grid */}
-      <div className="luxury-container py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {designersList.map((designer) => (
-            <div key={designer.id} className="group">
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="w-full md:w-1/3 h-64 md:h-auto overflow-hidden">
-                  <img 
-                    src={designer.image} 
-                    alt={designer.name}
-                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
-                <div className="w-full md:w-2/3">
-                  <div className="w-16 h-16 mb-4 rounded-full overflow-hidden bg-yemalin-grey-100 flex items-center justify-center">
+      {/* Tabs for Designer Content */}
+      <div className="luxury-container py-12">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="w-full max-w-md mx-auto">
+            <TabsTrigger value="overview" className="flex-1">Overview</TabsTrigger>
+            <TabsTrigger value="profiles" className="flex-1">Designer Profiles</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="overview" className="pt-8">
+            {/* Overview Content */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {designersList.slice(0, 3).map(designer => (
+                <Link 
+                  key={designer.id}
+                  to={designer.link}
+                  className="group bg-white overflow-hidden transition-all duration-300 hover:shadow-lg"
+                >
+                  <div className="relative h-[300px] overflow-hidden">
                     <img 
-                      src={designer.logo}
-                      alt={`${designer.name} logo`}
-                      className="w-12 h-12 object-contain"
+                      src={designer.image}
+                      alt={designer.name}
+                      className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
                     />
+                    <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity"></div>
                   </div>
-                  <h2 className="text-2xl font-display mb-2">{designer.name}</h2>
-                  <p className="text-gray-600 text-sm mb-2">
-                    {designer.location} • Est. {designer.established}
-                  </p>
-                  <p className="text-gray-600 mb-4">
-                    {designer.bio}
-                  </p>
-                  <p className="text-sm mb-4">
-                    <strong>Signature:</strong> {designer.signature}
-                  </p>
-                  <Link to={designer.link}>
-                    <Button className="bg-black text-white hover:bg-gray-800">
-                      View Collection
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+                  
+                  <div className="p-6 text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full overflow-hidden bg-yemalin-grey-100 flex items-center justify-center">
+                      <img 
+                        src={designer.logo}
+                        alt={`${designer.name} logo`}
+                        className="w-12 h-12 object-contain"
+                      />
+                    </div>
+                    <h3 className="text-xl font-display mb-2">{designer.name}</h3>
+                    <p className="text-gray-600 text-sm">{designer.signature}</p>
+                  </div>
+                </Link>
+              ))}
             </div>
-          ))}
-        </div>
-        
-        {/* Become a Designer CTA */}
-        <div className="mt-20 text-center p-12 bg-yemalin-grey-100">
-          <h2 className="text-2xl font-display mb-4">Are You a Designer?</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto mb-6">
-            We're always looking for talented designers to join our curated marketplace.
-            If you believe your brand aligns with our aesthetic and values, we'd love to hear from you.
-          </p>
-          <Link to="/designers/apply">
-            <Button className="bg-black text-white hover:bg-gray-800">
-              Apply to Sell with Us
-            </Button>
-          </Link>
-        </div>
+            
+            <div className="text-center mt-12">
+              <Button 
+                onClick={() => setActiveTab("profiles")} 
+                className="bg-black text-white hover:bg-gray-800"
+              >
+                View All Designer Profiles
+              </Button>
+            </div>
+            
+            {/* Become a Designer CTA */}
+            <div className="mt-20 text-center p-12 bg-yemalin-grey-100">
+              <h2 className="text-2xl font-display mb-4">Are You a Designer?</h2>
+              <p className="text-gray-600 max-w-2xl mx-auto mb-6">
+                We're always looking for talented designers to join our curated marketplace.
+                If you believe your brand aligns with our aesthetic and values, we'd love to hear from you.
+              </p>
+              <Link to="/designers/apply">
+                <Button className="bg-black text-white hover:bg-gray-800">
+                  Apply to Sell with Us
+                </Button>
+              </Link>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="profiles" className="pt-8">
+            {/* Designer Profiles Content */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              {designersList.map((designer) => (
+                <div key={designer.id} className="group">
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="w-full md:w-1/3 h-64 md:h-auto overflow-hidden">
+                      <img 
+                        src={designer.image} 
+                        alt={designer.name}
+                        className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="w-full md:w-2/3">
+                      <div className="w-16 h-16 mb-4 rounded-full overflow-hidden bg-yemalin-grey-100 flex items-center justify-center">
+                        <img 
+                          src={designer.logo}
+                          alt={`${designer.name} logo`}
+                          className="w-12 h-12 object-contain"
+                        />
+                      </div>
+                      <h2 className="text-2xl font-display mb-2">{designer.name}</h2>
+                      <p className="text-gray-600 text-sm mb-2">
+                        {designer.location} • Est. {designer.established}
+                      </p>
+                      <p className="text-gray-600 mb-4">
+                        {designer.bio}
+                      </p>
+                      <p className="text-sm mb-4">
+                        <strong>Signature:</strong> {designer.signature}
+                      </p>
+                      <Link to={designer.link}>
+                        <Button className="bg-black text-white hover:bg-gray-800">
+                          View Collection
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </MainLayout>
   );

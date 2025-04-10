@@ -41,14 +41,21 @@ const Navbar = () => {
     { title: "View All", href: "/shop" }
   ];
 
-  // Editorial Content Categories
+  // Editorial Content Categories (removed Designer Profiles)
   const editorialCategories = [
     { title: "Fashion Trends", href: "/blog/category/fashion-trends" },
     { title: "Style Tips", href: "/blog/category/style-tips" },
     { title: "Industry Insights", href: "/blog/category/industry-insights" },
-    { title: "Designer Profiles", href: "/blog/category/designer-profiles" },
     { title: "Runway Reviews", href: "/blog/category/runway-reviews" },
     { title: "View All Articles", href: "/blog" }
+  ];
+  
+  // Designer-related content
+  const designerCategories = [
+    { title: "Featured Designers", href: "/designers" },
+    { title: "Designer Profiles", href: "/designers/profiles" },
+    { title: "Collections", href: "/collections" },
+    { title: "Apply as Designer", href: "/designers/apply" },
   ];
 
   return (
@@ -103,9 +110,23 @@ const Navbar = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Link to="/designers" className={`block py-2 px-3 text-sm uppercase tracking-wider font-bold ${location.pathname === '/designers' ? 'font-medium' : ''}`}>
-                  Designers
-                </Link>
+                <NavigationMenuTrigger className="text-sm uppercase tracking-wider font-bold">Designers</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[400px] gap-3 p-4">
+                    {designerCategories.map((category) => (
+                      <li key={category.title}>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            to={category.href}
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-100 focus:bg-gray-100"
+                          >
+                            <div className="text-sm font-medium">{category.title}</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
@@ -261,9 +282,19 @@ const Navbar = () => {
                     ))}
                   </div>
                   
-                  <Link to="/designers" className="px-2 py-2 hover:bg-gray-100 rounded font-bold">
-                    Designers
-                  </Link>
+                  <div className="border-b pb-2">
+                    <p className="px-2 text-sm font-medium text-gray-500">Designers</p>
+                    {designerCategories.map((category) => (
+                      <Link 
+                        key={category.title}
+                        to={category.href} 
+                        className="px-2 py-2 hover:bg-gray-100 rounded block"
+                      >
+                        {category.title}
+                      </Link>
+                    ))}
+                  </div>
+                  
                   <Link to="/about" className="px-2 py-2 hover:bg-gray-100 rounded font-bold">
                     About
                   </Link>
