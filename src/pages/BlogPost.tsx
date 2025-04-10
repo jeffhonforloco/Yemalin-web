@@ -8,8 +8,8 @@ import BlogContent from '@/components/blog/BlogContent';
 import BlogSidebar from '@/components/blog/BlogSidebar';
 import CommentSection from '@/components/blog/CommentSection';
 import StylePoll from '@/components/blog/StylePoll';
-import useBlogPost from '@/hooks/useBlogPost';
-import SEO from '@/components/SEO';
+import { useWordPressPost } from '@/hooks/useWordPress';
+import SEOMeta from '@/components/SEO/SEOMeta';
 import useAnalytics from '@/hooks/useAnalytics';
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
@@ -18,7 +18,7 @@ import SocialShareButtons from '@/components/social/SocialShareButtons';
 const BlogPost = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { post, loading } = useBlogPost(slug);
+  const { post, loading, error } = useWordPressPost(slug);
   const { trackEvent, trackSocialInteraction } = useAnalytics();
   const [reactions, setReactions] = useState({ likes: 0, dislikes: 0 });
   const [userReaction, setUserReaction] = useState<'like' | 'dislike' | null>(null);
@@ -93,7 +93,7 @@ const BlogPost = () => {
   if (loading) {
     return (
       <MainLayout>
-        <SEO 
+        <SEOMeta 
           title="Loading Article"
           description="Loading Yemalin Journal article"
         />
@@ -106,10 +106,10 @@ const BlogPost = () => {
     );
   }
 
-  if (!post) {
+  if (!post || error) {
     return (
       <MainLayout>
-        <SEO 
+        <SEOMeta 
           title="Article Not Found"
           description="We couldn't find the article you were looking for."
           robots="noindex, follow"
@@ -182,7 +182,7 @@ const BlogPost = () => {
 
   return (
     <MainLayout>
-      <SEO 
+      <SEOMeta 
         title={post.title}
         description={post.excerpt}
         ogImage={post.image_url || post.image}
@@ -195,7 +195,7 @@ const BlogPost = () => {
       <div className="w-full">
         <div className="relative h-[70vh] overflow-hidden">
           <img 
-            src={post.image_url || post.image}
+            src={post.image_url || post.image || 'https://via.placeholder.com/1200x800?text=Yemalin+Journal'}
             alt={post.title}
             className="w-full h-full object-cover object-center"
           />
@@ -224,9 +224,10 @@ const BlogPost = () => {
                   {post.title}
                 </h1>
                 
-                <p className="text-white/90 text-lg mb-6 max-w-2xl">
-                  {post.excerpt}
-                </p>
+                <div
+                  className="text-white/90 text-lg mb-6 max-w-2xl"
+                  dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                />
                 
                 <div className="flex items-center justify-between flex-wrap gap-4">
                   <div></div>
