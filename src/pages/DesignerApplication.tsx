@@ -1,5 +1,6 @@
+
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -90,7 +91,9 @@ const DesignerApplication = () => {
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="w-full max-w-3xl mx-auto">
         <div className="mb-8 text-center">
-          <YemalinLogo className="h-12 w-auto mx-auto mb-6" />
+          <Link to="/">
+            <YemalinLogo className="h-12 w-auto mx-auto mb-6 cursor-pointer" />
+          </Link>
           <h1 className="text-2xl font-display">Designer Application</h1>
           <p className="text-gray-600 mt-2">
             Join the Yemalin community of independent designers
