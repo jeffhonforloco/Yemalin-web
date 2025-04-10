@@ -92,16 +92,13 @@ const About = () => {
           <div>
             <h2 className="text-2xl md:text-3xl font-display mb-6">The Yemalin Journey</h2>
             <p className="mb-4">
-              Yemalin was born from founder Isabella Chen's vision to create a digital destination that rivals the experience of the world's finest boutiques, while providing independent designers with a platform to reach a global audience.
+              At Yemalin, our name embodies the essence of the unexpected—a reflection of our commitment to delivering unparalleled luxury content that surprises and delights. Founded by Jeff Yemalin Bienvenu Honforloco, whose passion for high-class fashion fuels our vision, Yemalin is more than just a blog; it's a curated platform where the worlds of luxury fashion, art, and culture converge.
             </p>
             <p className="mb-4">
-              After years working in luxury fashion, Isabella saw a gap in the market for a truly curated online space that could connect discerning customers with extraordinary independent designers whose work might otherwise remain undiscovered.
-            </p>
-            <p className="mb-4">
-              The name "Yemalin" combines elements from multiple languages, reflecting our global perspective and the diverse influences that shape contemporary luxury.
+              Our journey begins with a dedication to exploring and showcasing the finest in luxury, offering our readers insightful content that spans emerging trends, timeless elegance, and the stories behind iconic designs. As we evolve, our ambition extends beyond content curation. In the future, we plan to introduce our own brand, seamlessly blending our deep appreciation for luxury with innovative designs that embody the sophistication our audience cherishes.
             </p>
             <p>
-              Today, we're proud to feature designers from over 20 countries, each bringing their unique cultural heritage and creative vision to our carefully curated collections.
+              Welcome to Yemalin—a sanctuary for connoisseurs of luxury, where every article is crafted with the same attention to detail and passion that we envision for our future creations. Join us as we embark on this journey, celebrating the art of luxury and anticipating the unveiling of our own signature brand.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4">
