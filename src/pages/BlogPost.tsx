@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Share, ChevronLeft, Calendar, Clock, ThumbsUp, ThumbsDown, MessageCircle } from 'lucide-react';
+import { Share, ChevronLeft, Clock, ThumbsUp, ThumbsDown, MessageCircle } from 'lucide-react';
 import BlogNewsletter from '@/components/blog/BlogNewsletter';
 import BlogContent from '@/components/blog/BlogContent';
 import BlogSidebar from '@/components/blog/BlogSidebar';
@@ -66,7 +66,7 @@ const BlogPost = () => {
     "headline": post.title,
     "description": post.excerpt,
     "image": post.image_url || post.image,
-    "datePublished": post.date || new Date().toISOString(),
+    "datePublished": new Date().toISOString(),
     "author": {
       "@type": "Person",
       "name": post.author
@@ -223,9 +223,6 @@ const BlogPost = () => {
                     {post.category}
                   </span>
                   <span className="flex items-center gap-1 text-white/90 text-xs">
-                    <Calendar size={14} /> {post.date}
-                  </span>
-                  <span className="flex items-center gap-1 text-white/90 text-xs">
                     <Clock size={14} /> {post.read_time}
                   </span>
                 </div>
@@ -247,7 +244,6 @@ const BlogPost = () => {
                     />
                     <div>
                       <p className="text-white font-medium">{post.author}</p>
-                      <p className="text-white/70 text-sm">Fashion Editor</p>
                     </div>
                   </div>
                   

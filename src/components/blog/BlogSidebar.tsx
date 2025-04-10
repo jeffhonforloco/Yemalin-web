@@ -69,7 +69,6 @@ const BlogSidebar = ({
           />
           <div>
             <h3 className="font-medium text-lg">{author}</h3>
-            <p className="text-sm text-gray-600">Fashion Editor</p>
           </div>
         </div>
         <p className="text-sm">
