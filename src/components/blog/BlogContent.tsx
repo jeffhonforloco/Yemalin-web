@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Separator } from '@/components/ui/separator';
 import { LeadMagnet } from '@/components/marketing/LeadMagnet';
@@ -82,15 +81,9 @@ const BlogContent = ({ excerpt, content, category, publishDate }: BlogContentPro
   
   return (
     <article className="prose prose-lg max-w-none">
-      {/* If we have category info, show it as metadata */}
-      {(category || publishDate) && (
+      {category && (
         <div className="flex items-center gap-4 text-sm text-gray-500 mb-6 not-prose">
-          {category && (
-            <span className="bg-gray-100 px-3 py-1 rounded">{category}</span>
-          )}
-          {publishDate && (
-            <span>{publishDate}</span>
-          )}
+          <span className="bg-gray-100 px-3 py-1 rounded">{category}</span>
         </div>
       )}
       

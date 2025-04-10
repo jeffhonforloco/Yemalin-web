@@ -16,6 +16,7 @@ interface BlogPostData {
   author_image?: string;
   read_time?: string;
   link?: string;
+  // No date property here
 }
 
 const useBlogPost = (slug: string | undefined) => {

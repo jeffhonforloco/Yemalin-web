@@ -24,7 +24,6 @@ const BlogPost = () => {
   const [userReaction, setUserReaction] = useState<'like' | 'dislike' | null>(null);
   const [showShareOptions, setShowShareOptions] = useState(false);
   
-  // Style poll sample data
   const pollData = {
     id: '1',
     question: 'Which trend do you prefer for the coming season?',
@@ -37,7 +36,6 @@ const BlogPost = () => {
     totalVotes: 124
   };
 
-  // Image poll data
   const imagePollData = {
     id: '2',
     question: 'Which accessory style speaks to you?',
@@ -59,7 +57,6 @@ const BlogPost = () => {
     pollType: 'image'
   };
   
-  // Create structured data for blog post if we have a post
   const structuredData = post ? {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -254,6 +251,7 @@ const BlogPost = () => {
                       title={post.title}
                       description={post.excerpt}
                       imageUrl={post.image_url || post.image}
+                      showLabels
                       size="sm"
                     />
                   </div>
