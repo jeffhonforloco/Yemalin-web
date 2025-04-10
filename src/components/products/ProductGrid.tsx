@@ -8,7 +8,8 @@ interface ProductGridProps {
   subtitle?: string;
   children?: ReactNode;
   columns?: 2 | 3 | 4;
-  category?: string; // Optional category for better SEO
+  category?: string;
+  collectionName?: string; // Added for better SEO
 }
 
 const ProductGrid = ({ 
@@ -17,7 +18,8 @@ const ProductGrid = ({
   subtitle, 
   children, 
   columns = 4,
-  category
+  category,
+  collectionName
 }: ProductGridProps) => {
   const gridCols = {
     2: 'grid-cols-1 sm:grid-cols-2',
@@ -29,6 +31,7 @@ const ProductGrid = ({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    "name": collectionName || title || `${category || ''} Products`,
     "itemListElement": products.map((product, index) => ({
       "@type": "ListItem",
       "position": index + 1,
@@ -43,7 +46,7 @@ const ProductGrid = ({
         "offers": {
           "@type": "Offer",
           "price": product.price,
-          "priceCurrency": product.currency,
+          "priceCurrency": product.currency || "USD",
           "availability": "https://schema.org/InStock"
         },
         "image": product.imageUrl,
@@ -72,6 +75,7 @@ const ProductGrid = ({
             key={product.id} 
             product={product} 
             categoryContext={category}
+            collectionContext={collectionName}
           />
         ))}
       </div>

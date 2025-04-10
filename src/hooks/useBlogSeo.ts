@@ -1,19 +1,31 @@
 
 import { useEffect } from 'react';
 import SEO from '@/components/SEO';
+import { BlogPostSEO } from '@/components/SEO/index';
 
 interface BlogSeoProps {
   title?: string;
   description?: string;
   imageUrl?: string;
   slug?: string;
+  publishDate?: string;
+  authorName?: string;
+  categoryName?: string;
 }
 
 /**
- * @deprecated Use the SEO component directly instead
+ * @deprecated Use the BlogPostSEO component directly instead
  * This hook is kept for backward compatibility
  */
-const useBlogSeo = ({ title, description, imageUrl, slug }: BlogSeoProps) => {
+const useBlogSeo = ({ 
+  title, 
+  description, 
+  imageUrl, 
+  slug,
+  publishDate,
+  authorName,
+  categoryName
+}: BlogSeoProps) => {
   useEffect(() => {
     if (!title) return;
     
@@ -25,7 +37,13 @@ const useBlogSeo = ({ title, description, imageUrl, slug }: BlogSeoProps) => {
       "description": description,
       "image": imageUrl,
       "url": slug ? `${window.location.origin}/blog/${slug}` : window.location.href,
-      "datePublished": new Date().toISOString(),
+      "datePublished": publishDate || new Date().toISOString(),
+      ...(authorName && {
+        "author": {
+          "@type": "Person",
+          "name": authorName
+        }
+      }),
       "publisher": {
         "@type": "Organization",
         "name": "Yemalin",
@@ -33,7 +51,10 @@ const useBlogSeo = ({ title, description, imageUrl, slug }: BlogSeoProps) => {
           "@type": "ImageObject",
           "url": `${window.location.origin}/logo.png`
         }
-      }
+      },
+      ...(categoryName && {
+        "articleSection": categoryName
+      })
     };
 
     // Generate SEO elements
@@ -78,7 +99,7 @@ const useBlogSeo = ({ title, description, imageUrl, slug }: BlogSeoProps) => {
       // Reset title when component unmounts
       document.title = 'Yemalin';
     };
-  }, [title, description, imageUrl, slug]);
+  }, [title, description, imageUrl, slug, publishDate, authorName, categoryName]);
   
   return null;
 };
