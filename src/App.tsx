@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -46,6 +47,7 @@ import ConversionLandingPage from './pages/ConversionLandingPage';
 import ProductLaunchLandingPage from './pages/ProductLaunchLandingPage';
 import Showcase from './pages/Showcase';
 import Materials from './pages/Materials';
+import MaterialStory from './pages/MaterialStory';
 
 // Initialize analytics
 analytics.init({
@@ -105,8 +107,9 @@ const App = () => (
                 <Route path="/landing/conversion" element={<ConversionLandingPage />} />
                 <Route path="/landing/product-launch" element={<ProductLaunchLandingPage />} />
                 
-                {/* New Materials Page */}
+                {/* Materials Pages */}
                 <Route path="/materials" element={<Materials />} />
+                <Route path="/materials/:id" element={<MaterialStory />} />
                 
                 {/* New Showcase Page */}
                 <Route path="/showcase" element={<Showcase />} />

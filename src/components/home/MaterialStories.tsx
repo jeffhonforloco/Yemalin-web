@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
@@ -36,7 +37,7 @@ const featuredMaterials = [
 ];
 
 const MaterialStories = () => {
-  const featuredMaterial = featuredMaterials[0]; // For simplicity, just showing the first material
+  const [selectedMaterial, setSelectedMaterial] = useState(featuredMaterials[0]);
   
   return (
     <section className="py-20 bg-yemalin-cream">
@@ -52,14 +53,14 @@ const MaterialStories = () => {
           <div>
             <div className="aspect-video relative overflow-hidden">
               <img 
-                src={featuredMaterial.image} 
-                alt={featuredMaterial.name}
+                src={selectedMaterial.image} 
+                alt={selectedMaterial.name}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
                 <div className="text-white">
-                  <h3 className="text-2xl font-display">{featuredMaterial.name}</h3>
-                  <p className="opacity-90 text-sm">Origin: {featuredMaterial.origin}</p>
+                  <h3 className="text-2xl font-display">{selectedMaterial.name}</h3>
+                  <p className="opacity-90 text-sm">Origin: {selectedMaterial.origin}</p>
                 </div>
               </div>
             </div>
@@ -68,7 +69,10 @@ const MaterialStories = () => {
               {featuredMaterials.map((material) => (
                 <div 
                   key={material.id}
-                  className="aspect-square overflow-hidden cursor-pointer transition-all hover:ring-2 ring-yemalin-accent"
+                  className={`aspect-square overflow-hidden cursor-pointer transition-all ${
+                    selectedMaterial.id === material.id ? 'ring-2 ring-yemalin-accent' : 'hover:ring-2 hover:ring-yemalin-accent/50'
+                  }`}
+                  onClick={() => setSelectedMaterial(material)}
                 >
                   <img 
                     src={material.image} 
@@ -82,9 +86,9 @@ const MaterialStories = () => {
           
           <div>
             <span className="text-yemalin-accent uppercase text-xs tracking-wider">Featured Material</span>
-            <h3 className="text-2xl md:text-3xl font-display mt-2 mb-4">{featuredMaterial.name}</h3>
+            <h3 className="text-2xl md:text-3xl font-display mt-2 mb-4">{selectedMaterial.name}</h3>
             <p className="text-gray-700 mb-6">
-              {featuredMaterial.description}
+              {selectedMaterial.description}
             </p>
             
             <Separator className="my-6" />
@@ -92,7 +96,7 @@ const MaterialStories = () => {
             <div className="mb-6">
               <h4 className="font-medium mb-2">Sustainability</h4>
               <p className="text-gray-600 text-sm">
-                {featuredMaterial.sustainability}
+                {selectedMaterial.sustainability}
               </p>
             </div>
             
@@ -101,14 +105,14 @@ const MaterialStories = () => {
               <div className="flex gap-4 items-center">
                 <div className="w-20 h-20 flex-shrink-0">
                   <img 
-                    src={featuredMaterial.productImage}
+                    src={selectedMaterial.productImage}
                     alt="Product made with this material"
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div>
                   <p className="text-sm text-gray-700">
-                    From raw material to finished piece, our skilled artisans transform {featuredMaterial.name.toLowerCase()} into timeless garments that honor its natural properties.
+                    From raw material to finished piece, our skilled artisans transform {selectedMaterial.name.toLowerCase()} into timeless garments that honor its natural properties.
                   </p>
                 </div>
               </div>
@@ -116,13 +120,13 @@ const MaterialStories = () => {
             
             <div className="flex flex-wrap gap-4">
               <Button asChild>
-                <Link to={`/materials/${featuredMaterial.id}`}>
+                <Link to={`/materials/${selectedMaterial.id}`}>
                   Explore Material Story
                 </Link>
               </Button>
               <Button asChild variant="outline">
-                <Link to={`/shop?material=${featuredMaterial.id}`}>
-                  Shop {featuredMaterial.name}
+                <Link to={`/shop?material=${selectedMaterial.id}`}>
+                  Shop {selectedMaterial.name}
                 </Link>
               </Button>
             </div>
