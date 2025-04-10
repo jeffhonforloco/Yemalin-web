@@ -20,6 +20,7 @@ import DashboardAnalytics from "./pages/DashboardAnalytics";
 import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
 import Designers from "./pages/Designers";
+import DesignerProfile from "./pages/DesignerProfile";
 import Collections from "./pages/Collections";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
@@ -77,6 +78,7 @@ const App = () => (
               <Route path="/shop" element={<Shop />} />
               <Route path="/shop/:slug" element={<ProductDetail />} />
               <Route path="/designers" element={<Designers />} />
+              <Route path="/designers/:id" element={<DesignerProfile />} />
               <Route path="/designers/apply" element={<DesignerApplication />} />
               <Route path="/collections" element={<Collections />} />
               <Route path="/blog" element={<Blog />} />

@@ -1,4 +1,3 @@
-
 import MainLayout from '@/components/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -16,7 +15,7 @@ const designersList = [
     image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80',
     logo: 'https://images.unsplash.com/photo-1618354691792-d1d42acfd860?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
     signature: 'Structured silhouettes with unexpected details',
-    link: '/designers/elise-laurent'
+    link: '/designers/designer1'
   },
   {
     id: 'designer2',
@@ -189,7 +188,7 @@ const Designers = () => {
                       </p>
                       <Link to={designer.link}>
                         <Button className="bg-black text-white hover:bg-gray-800">
-                          View Collection
+                          View Profile
                         </Button>
                       </Link>
                     </div>
