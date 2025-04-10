@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Calendar, ChevronRight, BookOpen } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Link } from 'react-router-dom';
 import { blogCategories } from '@/data/blogCategoriesData';
+import sampleArticleContent from '@/data/sampleArticleContent';
 
 // Generate upcoming dates for the content calendar
 const generateUpcomingDates = () => {

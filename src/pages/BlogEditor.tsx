@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -19,7 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import SEO from '@/components/SEO';
 import BlogAIGenerator from '@/components/blog/BlogAIGenerator';
-import { sampleArticleContent } from '@/data/sampleArticleContent';
+import sampleArticleContent from '@/data/sampleArticleContent';
 
 interface BlogPost {
   id: string;
@@ -38,7 +37,6 @@ interface BlogPost {
   created_at?: string;
 }
 
-// Extended interface for database posts that might not have SEO fields
 interface DatabasePost {
   id: string;
   title: string;
@@ -73,7 +71,6 @@ const DEFAULT_CONTENT = `<h2>Introduction</h2>
 <h2>Conclusion</h2>
 <p>Wrap up with a strong conclusion...</p>`;
 
-// Categories from the sample content
 const categories = [
   'Luxury Trends',
   'Designer Spotlights',
@@ -102,7 +99,6 @@ const BlogEditor = () => {
   const [sampleTopics, setSampleTopics] = useState<string[]>([]);
 
   useEffect(() => {
-    // Load sample topics based on categories
     const topics = Object.keys(sampleArticleContent).map(key => {
       const article = sampleArticleContent[key as keyof typeof sampleArticleContent];
       return article.title;
@@ -203,7 +199,6 @@ const BlogEditor = () => {
       });
 
       if (!id && data) {
-        // If we created a new post, navigate to edit it
         navigate(`/dashboard/blog/edit/${data[0].id}`);
       }
     } catch (error: any) {
@@ -216,12 +211,10 @@ const BlogEditor = () => {
   };
 
   const handlePreview = () => {
-    // Generate a slug from the title
     const slug = post.title.toLowerCase()
       .replace(/[^\w\s-]/g, '')
       .replace(/\s+/g, '-');
 
-    // Store the post data in localStorage for preview
     localStorage.setItem('preview_post', JSON.stringify({
       ...post,
       link: `/blog/${slug}`,
@@ -232,12 +225,10 @@ const BlogEditor = () => {
       })
     }));
 
-    // Open preview in new tab
     window.open(`/blog/preview`, '_blank');
   };
 
   const handleUseSampleContent = (title: string) => {
-    // Find the sample content by title
     const topicKey = Object.keys(sampleArticleContent).find(key => {
       const article = sampleArticleContent[key as keyof typeof sampleArticleContent];
       return article.title === title;
@@ -289,7 +280,7 @@ const BlogEditor = () => {
       <SEO 
         title={id ? `Edit: ${post.title}` : "Create New Blog Post"}
         description="Content management system for Yemalin Journal"
-        robots="noindex, nofollow" // Don't index admin pages
+        robots="noindex, nofollow"
       />
       <div className="luxury-container py-10">
         <div className="flex justify-between items-center mb-6">
