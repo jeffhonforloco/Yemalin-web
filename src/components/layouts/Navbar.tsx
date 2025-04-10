@@ -63,7 +63,7 @@ const Navbar = () => {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm uppercase tracking-wider">Shop</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-sm uppercase tracking-wider font-bold">Shop</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4">
                     {fashionCategories.map((category) => (
@@ -83,7 +83,7 @@ const Navbar = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm uppercase tracking-wider">Journal</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-sm uppercase tracking-wider font-bold">Journal</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[500px] grid-cols-2 gap-3 p-4">
                     {editorialCategories.map((category) => (
@@ -103,13 +103,13 @@ const Navbar = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Link to="/designers" className={`block py-2 px-3 text-sm uppercase tracking-wider ${location.pathname === '/designers' ? 'font-medium' : ''}`}>
+                <Link to="/designers" className={`block py-2 px-3 text-sm uppercase tracking-wider font-bold ${location.pathname === '/designers' ? 'font-medium' : ''}`}>
                   Designers
                 </Link>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Link to="/about" className={`block py-2 px-3 text-sm uppercase tracking-wider ${location.pathname === '/about' ? 'font-medium' : ''}`}>
+                <Link to="/about" className={`block py-2 px-3 text-sm uppercase tracking-wider font-bold ${location.pathname === '/about' ? 'font-medium' : ''}`}>
                   About
                 </Link>
               </NavigationMenuItem>
@@ -261,10 +261,10 @@ const Navbar = () => {
                     ))}
                   </div>
                   
-                  <Link to="/designers" className="px-2 py-2 hover:bg-gray-100 rounded">
+                  <Link to="/designers" className="px-2 py-2 hover:bg-gray-100 rounded font-bold">
                     Designers
                   </Link>
-                  <Link to="/about" className="px-2 py-2 hover:bg-gray-100 rounded">
+                  <Link to="/about" className="px-2 py-2 hover:bg-gray-100 rounded font-bold">
                     About
                   </Link>
                   
