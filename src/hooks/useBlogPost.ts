@@ -79,8 +79,13 @@ const useBlogPost = (slug: string | undefined) => {
         
         if (foundPost) {
           setPost({
-            ...foundPost,
-            content: foundPost.excerpt || "" // Ensure content is present
+            title: foundPost.title,
+            excerpt: foundPost.excerpt || "",
+            content: foundPost.excerpt || "",
+            image: foundPost.image,
+            category: foundPost.category,
+            read_time: foundPost.readTime,
+            link: foundPost.link
           });
         }
       }

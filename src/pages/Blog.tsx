@@ -114,21 +114,7 @@ const Blog = () => {
                 <p className="text-white text-lg mb-4 max-w-2xl">
                   {featuredPost.excerpt}
                 </p>
-                <div className="flex items-center mb-6">
-                  <img 
-                    src={featuredPost.authorImage}
-                    alt={featuredPost.author}
-                    className="w-10 h-10 rounded-full mr-3 object-cover"
-                  />
-                  <div>
-                    <p className="text-white text-sm font-medium">{featuredPost.author}</p>
-                    <div className="flex items-center text-white text-xs opacity-80">
-                      <span>{featuredPost.date}</span>
-                      <span className="mx-2">•</span>
-                      <span>{featuredPost.readTime}</span>
-                    </div>
-                  </div>
-                </div>
+                
                 <Link to={featuredPost.link}>
                   <Button className="bg-white text-black hover:bg-black hover:text-white">
                     Read Article
@@ -208,20 +194,6 @@ const Blog = () => {
                               {post.excerpt}
                             </CardDescription>
                           </CardHeader>
-                          <CardContent>
-                            <Separator className="mb-4" />
-                            <div className="flex items-center">
-                              <img 
-                                src={post.authorImage}
-                                alt={post.author}
-                                className="w-8 h-8 rounded-full mr-2 object-cover"
-                              />
-                              <div>
-                                <p className="text-sm font-medium">{post.author}</p>
-                                <p className="text-xs text-gray-500">{post.date}</p>
-                              </div>
-                            </div>
-                          </CardContent>
                         </Link>
                       </Card>
                     ))}
