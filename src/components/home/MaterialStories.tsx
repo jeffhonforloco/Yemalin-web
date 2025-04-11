@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Info, Leaf, Shield } from 'lucide-react';
+import { ChevronRight, Info, Leaf, Shield, Award, Star } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
@@ -72,16 +72,19 @@ const MaterialStories = () => {
   const [selectedMaterial, setSelectedMaterial] = useState(featuredMaterials[0]);
   
   return (
-    <section className="py-20 bg-yemalin-cream" id="material-stories">
+    <section className="py-20 bg-yemalin-cream overflow-hidden" id="material-stories">
       <div className="luxury-container">
         <motion.div 
           className="text-center mb-12"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-100px" }}
           variants={fadeIn}
         >
-          <h2 className="text-3xl md:text-4xl font-display mb-3">Material Stories</h2>
+          <Badge className="bg-yemalin-accent text-white mb-3">
+            <Star size={14} className="mr-1" /> Premium Materials
+          </Badge>
+          <h2 className="text-3xl md:text-4xl font-display mb-3 tracking-tight">Material Stories</h2>
           <p className="text-yemalin-grey-600 max-w-2xl mx-auto">
             Explore the exceptional materials that form the foundation of our collections and their journey from source to garment
           </p>
@@ -91,8 +94,9 @@ const MaterialStories = () => {
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             variants={fadeIn}
+            className="relative"
           >
             <motion.div 
               className="aspect-video relative overflow-hidden rounded-lg shadow-lg"
@@ -105,14 +109,20 @@ const MaterialStories = () => {
                 className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/70"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/70 pointer-events-none"></div>
               <div className="absolute bottom-0 left-0 p-6 right-0 text-white">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-2xl font-display">{selectedMaterial.name}</h3>
-                    <p className="opacity-90 text-sm">Origin: {selectedMaterial.origin}</p>
-                  </div>
-                  <Badge className="bg-yemalin-accent/80 hover:bg-yemalin-accent" aria-label="Sustainability score">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <h3 className="text-2xl sm:text-3xl font-display">{selectedMaterial.name}</h3>
+                    <p className="opacity-90 text-sm flex items-center">
+                      <Award size={14} className="inline mr-1.5" /> Origin: {selectedMaterial.origin}
+                    </p>
+                  </motion.div>
+                  <Badge className="bg-yemalin-accent hover:bg-yemalin-accent border-none text-white" aria-label="Sustainability score">
                     <Leaf size={14} className="mr-1" /> 
                     {selectedMaterial.sustainabilityScore}/100
                   </Badge>
@@ -124,7 +134,7 @@ const MaterialStories = () => {
               {featuredMaterials.map((material) => (
                 <motion.button 
                   key={material.id}
-                  className={`aspect-square overflow-hidden rounded-md cursor-pointer transition-all ${
+                  className={`aspect-square relative overflow-hidden rounded-md cursor-pointer transition-all ${
                     selectedMaterial.id === material.id ? 'ring-2 ring-yemalin-accent shadow-lg' : 'hover:ring-2 hover:ring-yemalin-accent/50 hover:shadow-md'
                   }`}
                   onClick={() => setSelectedMaterial(material)}
@@ -154,9 +164,9 @@ const MaterialStories = () => {
               animate="visible"
               exit="exit"
               variants={cardVariants}
-              className="bg-white rounded-lg p-8 shadow-sm"
+              className="bg-white rounded-lg p-8 shadow-md border border-gray-100"
             >
-              <Badge className="bg-yemalin-accent mb-3" aria-label="Featured material">
+              <Badge className="bg-yemalin-accent mb-3 text-white border-none" aria-label="Featured material">
                 Featured Material
               </Badge>
               
@@ -167,7 +177,7 @@ const MaterialStories = () => {
               
               <div className="flex flex-wrap gap-2 mb-6">
                 {selectedMaterial.properties.map(property => (
-                  <Badge key={property} variant="outline" className="bg-white">
+                  <Badge key={property} variant="outline" className="bg-white border-yemalin-gray-300 text-yemalin-grey-700">
                     {property}
                   </Badge>
                 ))}
@@ -190,7 +200,10 @@ const MaterialStories = () => {
                   <Info size={18} className="mr-2 text-yemalin-accent" />
                   <h4 className="font-medium">Crafted into Excellence</h4>
                 </div>
-                <div className="flex gap-4 items-center bg-gray-50 p-4 rounded-md">
+                <motion.div 
+                  className="flex gap-4 items-center bg-gray-50 p-4 rounded-md border border-gray-100 hover:shadow-md transition-shadow"
+                  whileHover={{ y: -2 }}
+                >
                   <div className="w-20 h-20 flex-shrink-0 rounded-md overflow-hidden">
                     <img 
                       src={selectedMaterial.productImage}
@@ -204,16 +217,16 @@ const MaterialStories = () => {
                       From raw material to finished piece, our skilled artisans transform {selectedMaterial.name.toLowerCase()} into timeless garments that honor its natural properties.
                     </p>
                   </div>
-                </div>
+                </motion.div>
               </div>
               
               <div className="flex flex-wrap gap-4">
-                <Button asChild>
+                <Button asChild className="bg-yemalin-accent hover:bg-yemalin-accent/90 text-white">
                   <Link to={`/materials/${selectedMaterial.id}`}>
                     Explore Material Story
                   </Link>
                 </Button>
-                <Button asChild variant="outline">
+                <Button asChild variant="outline" className="border-yemalin-accent text-yemalin-accent hover:bg-yemalin-accent/10">
                   <Link to={`/shop?material=${selectedMaterial.id}`}>
                     Shop {selectedMaterial.name}
                   </Link>
@@ -227,8 +240,9 @@ const MaterialStories = () => {
           <motion.div
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            className="inline-block"
           >
-            <Link to="/materials" className="text-yemalin-accent hover:underline inline-flex items-center group">
+            <Link to="/materials" className="text-yemalin-accent hover:text-yemalin-accent/80 hover:underline inline-flex items-center group font-medium">
               Discover All Material Stories
               <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
             </Link>
