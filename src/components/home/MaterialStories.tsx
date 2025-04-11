@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { motion } from 'framer-motion';
 
 // Sample material data - in a real app, this would come from an API
 const featuredMaterials = [
@@ -36,26 +37,48 @@ const featuredMaterials = [
   }
 ];
 
+// Animation variants
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6 }
+  }
+};
+
 const MaterialStories = () => {
   const [selectedMaterial, setSelectedMaterial] = useState(featuredMaterials[0]);
   
   return (
-    <section className="py-20 bg-yemalin-cream">
+    <section className="py-20 bg-yemalin-cream" id="material-stories">
       <div className="luxury-container">
-        <div className="text-center mb-12">
+        <motion.div 
+          className="text-center mb-12"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeIn}
+        >
           <h2 className="text-3xl md:text-4xl font-display mb-3">Material Stories</h2>
           <p className="text-yemalin-grey-600 max-w-2xl mx-auto">
             Explore the exceptional materials that form the foundation of our collections and their journey from source to garment
           </p>
-        </div>
+        </motion.div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          <div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeIn}
+          >
             <div className="aspect-video relative overflow-hidden rounded-lg shadow-lg">
               <img 
                 src={selectedMaterial.image} 
                 alt={selectedMaterial.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
                 <div className="text-white">
@@ -67,24 +90,32 @@ const MaterialStories = () => {
             
             <div className="mt-6 grid grid-cols-3 gap-4">
               {featuredMaterials.map((material) => (
-                <div 
+                <button 
                   key={material.id}
                   className={`aspect-square overflow-hidden rounded-md cursor-pointer transition-all ${
                     selectedMaterial.id === material.id ? 'ring-2 ring-yemalin-accent' : 'hover:ring-2 hover:ring-yemalin-accent/50'
                   }`}
                   onClick={() => setSelectedMaterial(material)}
+                  aria-label={`Select ${material.name}`}
+                  aria-pressed={selectedMaterial.id === material.id}
                 >
                   <img 
                     src={material.image} 
                     alt={material.name}
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
-                </div>
+                </button>
               ))}
             </div>
-          </div>
+          </motion.div>
           
-          <div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeIn}
+          >
             <span className="text-yemalin-accent uppercase text-xs tracking-wider">Featured Material</span>
             <h3 className="text-2xl md:text-3xl font-display mt-2 mb-4">{selectedMaterial.name}</h3>
             <p className="text-gray-700 mb-6">
@@ -108,6 +139,7 @@ const MaterialStories = () => {
                     src={selectedMaterial.productImage}
                     alt="Product made with this material"
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 </div>
                 <div>
@@ -130,13 +162,13 @@ const MaterialStories = () => {
                 </Link>
               </Button>
             </div>
-          </div>
+          </motion.div>
         </div>
         
         <div className="mt-12 text-center">
-          <Link to="/materials" className="text-yemalin-accent hover:underline inline-flex items-center">
+          <Link to="/materials" className="text-yemalin-accent hover:underline inline-flex items-center group">
             Discover All Material Stories
-            <ChevronRight size={16} className="ml-1" />
+            <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>

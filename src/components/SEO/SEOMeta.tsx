@@ -10,14 +10,18 @@ interface SEOMetaProps {
   keywords?: string[];
   structuredData?: Record<string, any>;
   noIndex?: boolean;
-  robots?: string; // Add robots prop to match usage in BlogPost.tsx
+  robots?: string;
 }
 
+/**
+ * Enhanced SEO component that manages all document head metadata
+ * with improved structured data and meta tags
+ */
 const SEOMeta = ({
   title,
   description,
   canonicalUrl = window.location.href,
-  ogImage = "https://lovable.dev/opengraph-image-p98pqg.png",
+  ogImage = "https://images.unsplash.com/photo-1589394915835-964da87c1303?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
   ogType = "website",
   keywords = [],
   structuredData,
@@ -34,7 +38,16 @@ const SEOMeta = ({
         "@context": "https://schema.org",
         "@type": "WebPage",
         "name": title,
-        "description": description
+        "description": description,
+        "url": canonicalUrl,
+        "publisher": {
+          "@type": "Organization",
+          "name": "Yemalin",
+          "logo": {
+            "@type": "ImageObject",
+            "url": `${window.location.origin}/logo.png`
+          }
+        }
       });
 
   return (
@@ -49,7 +62,7 @@ const SEOMeta = ({
       ) : noIndex ? (
         <meta name="robots" content="noindex, nofollow" />
       ) : (
-        <meta name="robots" content="index, follow" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
       )}
       
       {/* Canonical URL */}
@@ -61,6 +74,7 @@ const SEOMeta = ({
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
+      <meta property="og:site_name" content="Yemalin" />
       
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
@@ -68,6 +82,10 @@ const SEOMeta = ({
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
+      
+      {/* Additional SEO tags */}
+      <meta name="format-detection" content="telephone=no" />
+      <meta name="theme-color" content="#ffffff" />
       
       {/* Schema.org structured data */}
       <script type="application/ld+json">{structuredDataJSON}</script>

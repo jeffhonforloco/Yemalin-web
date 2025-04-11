@@ -7,51 +7,51 @@
   <!-- Main Pages -->
   <url>
     <loc>https://yemalin.com/</loc>
-    <lastmod>2025-04-10</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2025-04-11</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://yemalin.com/shop</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://yemalin.com/designers</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://yemalin.com/collections</loc>
-    <lastmod>2025-04-10</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2025-04-11</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://yemalin.com/blog</loc>
-    <lastmod>2025-04-10</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2025-04-11</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   
   <!-- Secondary Pages -->
   <url>
     <loc>https://yemalin.com/about</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://yemalin.com/sustainability</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://yemalin.com/materials</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -59,58 +59,73 @@
   <!-- Material Story Pages -->
   <url>
     <loc>https://yemalin.com/materials/silk</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1589394915835-964da87c1303</image:loc>
+      <image:title>Mulberry Silk</image:title>
+      <image:caption>Luxurious silk fabric from China and Japan</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://yemalin.com/materials/linen</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1594761051656-73fefd47ad16</image:loc>
+      <image:title>Belgian Linen</image:title>
+      <image:caption>Premium linen fabric from Belgium</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://yemalin.com/materials/wool</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1599974202733-c2b17594b1e9</image:loc>
+      <image:title>Merino Wool</image:title>
+      <image:caption>Soft merino wool from Australia and New Zealand</image:caption>
+    </image:image>
   </url>
   
   <url>
     <loc>https://yemalin.com/showcase</loc>
-    <lastmod>2025-04-10</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2025-04-11</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <!-- Support Pages -->
   <url>
     <loc>https://yemalin.com/faq</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://yemalin.com/shipping</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://yemalin.com/contact</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://yemalin.com/privacy</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://yemalin.com/terms</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -118,13 +133,13 @@
   <!-- Landing Pages -->
   <url>
     <loc>https://yemalin.com/early-access</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://yemalin.com/trend-report</loc>
-    <lastmod>2025-04-10</lastmod>
+    <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

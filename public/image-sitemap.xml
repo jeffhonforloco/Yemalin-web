@@ -1,0 +1,39 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://yemalin.com/materials</loc>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1589394915835-964da87c1303</image:loc>
+      <image:title>Mulberry Silk</image:title>
+      <image:caption>Luxurious mulberry silk textile from China and Japan</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1594761051656-73fefd47ad16</image:loc>
+      <image:title>Belgian Linen</image:title>
+      <image:caption>Premium Belgian linen fabric in natural color</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1599974202733-c2b17594b1e9</image:loc>
+      <image:title>Merino Wool</image:title>
+      <image:caption>Soft merino wool from Australia and New Zealand</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://yemalin.com/sustainability</loc>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1592185285645-5b9d0f5809f5</image:loc>
+      <image:title>Sustainable Fashion Production</image:title>
+      <image:caption>Eco-friendly production methods at Yemalin</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://yemalin.com/designers</loc>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1618044733300-9472054094ee</image:loc>
+      <image:title>Fashion Designers at Work</image:title>
+      <image:caption>Talented designers creating premium fashion collections for Yemalin</image:caption>
+    </image:image>
+  </url>
+</urlset>

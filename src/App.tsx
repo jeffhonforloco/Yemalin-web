@@ -3,8 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation, useNavigationType } from "react-router-dom";
-import { useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -19,7 +18,7 @@ import DashboardProducts from "./pages/DashboardProducts";
 import DashboardOrders from "./pages/DashboardOrders";
 import DashboardAnalytics from "./pages/DashboardAnalytics";
 import Shop from "./pages/Shop";
-import Products from "./pages/Products"; // Import our new Products page
+import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import Designers from "./pages/Designers";
 import DesignerProfile from "./pages/DesignerProfile";
@@ -52,7 +51,7 @@ import MaterialStory from './pages/MaterialStory';
 // Initialize analytics
 analytics.init({
   // Add your Google Analytics ID here when ready for production
-  // googleAnalyticsId: 'G-XXXXXXXXXX'
+  googleAnalyticsId: 'G-XXXXXXXXXX'
 });
 
 const queryClient = new QueryClient();

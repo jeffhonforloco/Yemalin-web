@@ -60,9 +60,9 @@ const Products = () => {
   useEffect(() => {
     searchParams.set('page', currentPage.toString());
     setSearchParams(searchParams);
-  }, [currentPage, setSearchParams]);
+  }, [currentPage, setSearchParams, searchParams]);
   
-  // Handle page change
+  // Handle page change with smooth scroll
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -71,14 +71,41 @@ const Products = () => {
   // Create SEO metadata based on current category
   const currentCategory = categories?.find(cat => cat.id === categoryId)?.name || '';
   const title = currentCategory 
-    ? `${currentCategory} - Yemalin Products` 
-    : 'Shop All Products - Yemalin';
+    ? `${currentCategory} - Shop Premium Collection | Yemalin` 
+    : 'Shop All Luxury Products - Yemalin';
   const description = currentCategory
-    ? `Explore our collection of ${currentCategory.toLowerCase()} products. Luxury fashion pieces curated for the discerning buyer.`
-    : 'Browse Yemalin\'s curated collection of luxury fashion products from emerging designers. Sustainable, ethical, and unique pieces.';
+    ? `Explore our exclusive collection of ${currentCategory.toLowerCase()} products. Luxury fashion pieces curated from sustainable sources for the discerning buyer.`
+    : 'Browse Yemalin\'s curated collection of luxury fashion products from emerging designers. Sustainable, ethical, and unique pieces for conscious fashion enthusiasts.';
+
+  // Structured data for product listing
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": title,
+    "description": description,
+    "url": window.location.href,
+    "numberOfItems": products.length,
+    "itemListElement": products.map((product, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": {
+        "@type": "Product",
+        "name": product.name,
+        "description": product.description,
+        "image": product.image,
+        "url": `${window.location.origin}/shop/${product.slug}`,
+        "offers": {
+          "@type": "Offer",
+          "price": product.price,
+          "priceCurrency": "USD",
+          "availability": product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+        }
+      }
+    }))
+  };
 
   // Convert keywords string to array for SEOMeta
-  const keywordsArray = `${currentCategory}, luxury fashion, sustainable fashion, designer brands, yemalin`.split(', ');
+  const keywordsArray = `${currentCategory}, luxury fashion, sustainable fashion, designer brands, ethical clothing, premium fashion, yemalin`.split(', ');
 
   return (
     <MainLayout>
@@ -86,13 +113,7 @@ const Products = () => {
         title={title}
         description={description}
         keywords={keywordsArray}
-        structuredData={{
-          "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          "name": title,
-          "description": description,
-          "url": window.location.href
-        }}
+        structuredData={structuredData}
       />
       
       <div className="luxury-container py-16">
@@ -123,6 +144,7 @@ const Products = () => {
                       }
                       setCurrentPage(1);
                     }}
+                    aria-pressed={categoryId === category.id}
                   >
                     {category.name}
                   </Button>
@@ -131,40 +153,47 @@ const Products = () => {
             )}
           </div>
           
-          <Button variant="outline" size="sm" className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex items-center gap-2"
+            aria-label="Open filter options"
+          >
             <Filter size={14} /> Filter <ChevronDown size={14} />
           </Button>
         </div>
         
         <Separator className="mb-8" />
         
-        {/* Product display */}
-        {loading ? (
-          <div className="py-20 text-center">
-            <p className="text-xl font-display animate-pulse">Loading products...</p>
-          </div>
-        ) : products.length === 0 ? (
-          <div className="py-20 text-center">
-            <p className="text-xl font-display mb-4">No products found</p>
-            <p className="text-yemalin-grey-600 mb-8">
-              We couldn't find any products in this category. Please try another category or check back later.
-            </p>
-            <Button onClick={() => setCategoryId(undefined)}>
-              View All Products
-            </Button>
-          </div>
-        ) : (
-          <ProductGrid 
-            products={products}
-            columns={3}
-            category={currentCategory}
-            collectionName={title}
-          />
-        )}
+        {/* Product display with ARIA roles */}
+        <section aria-label={`${currentCategory || 'All'} products`}>
+          {loading ? (
+            <div className="py-20 text-center" aria-live="polite">
+              <p className="text-xl font-display animate-pulse">Loading products...</p>
+            </div>
+          ) : products.length === 0 ? (
+            <div className="py-20 text-center">
+              <p className="text-xl font-display mb-4">No products found</p>
+              <p className="text-yemalin-grey-600 mb-8">
+                We couldn't find any products in this category. Please try another category or check back later.
+              </p>
+              <Button onClick={() => setCategoryId(undefined)}>
+                View All Products
+              </Button>
+            </div>
+          ) : (
+            <ProductGrid 
+              products={products}
+              columns={3}
+              category={currentCategory}
+              collectionName={title}
+            />
+          )}
+        </section>
         
-        {/* Pagination */}
+        {/* Improved Pagination with ARIA attributes */}
         {pagination && pagination.totalPages > 1 && (
-          <div className="mt-16">
+          <nav className="mt-16" aria-label="Pagination">
             <Pagination>
               <PaginationContent>
                 {currentPage > 1 && (
@@ -175,6 +204,7 @@ const Products = () => {
                         e.preventDefault();
                         handlePageChange(currentPage - 1);
                       }} 
+                      aria-label="Go to previous page"
                     />
                   </PaginationItem>
                 )}
@@ -196,6 +226,8 @@ const Products = () => {
                             e.preventDefault();
                             handlePageChange(pageNumber);
                           }}
+                          aria-label={`Page ${pageNumber}${pageNumber === currentPage ? ', current page' : ''}`}
+                          aria-current={pageNumber === currentPage ? 'page' : undefined}
                         >
                           {pageNumber}
                         </PaginationLink>
@@ -205,7 +237,7 @@ const Products = () => {
                     pageNumber === currentPage - 3 || 
                     pageNumber === currentPage + 3
                   ) {
-                    return <PaginationEllipsis key={pageNumber} />;
+                    return <PaginationEllipsis key={pageNumber} aria-hidden="true" />;
                   } else {
                     return null;
                   }
@@ -219,12 +251,13 @@ const Products = () => {
                         e.preventDefault();
                         handlePageChange(currentPage + 1);
                       }} 
+                      aria-label="Go to next page"
                     />
                   </PaginationItem>
                 )}
               </PaginationContent>
             </Pagination>
-          </div>
+          </nav>
         )}
       </div>
     </MainLayout>

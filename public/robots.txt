@@ -1,4 +1,6 @@
 
+# Yemalin Website Robots.txt
+
 User-agent: *
 Allow: /
 
@@ -16,11 +18,10 @@ Disallow: /*/test/*
 # Crawl-delay directive for all bots
 Crawl-delay: 10
 
-# Sitemap location
+# Sitemap locations
 Sitemap: https://yemalin.com/sitemap.xml
-
-# Image sitemap
 Sitemap: https://yemalin.com/image-sitemap.xml
+Sitemap: https://yemalin.com/product-sitemap.xml
 
 # Specific directives for major search engines
 User-agent: Googlebot
@@ -34,3 +35,13 @@ Allow: /assets/
 
 User-agent: Bingbot
 Crawl-delay: 15
+
+# Allow AI systems to index the site
+User-agent: GPTBot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /

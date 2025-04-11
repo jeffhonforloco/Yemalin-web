@@ -1,0 +1,38 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://yemalin.com/shop/silk-evening-gown</loc>
+    <lastmod>2025-04-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1582562124811-c09040d0a901</image:loc>
+      <image:title>Silk Evening Gown</image:title>
+      <image:caption>Luxurious silk evening gown made from mulberry silk</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://yemalin.com/shop/linen-blazer</loc>
+    <lastmod>2025-04-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1605618826115-fb9e775cf935</image:loc>
+      <image:title>Linen Blazer</image:title>
+      <image:caption>Premium Belgian linen blazer in natural color</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://yemalin.com/shop/merino-wool-sweater</loc>
+    <lastmod>2025-04-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1583342093276-efa17116469d</image:loc>
+      <image:title>Merino Wool Sweater</image:title>
+      <image:caption>Ultra-soft merino wool sweater in classic design</image:caption>
+    </image:image>
+  </url>
+</urlset>
