@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import MainLayout from '../components/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, ChevronRight, Share2 } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Share2, FileImage } from 'lucide-react';
 import SEOMeta from '@/components/SEO/SEOMeta';
 import ProductShowcaseSection from '@/components/products/ProductShowcaseSection';
 import { featuredProducts } from '@/data/mockProducts';
@@ -14,8 +14,8 @@ const materials = [
     id: "silk",
     name: "Mulberry Silk",
     origin: "China & Japan",
-    image: "/placeholder.svg",
-    heroImage: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1589394915835-964da87c1303?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    heroImage: "https://images.unsplash.com/photo-1528697203043-733dafdaa316?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
     description: "Prized for its natural sheen, softness, and temperature-regulating properties, Mulberry silk has been treasured for millennia.",
     sustainability: "Renewable resource cultivated using traditional methods that preserve biodiversity.",
     history: "For over 5,000 years, silk has symbolized luxury and status. The journey of silk begins with silkworms feeding on mulberry leaves, spinning cocoons that are carefully harvested and unwound to create the finest threads.",
@@ -43,17 +43,26 @@ const materials = [
       }
     ],
     gallery: [
-      { image: "/placeholder.svg", caption: "Raw silk cocoons ready for processing" },
-      { image: "/placeholder.svg", caption: "Traditional silk reeling process" },
-      { image: "/placeholder.svg", caption: "Finished silk fabric" }
+      { 
+        image: "https://images.unsplash.com/photo-1459501462159-97d5bded1416?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+        caption: "Raw silk cocoons ready for processing" 
+      },
+      { 
+        image: "https://images.unsplash.com/photo-1583766395091-2eb9994ed094?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+        caption: "Traditional silk reeling process" 
+      },
+      { 
+        image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+        caption: "Finished silk fabric" 
+      }
     ]
   },
   {
     id: "linen",
     name: "Belgian Linen",
     origin: "Belgium",
-    image: "/placeholder.svg",
-    heroImage: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1594761051656-73fefd47ad16?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    heroImage: "https://images.unsplash.com/photo-1584450151850-3a0480eecab6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
     description: "Known for its exceptional durability and breathability, Belgian linen becomes more beautiful with age.",
     sustainability: "Flax requires minimal water and pesticides, making linen one of the most eco-friendly textile fibers.",
     history: "Belgium has been renowned for its exceptional linen production since the Middle Ages. The cool, damp climate of the region creates ideal conditions for growing flax and processing it into the world's finest linen.",
@@ -81,17 +90,26 @@ const materials = [
       }
     ],
     gallery: [
-      { image: "/placeholder.svg", caption: "Flax fields in bloom" },
-      { image: "/placeholder.svg", caption: "Traditional linen processing" },
-      { image: "/placeholder.svg", caption: "Finished linen fabric" }
+      { 
+        image: "https://images.unsplash.com/photo-1499955085172-a104c9463ece?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+        caption: "Flax fields in bloom" 
+      },
+      { 
+        image: "https://images.unsplash.com/photo-1531002043926-6235bf9e2c3b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+        caption: "Traditional linen processing" 
+      },
+      { 
+        image: "https://images.unsplash.com/photo-1605618826115-fb9e775cf935?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+        caption: "Finished linen fabric" 
+      }
     ]
   },
   {
     id: "wool",
     name: "Merino Wool",
     origin: "Australia & New Zealand",
-    image: "/placeholder.svg",
-    heroImage: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1599974202733-c2b17594b1e9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    heroImage: "https://images.unsplash.com/photo-1562025425-7d7ff2c3f110?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
     description: "Ultra-fine fibers create a luxuriously soft hand feel while providing natural temperature regulation.",
     sustainability: "Our merino is sourced from certified ethical farms prioritizing animal welfare and environmental stewardship.",
     history: "Merino sheep originated in Spain but were later introduced to Australia and New Zealand, where breeding programs developed the world's finest wool fibers. Today, these regions produce the highest quality merino prized for its exceptional softness.",
@@ -119,9 +137,18 @@ const materials = [
       }
     ],
     gallery: [
-      { image: "/placeholder.svg", caption: "Merino sheep in the Australian outback" },
-      { image: "/placeholder.svg", caption: "Wool processing facility" },
-      { image: "/placeholder.svg", caption: "Finished merino wool fabric" }
+      { 
+        image: "https://images.unsplash.com/photo-1539190299742-a1e6cca89af2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+        caption: "Merino sheep in the Australian outback" 
+      },
+      { 
+        image: "https://images.unsplash.com/photo-1558157870-000af36acd10?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+        caption: "Wool processing facility" 
+      },
+      { 
+        image: "https://images.unsplash.com/photo-1583342093276-efa17116469d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80", 
+        caption: "Finished merino wool fabric" 
+      }
     ]
   }
 ];
@@ -193,9 +220,9 @@ const MaterialStory = () => {
               
               <div className="mb-12">
                 <h2 className="text-3xl font-display mb-6">From Source to Fabric</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {material.processSteps.map((step, index) => (
-                    <div key={index} className="border border-gray-200 p-6 bg-gray-50">
+                    <div key={index} className="border border-gray-200 p-6 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                       <div className="w-10 h-10 bg-yemalin-accent text-white rounded-full flex items-center justify-center mb-4">
                         {index + 1}
                       </div>
@@ -210,7 +237,7 @@ const MaterialStory = () => {
               
               <div className="mb-12">
                 <h2 className="text-3xl font-display mb-6">Sustainability Impact</h2>
-                <div className="bg-yemalin-cream p-8">
+                <div className="bg-yemalin-cream p-8 rounded-lg shadow-sm">
                   <p className="text-gray-700">
                     {material.sustainability}
                   </p>
@@ -220,14 +247,17 @@ const MaterialStory = () => {
             
             <div>
               <div className="sticky top-24">
-                <div className="border border-gray-200 p-6 mb-8">
-                  <h3 className="text-xl font-medium mb-4">Care Instructions</h3>
+                <div className="border border-gray-200 rounded-lg p-6 mb-8 shadow-sm">
+                  <h3 className="text-xl font-medium mb-4 flex items-center">
+                    <FileImage size={18} className="mr-2 text-yemalin-accent" />
+                    Care Instructions
+                  </h3>
                   <p className="text-gray-600">
                     {material.care}
                   </p>
                 </div>
                 
-                <div className="border border-gray-200 p-6 mb-8">
+                <div className="border border-gray-200 rounded-lg p-6 mb-8 shadow-sm">
                   <h3 className="text-xl font-medium mb-4">Share This Story</h3>
                   <div className="flex gap-4">
                     <Button variant="outline" size="icon">
@@ -237,16 +267,16 @@ const MaterialStory = () => {
                   </div>
                 </div>
                 
-                <div>
+                <div className="border border-gray-200 rounded-lg p-6 shadow-sm">
                   <h3 className="text-xl font-medium mb-4">Related Materials</h3>
                   <div className="space-y-3">
                     {materials.filter(m => m.id !== material.id).map(relatedMaterial => (
                       <Link 
                         key={relatedMaterial.id}
                         to={`/materials/${relatedMaterial.id}`} 
-                        className="flex items-center gap-3 p-3 border border-gray-200 hover:bg-gray-50"
+                        className="flex items-center gap-3 p-3 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
                       >
-                        <div className="w-12 h-12 flex-shrink-0">
+                        <div className="w-12 h-12 flex-shrink-0 rounded-md overflow-hidden">
                           <img 
                             src={relatedMaterial.image} 
                             alt={relatedMaterial.name}
@@ -269,12 +299,12 @@ const MaterialStory = () => {
       </section>
       
       {/* Image Gallery Section */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-16 bg-gray-50">
         <div className="luxury-container">
           <h2 className="text-3xl font-display mb-8 text-center">Material Gallery</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {material.gallery.map((item, index) => (
-              <div key={index} className="overflow-hidden group">
+              <div key={index} className="overflow-hidden group rounded-lg shadow-md">
                 <div className="aspect-[4/3] overflow-hidden">
                   <img 
                     src={item.image} 
@@ -282,7 +312,7 @@ const MaterialStory = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
-                <p className="mt-2 text-sm text-center text-gray-600">{item.caption}</p>
+                <p className="mt-3 mb-2 px-4 text-center text-gray-700 font-medium">{item.caption}</p>
               </div>
             ))}
           </div>
