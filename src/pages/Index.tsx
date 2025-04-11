@@ -26,6 +26,7 @@ import EmailMarketingSignup from '../components/marketing/EmailMarketingSignup';
 import DesignerSpotlight from '../components/home/DesignerSpotlight';
 import MaterialStories from '../components/home/MaterialStories';
 import SEOMeta from '@/components/SEO/SEOMeta';
+import { motion } from 'framer-motion';
 
 const Index = () => {
   // Sample editorial content for the content-to-product section
@@ -42,6 +43,16 @@ const Index = () => {
       </p>
     </>
   );
+  
+  // Animation variants
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.6 }
+    }
+  };
 
   return (
     <MainLayout>
@@ -67,24 +78,31 @@ const Index = () => {
       {/* Enhanced Journal Section */}
       <JournalSection />
       
-      {/* Content Calendar Preview */}
+      {/* Content Calendar Preview - Enhanced Upcoming Features Section */}
       <section className="py-16 bg-white">
         <div className="luxury-container">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-10">
-            <div>
-              <h2 className="font-display text-2xl md:text-3xl mb-2">Upcoming Features</h2>
-              <p className="text-yemalin-grey-600">Stay ahead with our editorial calendar</p>
+          <motion.div 
+            className="text-center mb-12"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeIn}
+          >
+            <h2 className="font-display text-3xl md:text-4xl mb-3">Editorial Calendar</h2>
+            <p className="text-yemalin-grey-600 max-w-2xl mx-auto">
+              A preview of our upcoming features, interviews, and in-depth analyses curated for the modern fashion enthusiast
+            </p>
+            <div className="mt-6 flex justify-center">
+              <Link to="/blog" className="inline-block">
+                <Button variant="outline" className="flex items-center gap-2 border-yemalin-black">
+                  <Calendar size={16} /> View Complete Calendar
+                </Button>
+              </Link>
             </div>
-            <Link to="/blog" className="mt-4 md:mt-0">
-              <Button variant="outline" className="flex items-center gap-2 border-yemalin-black">
-                <Calendar size={16} /> View Full Calendar
-              </Button>
-            </Link>
-          </div>
+            <Separator className="max-w-md mx-auto mt-8" />
+          </motion.div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <ContentCalendar />
-          </div>
+          <ContentCalendar />
         </div>
       </section>
       

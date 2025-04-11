@@ -1,10 +1,13 @@
+
 import React from 'react';
-import { Calendar, ChevronRight, BookOpen } from 'lucide-react';
+import { Calendar, ChevronRight, BookOpen, Clock, Tag } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Link } from 'react-router-dom';
 import { blogCategories } from '@/data/blogCategoriesData';
 import sampleArticleContent from '@/data/sampleArticleContent';
+import { motion } from 'framer-motion';
+import { Badge } from '@/components/ui/badge';
 
 // Generate upcoming dates for the content calendar
 const generateUpcomingDates = () => {
@@ -64,6 +67,7 @@ const ContentCalendar: React.FC = () => {
     const topicIndex = index % availableTopics.length;
     const topic = availableTopics[topicIndex];
     
+    // Add estimated reading time and tag
     return {
       id: index + 1,
       date: formatDate(date),
@@ -72,38 +76,100 @@ const ContentCalendar: React.FC = () => {
       category: topic.category,
       categorySlug: topic.categorySlug,
       slug: topic.slug,
-      link: `/blog/${topic.slug}`
+      link: `/blog/${topic.slug}`,
+      readTime: `${Math.floor(Math.random() * 10) + 5} min read`,
+      tag: ['New', 'Featured', 'Exclusive', 'Trending'][index % 4]
     };
   });
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
+  const cardVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
+  // Color mapping for different tags
+  const tagColors: Record<string, string> = {
+    'New': 'bg-emerald-500',
+    'Featured': 'bg-purple-500',
+    'Exclusive': 'bg-amber-500',
+    'Trending': 'bg-rose-500'
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <motion.div 
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-50px" }}
+    >
       {upcomingContent.map((item) => (
-        <Card key={item.id} className="bg-white overflow-hidden group transition-all hover:shadow-md">
-          <CardContent className="p-0">
-            <div className="bg-yemalin-black text-white p-3 flex items-center justify-between">
-              <div className="flex items-center">
-                <Calendar size={16} className="mr-2" />
-                <span className="text-sm font-medium">{item.date}</span>
+        <motion.div key={item.id} variants={cardVariants}>
+          <Card className="bg-white overflow-hidden group transition-all hover:shadow-md border-0 h-full">
+            <CardContent className="p-0 flex flex-col h-full">
+              <div className="bg-yemalin-black text-white p-4 flex items-center justify-between relative">
+                <div className="flex items-center">
+                  <Calendar size={18} className="mr-2 text-yemalin-accent" />
+                  <span className="text-sm font-medium">{item.date}</span>
+                </div>
+                {item.tag && (
+                  <Badge className={`${tagColors[item.tag]} text-white text-xs px-2 py-1 absolute -top-1 right-2 rotate-3 shadow-sm`}>
+                    {item.tag}
+                  </Badge>
+                )}
               </div>
-              <Link to={`/blog/category/${item.categorySlug}`} className="text-xs px-2 py-1 bg-white/20 rounded-full hover:bg-white/30 transition-colors">
-                {item.category}
-              </Link>
-            </div>
-            <div className="p-5">
-              <h3 className="font-medium text-lg mb-2 line-clamp-2">{item.title}</h3>
-              <p className="text-sm text-gray-600 mb-4 line-clamp-2">{item.description}</p>
-              <Separator className="my-3" />
-              <Link to={item.link} className="flex items-center text-sm font-medium text-yemalin-black hover:text-yemalin-grey-600 transition-colors">
-                <BookOpen size={16} className="mr-2" />
-                <span>Read Article</span>
-                <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
+              <div className="p-5 flex flex-col flex-grow">
+                <Link 
+                  to={`/blog/category/${item.categorySlug}`} 
+                  className="inline-block text-xs font-medium px-3 py-1 bg-yemalin-cream rounded-full mb-3 hover:bg-yemalin-accent hover:text-white transition-colors"
+                >
+                  {item.category}
+                </Link>
+                
+                <h3 className="font-display text-lg mb-2 line-clamp-2 group-hover:text-yemalin-accent transition-colors">
+                  <Link to={item.link}>{item.title}</Link>
+                </h3>
+                
+                <p className="text-sm text-gray-600 mb-4 line-clamp-2 flex-grow">{item.description}</p>
+                
+                <div className="flex items-center text-xs text-yemalin-grey-600 mb-3">
+                  <Clock size={14} className="mr-1.5" />
+                  <span>{item.readTime}</span>
+                </div>
+                
+                <Separator className="my-3" />
+                
+                <Link 
+                  to={item.link} 
+                  className="flex items-center text-sm font-medium text-yemalin-black hover:text-yemalin-accent transition-colors"
+                >
+                  <BookOpen size={16} className="mr-2" />
+                  <span>Read Article</span>
+                  <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 };
 

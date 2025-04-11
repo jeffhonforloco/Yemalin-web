@@ -2,8 +2,9 @@
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from 'react-router-dom';
-import { ArrowRight, TrendingUp } from 'lucide-react';
+import { ArrowRight, TrendingUp, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Button } from "@/components/ui/button";
 
 const trendingTopics = [
   {
@@ -75,14 +76,21 @@ const TrendingSection = () => {
   return (
     <section className="py-20 bg-yemalin-cream">
       <div className="luxury-container">
-        <div className="mb-12 text-center">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <TrendingUp size={24} className="text-yemalin-accent" />
-            <h2 className="font-display text-3xl md:text-4xl">Trending Narratives</h2>
+        <div className="mb-12 flex flex-col md:flex-row justify-between items-center">
+          <div className="text-center md:text-left mb-6 md:mb-0">
+            <div className="flex items-center gap-2 mb-3 justify-center md:justify-start">
+              <TrendingUp size={24} className="text-yemalin-accent" />
+              <h2 className="font-display text-3xl md:text-4xl">Trending Narratives</h2>
+            </div>
+            <p className="text-yemalin-grey-600 max-w-2xl">
+              Immerse yourself in the evolving conversations shaping a more intentional approach to style and living
+            </p>
           </div>
-          <p className="text-yemalin-grey-600 max-w-2xl mx-auto">
-            Immerse yourself in the evolving conversations shaping a more intentional approach to style and living
-          </p>
+          <Button asChild variant="outline" className="border-yemalin-black hover:bg-yemalin-black hover:text-white">
+            <Link to="/blog" className="flex items-center gap-2">
+              <Calendar size={16} /> View Editorial Calendar
+            </Link>
+          </Button>
         </div>
         
         <motion.div 
@@ -94,7 +102,7 @@ const TrendingSection = () => {
         >
           {trendingTopics.map((topic) => (
             <motion.div key={topic.id} variants={itemVariants}>
-              <Card className="overflow-hidden border-0 group h-full">
+              <Card className="overflow-hidden border-0 group h-full shadow-sm hover:shadow-md transition-all">
                 <Link to={topic.link} className="block h-full">
                   <div className="relative h-[220px] overflow-hidden">
                     <img 
@@ -102,14 +110,14 @@ const TrendingSection = () => {
                       alt={topic.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70"></div>
-                    <div className="absolute bottom-0 left-0 p-4 right-0 text-white">
-                      <h3 className="text-lg font-medium font-display">{topic.title}</h3>
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/70"></div>
+                    <div className="absolute bottom-0 left-0 p-6 right-0 text-white">
+                      <h3 className="text-xl font-medium font-display">{topic.title}</h3>
                     </div>
                   </div>
                   <CardContent className="pt-4 flex flex-col h-[calc(100%-220px)]">
                     <p className="text-sm text-yemalin-grey-600 mb-3 flex-grow">{topic.description}</p>
-                    <div className="flex items-center text-yemalin-accent text-sm font-medium mt-2">
+                    <div className="flex items-center text-yemalin-accent text-sm font-medium mt-2 group-hover:translate-x-1 transition-transform">
                       <span className="mr-1">Continue Reading</span>
                       <ArrowRight size={14} />
                     </div>
