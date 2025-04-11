@@ -2,9 +2,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Info, Leaf, Shield } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Badge } from '@/components/ui/badge';
 
 // Sample material data - in a real app, this would come from an API
 const featuredMaterials = [
@@ -15,7 +16,9 @@ const featuredMaterials = [
     image: "https://images.unsplash.com/photo-1589394915835-964da87c1303?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     description: "Prized for its natural sheen, softness, and temperature-regulating properties, Mulberry silk has been treasured for millennia.",
     sustainability: "Renewable resource cultivated using traditional methods that preserve biodiversity.",
-    productImage: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+    productImage: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+    sustainabilityScore: 85,
+    properties: ["Breathable", "Lightweight", "Hypoallergenic", "Thermoregulating"]
   },
   {
     id: "linen",
@@ -24,7 +27,9 @@ const featuredMaterials = [
     image: "https://images.unsplash.com/photo-1594761051656-73fefd47ad16?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     description: "Known for its exceptional durability and breathability, Belgian linen becomes more beautiful with age.",
     sustainability: "Flax requires minimal water and pesticides, making linen one of the most eco-friendly textile fibers.",
-    productImage: "https://images.unsplash.com/photo-1605618826115-fb9e775cf935?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+    productImage: "https://images.unsplash.com/photo-1605618826115-fb9e775cf935?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+    sustainabilityScore: 95,
+    properties: ["Durable", "Absorbent", "Antibacterial", "Cooling"]
   },
   {
     id: "wool",
@@ -33,7 +38,9 @@ const featuredMaterials = [
     image: "https://images.unsplash.com/photo-1599974202733-c2b17594b1e9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     description: "Ultra-fine fibers create a luxuriously soft hand feel while providing natural temperature regulation.",
     sustainability: "Our merino is sourced from certified ethical farms prioritizing animal welfare and environmental stewardship.",
-    productImage: "https://images.unsplash.com/photo-1583342093276-efa17116469d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+    productImage: "https://images.unsplash.com/photo-1583342093276-efa17116469d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+    sustainabilityScore: 80,
+    properties: ["Odor-resistant", "Moisture-wicking", "Insulating", "Biodegradable"]
   }
 ];
 
@@ -44,6 +51,20 @@ const fadeIn = {
     opacity: 1, 
     y: 0,
     transition: { duration: 0.6 }
+  }
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    transition: { duration: 0.5 }
+  },
+  exit: { 
+    opacity: 0, 
+    scale: 0.95,
+    transition: { duration: 0.3 }
   }
 };
 
@@ -73,31 +94,44 @@ const MaterialStories = () => {
             viewport={{ once: true }}
             variants={fadeIn}
           >
-            <div className="aspect-video relative overflow-hidden rounded-lg shadow-lg">
+            <motion.div 
+              className="aspect-video relative overflow-hidden rounded-lg shadow-lg"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+            >
               <img 
                 src={selectedMaterial.image} 
                 alt={selectedMaterial.name}
                 className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
-                <div className="text-white">
-                  <h3 className="text-2xl font-display">{selectedMaterial.name}</h3>
-                  <p className="opacity-90 text-sm">Origin: {selectedMaterial.origin}</p>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/70"></div>
+              <div className="absolute bottom-0 left-0 p-6 right-0 text-white">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-2xl font-display">{selectedMaterial.name}</h3>
+                    <p className="opacity-90 text-sm">Origin: {selectedMaterial.origin}</p>
+                  </div>
+                  <Badge className="bg-yemalin-accent/80 hover:bg-yemalin-accent" aria-label="Sustainability score">
+                    <Leaf size={14} className="mr-1" /> 
+                    {selectedMaterial.sustainabilityScore}/100
+                  </Badge>
                 </div>
               </div>
-            </div>
+            </motion.div>
             
             <div className="mt-6 grid grid-cols-3 gap-4">
               {featuredMaterials.map((material) => (
-                <button 
+                <motion.button 
                   key={material.id}
                   className={`aspect-square overflow-hidden rounded-md cursor-pointer transition-all ${
-                    selectedMaterial.id === material.id ? 'ring-2 ring-yemalin-accent' : 'hover:ring-2 hover:ring-yemalin-accent/50'
+                    selectedMaterial.id === material.id ? 'ring-2 ring-yemalin-accent shadow-lg' : 'hover:ring-2 hover:ring-yemalin-accent/50 hover:shadow-md'
                   }`}
                   onClick={() => setSelectedMaterial(material)}
                   aria-label={`Select ${material.name}`}
                   aria-pressed={selectedMaterial.id === material.id}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <img 
                     src={material.image} 
@@ -105,71 +139,100 @@ const MaterialStories = () => {
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
-                </button>
+                  {selectedMaterial.id === material.id && (
+                    <div className="absolute inset-0 bg-yemalin-accent/20 border-2 border-yemalin-accent rounded-md"></div>
+                  )}
+                </motion.button>
               ))}
             </div>
           </motion.div>
           
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeIn}
-          >
-            <span className="text-yemalin-accent uppercase text-xs tracking-wider">Featured Material</span>
-            <h3 className="text-2xl md:text-3xl font-display mt-2 mb-4">{selectedMaterial.name}</h3>
-            <p className="text-gray-700 mb-6">
-              {selectedMaterial.description}
-            </p>
-            
-            <Separator className="my-6" />
-            
-            <div className="mb-6">
-              <h4 className="font-medium mb-2">Sustainability</h4>
-              <p className="text-gray-600 text-sm">
-                {selectedMaterial.sustainability}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedMaterial.id}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={cardVariants}
+              className="bg-white rounded-lg p-8 shadow-sm"
+            >
+              <Badge className="bg-yemalin-accent mb-3" aria-label="Featured material">
+                Featured Material
+              </Badge>
+              
+              <h3 className="text-2xl md:text-3xl font-display mt-2 mb-4">{selectedMaterial.name}</h3>
+              <p className="text-gray-700 mb-6">
+                {selectedMaterial.description}
               </p>
-            </div>
-            
-            <div className="mb-8">
-              <h4 className="font-medium mb-4">Crafted into Excellence</h4>
-              <div className="flex gap-4 items-center">
-                <div className="w-20 h-20 flex-shrink-0 rounded-md overflow-hidden">
-                  <img 
-                    src={selectedMaterial.productImage}
-                    alt="Product made with this material"
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+              
+              <div className="flex flex-wrap gap-2 mb-6">
+                {selectedMaterial.properties.map(property => (
+                  <Badge key={property} variant="outline" className="bg-white">
+                    {property}
+                  </Badge>
+                ))}
+              </div>
+              
+              <Separator className="my-6" />
+              
+              <div className="mb-6">
+                <div className="flex items-center mb-2">
+                  <Shield size={18} className="mr-2 text-yemalin-accent" />
+                  <h4 className="font-medium">Sustainability</h4>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-700">
-                    From raw material to finished piece, our skilled artisans transform {selectedMaterial.name.toLowerCase()} into timeless garments that honor its natural properties.
-                  </p>
+                <p className="text-gray-600 text-sm pl-6">
+                  {selectedMaterial.sustainability}
+                </p>
+              </div>
+              
+              <div className="mb-8">
+                <div className="flex items-center mb-4">
+                  <Info size={18} className="mr-2 text-yemalin-accent" />
+                  <h4 className="font-medium">Crafted into Excellence</h4>
+                </div>
+                <div className="flex gap-4 items-center bg-gray-50 p-4 rounded-md">
+                  <div className="w-20 h-20 flex-shrink-0 rounded-md overflow-hidden">
+                    <img 
+                      src={selectedMaterial.productImage}
+                      alt="Product made with this material"
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-700">
+                      From raw material to finished piece, our skilled artisans transform {selectedMaterial.name.toLowerCase()} into timeless garments that honor its natural properties.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div className="flex flex-wrap gap-4">
-              <Button asChild>
-                <Link to={`/materials/${selectedMaterial.id}`}>
-                  Explore Material Story
-                </Link>
-              </Button>
-              <Button asChild variant="outline">
-                <Link to={`/shop?material=${selectedMaterial.id}`}>
-                  Shop {selectedMaterial.name}
-                </Link>
-              </Button>
-            </div>
-          </motion.div>
+              
+              <div className="flex flex-wrap gap-4">
+                <Button asChild>
+                  <Link to={`/materials/${selectedMaterial.id}`}>
+                    Explore Material Story
+                  </Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link to={`/shop?material=${selectedMaterial.id}`}>
+                    Shop {selectedMaterial.name}
+                  </Link>
+                </Button>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
         
         <div className="mt-12 text-center">
-          <Link to="/materials" className="text-yemalin-accent hover:underline inline-flex items-center group">
-            Discover All Material Stories
-            <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
-          </Link>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <Link to="/materials" className="text-yemalin-accent hover:underline inline-flex items-center group">
+              Discover All Material Stories
+              <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
         </div>
       </div>
     </section>
