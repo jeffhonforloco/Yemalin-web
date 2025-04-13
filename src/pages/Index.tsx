@@ -1,30 +1,19 @@
 
 import MainLayout from '../components/layouts/MainLayout';
 import Hero from '../components/home/Hero';
-import FeaturedCategories from '../components/home/FeaturedCategories';
-import ProductGrid from '../components/products/ProductGrid';
-import { featuredProducts, newArrivals } from '../data/mockProducts';
-import FeaturedDesigners from '../components/home/FeaturedDesigners';
-import FeaturedCollections from '../components/home/FeaturedCollections';
-import Testimonials from '../components/home/Testimonials';
+import { featuredProducts } from '../data/mockProducts';
 import Newsletter from '../components/home/Newsletter';
-import OurJourney from '../components/home/OurJourney';
 import JournalSection from '../components/home/JournalSection';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import TrendingSection from '../components/home/TrendingSection';
-import ExclusiveDrop from '../components/home/ExclusiveDrop';
 import ContentCalendar from '../components/blog/ContentCalendar';
 import TrendReport from '../components/home/TrendReport';
 import PopupLeadMagnet from '../components/marketing/PopupLeadMagnet';
-import SocialFeed from '@/components/social/SocialFeed';
 import ContentToProductSection from '../components/products/ContentToProductSection';
-import CollaborationTeaser from '../components/home/CollaborationTeaser';
 import EmailMarketingSignup from '../components/marketing/EmailMarketingSignup';
-import DesignerSpotlight from '../components/home/DesignerSpotlight';
-import MaterialStories from '../components/home/MaterialStories';
 import SEOMeta from '@/components/SEO/SEOMeta';
 import { motion } from 'framer-motion';
 
@@ -57,12 +46,12 @@ const Index = () => {
   return (
     <MainLayout>
       <SEOMeta 
-        title="Yemalin | Fashion Journal and Luxury Marketplace"
-        description="Explore fashion insights, trends, and curated luxury pieces. Yemalin brings you thoughtful editorial content alongside exclusive designer collections."
-        keywords={["fashion journal", "luxury editorial", "designer clothing", "sustainable fashion", "boutique designers", "high-end fashion", "fashion marketplace"]}
+        title="Yemalin | Fashion Journal and Editorial Experience"
+        description="Explore our curated fashion journal with in-depth articles, trend analyses, interviews with designers, and thoughtful perspectives on style and sustainability."
+        keywords={["fashion journal", "luxury editorial", "fashion blog", "style insights", "sustainable fashion", "fashion trends", "fashion stories", "designer interviews"]}
       />
       
-      {/* Dynamic Hero Section with brand vision */}
+      {/* Hero Section with Journal Focus */}
       <Hero />
       
       {/* Main Journal Section - Primary Content */}
@@ -77,6 +66,9 @@ const Index = () => {
       
       {/* Enhanced Journal Section */}
       <JournalSection />
+      
+      {/* Trending Fashion Topics */}
+      <TrendingSection />
       
       {/* Content Calendar Preview - Enhanced Upcoming Features Section */}
       <section className="py-16 bg-white">
@@ -106,8 +98,23 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Trending Fashion Topics */}
-      <TrendingSection />
+      {/* Free Fashion Trend Report Lead Magnet */}
+      <TrendReport />
+      
+      {/* Minimal Product Content - Just one section to maintain commerce aspect */}
+      <section className="py-12 bg-white">
+        <div className="luxury-container">
+          <ContentToProductSection 
+            title="From Stories to Style"
+            content={editorialContent}
+            product={featuredProducts[0]}
+            ctaText="Explore Our Collection"
+            ctaLink="/shop"
+            reversed={true}
+            className="mt-6"
+          />
+        </div>
+      </section>
       
       {/* Popup Lead Magnet - triggers after 5 seconds or exit intent */}
       <PopupLeadMagnet 
@@ -118,62 +125,6 @@ const Index = () => {
         description="Get early access to our latest journal features and exclusive offers when you join our community."
         source="Homepage Popup"
       />
-
-      {/* Free Fashion Trend Report Lead Magnet */}
-      <TrendReport />
-      
-      {/* Content to Product Showcase */}
-      <section className="py-16 bg-white">
-        <div className="luxury-container text-center mb-10">
-          <h2 className="font-display text-3xl md:text-4xl mb-3">Content Meets Commerce</h2>
-          <p className="text-yemalin-grey-600 max-w-2xl mx-auto mb-6">
-            Experience our innovative approach to blending editorial content with curated products
-          </p>
-          <Button asChild variant="outline" className="border-yemalin-black hover:bg-yemalin-black hover:text-white">
-            <Link to="/showcase">
-              Explore Our Showcase <ArrowRight size={16} className="ml-2" />
-            </Link>
-          </Button>
-        </div>
-        
-        <ContentToProductSection 
-          title="Featured Story"
-          content={editorialContent}
-          product={featuredProducts[0]}
-          ctaText="See More Examples"
-          ctaLink="/showcase"
-          reversed={true}
-          className="mt-10"
-        />
-      </section>
-
-      {/* Exclusive Product Drop Teaser */}
-      <ExclusiveDrop />
-      
-      {/* New Arrivals - Now a smaller section */}
-      <div className="py-16 bg-white">
-        <div className="luxury-container">
-          <div className="mb-8 text-center">
-            <h2 className="font-display text-2xl md:text-3xl mb-3">New Arrivals</h2>
-            <p className="text-yemalin-grey-600 max-w-2xl mx-auto">
-              The latest additions to our curated collection
-            </p>
-          </div>
-          
-          <ProductGrid 
-            products={newArrivals.slice(0, 4)}
-            columns={4}
-          />
-          
-          <div className="mt-8 text-center">
-            <Link to="/shop">
-              <Button className="bg-yemalin-black hover:bg-yemalin-grey-800">
-                Shop New Arrivals
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
       
       {/* Enhanced Email Marketing Integration */}
       <section className="py-16 bg-yemalin-accent text-white">
@@ -209,23 +160,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-      
-      {/* Social Media Feed */}
-      <section className="py-20 bg-white">
-        <div className="luxury-container">
-          <SocialFeed 
-            title="Join Our Community" 
-            description="See what fashion enthusiasts are sharing about Yemalin's journal on social media"
-            hashtag="YemalinJournal"
-          />
-        </div>
-      </section>
-      
-      {/* Featured Designer Section - Now smaller section */}
-      <FeaturedDesigners />
-      
-      {/* Material Stories */}
-      <MaterialStories />
       
       {/* Email Signup - Newsletter */}
       <Newsletter />
