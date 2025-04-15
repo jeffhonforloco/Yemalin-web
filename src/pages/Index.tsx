@@ -1,9 +1,7 @@
-
 import MainLayout from '../components/layouts/MainLayout';
 import Hero from '../components/home/Hero';
 import { featuredProducts } from '../data/mockProducts';
 import Newsletter from '../components/home/Newsletter';
-import JournalSection from '../components/home/JournalSection';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar } from 'lucide-react';
@@ -16,9 +14,9 @@ import ContentToProductSection from '../components/products/ContentToProductSect
 import EmailMarketingSignup from '../components/marketing/EmailMarketingSignup';
 import SEOMeta from '@/components/SEO/SEOMeta';
 import { motion } from 'framer-motion';
+import YemalinEditSection from '../components/home/YemalinEditSection';
 
 const Index = () => {
-  // Sample editorial content for the content-to-product section
   const editorialContent = (
     <>
       <h3 className="text-2xl font-display mb-4">The Future of Fashion</h3>
@@ -32,8 +30,7 @@ const Index = () => {
       </p>
     </>
   );
-  
-  // Animation variants
+
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: { 
@@ -46,31 +43,26 @@ const Index = () => {
   return (
     <MainLayout>
       <SEOMeta 
-        title="Yemalin | Fashion Journal and Editorial Experience"
-        description="Explore our curated fashion journal with in-depth articles, trend analyses, interviews with designers, and thoughtful perspectives on style and sustainability."
-        keywords={["fashion journal", "luxury editorial", "fashion blog", "style insights", "sustainable fashion", "fashion trends", "fashion stories", "designer interviews"]}
+        title="Yemalin | The Yemalin Edit - Fashion Editorial Experience"
+        description="Explore our curated fashion editorial with in-depth articles, trend analyses, interviews with designers, and thoughtful perspectives on style and sustainability."
+        keywords={["fashion editorial", "luxury journal", "fashion blog", "style insights", "sustainable fashion", "fashion trends", "fashion stories", "designer interviews"]}
       />
       
-      {/* Hero Section with Journal Focus */}
       <Hero />
       
-      {/* Main Journal Section - Primary Content */}
       <div className="py-16 bg-white">
         <div className="luxury-container text-center mb-8">
-          <h2 className="font-display text-3xl md:text-5xl mb-3">Our Journal</h2>
+          <h2 className="font-display text-3xl md:text-5xl mb-3">The Yemalin Edit</h2>
           <p className="text-yemalin-grey-600 max-w-2xl mx-auto">
             Thoughtful perspectives on style, sustainability, and the cultural narratives shaping fashion today
           </p>
         </div>
       </div>
       
-      {/* Enhanced Journal Section */}
-      <JournalSection />
+      <YemalinEditSection />
       
-      {/* Trending Fashion Topics */}
       <TrendingSection />
       
-      {/* Content Calendar Preview - Enhanced Upcoming Features Section */}
       <section className="py-16 bg-white">
         <div className="luxury-container">
           <motion.div 
@@ -98,10 +90,8 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Free Fashion Trend Report Lead Magnet */}
       <TrendReport />
       
-      {/* Minimal Product Content - Just one section to maintain commerce aspect */}
       <section className="py-12 bg-white">
         <div className="luxury-container">
           <ContentToProductSection 
@@ -116,7 +106,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Popup Lead Magnet - triggers after 5 seconds or exit intent */}
       <PopupLeadMagnet 
         delay={5000} 
         exitIntent={true} 
@@ -126,7 +115,6 @@ const Index = () => {
         source="Homepage Popup"
       />
       
-      {/* Enhanced Email Marketing Integration */}
       <section className="py-16 bg-yemalin-accent text-white">
         <div className="luxury-container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -161,7 +149,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Email Signup - Newsletter */}
       <Newsletter />
     </MainLayout>
   );

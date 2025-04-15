@@ -1,4 +1,3 @@
-
 import MainLayout from '@/components/layouts/MainLayout';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -38,29 +37,22 @@ const Blog = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
   
-  // Fetch posts based on selected category
   const { posts, pagination, loading: loadingPosts, error: postsError } = 
     useWordPressPosts(currentPage, postsPerPage, selectedCategoryId);
   
-  // Featured post is the first post when no category is selected
   const featuredPost = posts.length > 0 && !selectedCategoryId ? posts[0] : null;
-  // Current posts are all posts except featured when no category selected
   const currentPosts = posts.length > 0 && !selectedCategoryId ? posts.slice(1) : posts;
   
-  // Parse category from URL if available
   useEffect(() => {
-    // Check if we're on a category page
     const urlParts = location.pathname.split('/');
     if (urlParts[1] === 'blog' && urlParts[2] === 'category' && urlParts[3]) {
       const categoryFromUrl = decodeURIComponent(urlParts[3]);
-      // Find category ID from name
       if (categories && categories.length > 0) {
         const category = categories.find(cat => cat.slug === categoryFromUrl);
         if (category) {
           setSelectedCategoryId(category.id);
           setSelectedCategoryName(category.name);
         } else {
-          // Redirect to main blog page if category doesn't exist
           navigate('/blog');
         }
       }
@@ -78,33 +70,29 @@ const Blog = () => {
       setSelectedCategoryName('All');
       navigate('/blog');
     } else {
-      // Using WordPress categories if available, otherwise use our custom categories
       const category = categories.find(cat => cat.name === categoryName);
       if (category) {
         setSelectedCategoryId(category.id);
         setSelectedCategoryName(category.name);
         navigate(`/blog/category/${category.slug}`);
       } else {
-        // If we can't find it in WordPress categories, use our custom categories
         const customCategory = blogCategories.find(cat => cat.name === categoryName);
         if (customCategory) {
-          setSelectedCategoryId(undefined); // No WordPress ID for our custom category
+          setSelectedCategoryId(undefined);
           setSelectedCategoryName(customCategory.name);
           navigate(`/blog/category/${customCategory.slug}`);
         }
       }
     }
-    setCurrentPage(1); // Reset to first page when changing category
+    setCurrentPage(1);
   };
   
-  // Create a complete list of categories, combining WordPress and our custom categories
   const combinedCategories = [
     { name: 'All', id: 0, slug: '' }, 
     ...(categories || []),
     ...blogCategories.map(cat => ({ name: cat.name, id: -1, slug: cat.slug }))
   ];
 
-  // Remove duplicates based on name
   const uniqueCategories = Array.from(
     new Map(combinedCategories.map(item => [item.name, item])).values()
   );
@@ -112,9 +100,9 @@ const Blog = () => {
   return (
     <MainLayout>
       <SEOMeta 
-        title="Yemalin Journal - Luxury Fashion Blog"
-        description="Explore Yemalin's fashion journal for insights on sustainable fashion, designer spotlights, and style guides."
-        keywords={['luxury fashion', 'sustainable fashion', 'designer spotlight', 'style guide']}
+        title="The Yemalin Edit - Luxury Fashion Editorial"
+        description="Explore The Yemalin Edit for insights on sustainable fashion, designer spotlights, and style guides."
+        keywords={['luxury fashion', 'sustainable fashion', 'designer spotlight', 'style guide', 'the yemalin edit']}
       />
       
       {featuredPost && (
@@ -172,7 +160,7 @@ const Blog = () => {
       <div className="luxury-container py-16">
         <div className="flex flex-col md:flex-row gap-8">
           <div className="w-full md:w-3/4">
-            <h2 className="text-2xl font-display mb-10">Journal</h2>
+            <h2 className="text-2xl font-display mb-10">The Yemalin Edit</h2>
             
             {loadingCategories ? (
               <div className="w-full h-12 bg-gray-200 animate-pulse rounded-md mb-8"></div>
@@ -255,7 +243,6 @@ const Blog = () => {
                           </div>
                         )}
                         
-                        {/* Show topic links for our custom categories */}
                         {blogCategories.find(cat => cat.name === category.name) && (
                           <div className="mt-8">
                             <h3 className="font-medium text-lg mb-4">Popular Topics in {category.name}</h3>
@@ -333,9 +320,7 @@ const Blog = () => {
           <div className="w-full md:w-1/4">
             <div className="sticky top-24">
               <div className="mb-8 bg-white p-6 shadow-sm">
-                <h3 className="text-lg font-medium mb-4 flex items-center">
-                  <BookOpen size={18} className="mr-2" /> Featured Topics
-                </h3>
+                <h3 className="text-lg font-medium mb-4">The Yemalin Edit</h3>
                 <div className="space-y-4">
                   {blogCategories.slice(0, 3).map(category => (
                     <div key={category.slug} className="mb-4">

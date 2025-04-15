@@ -91,7 +91,7 @@ const Navbar = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm uppercase tracking-wider font-bold">Journal</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="text-sm uppercase tracking-wider font-bold">The Yemalin Edit</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[500px] grid-cols-1 gap-3 p-4">
                     {/* Display Categories */}
@@ -303,7 +303,7 @@ const Navbar = () => {
                   </div>
                   
                   <div className="border-b pb-2">
-                    <p className="px-2 text-sm font-medium text-gray-500">Journal</p>
+                    <p className="px-2 text-sm font-medium text-gray-500">The Yemalin Edit</p>
                     {/* Updated mobile journal menu */}
                     {blogCategories.map((category) => (
                       <div key={category.slug}>
