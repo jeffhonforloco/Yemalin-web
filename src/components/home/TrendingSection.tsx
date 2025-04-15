@@ -12,42 +12,42 @@ const trendingTopics = [
     title: "The Sustainable Narrative",
     description: "Exploring how conscious choices in our wardrobes become chapters in a larger story of environmental stewardship",
     image: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    link: "/blog/category/sustainable-fashion"
+    slug: "sustainable-narrative"
   },
   {
     id: 2,
     title: "Cultural Conversations",
     description: "How today's visionary designers are engaging in dialogue with heritage, tradition, and contemporary culture",
     image: "https://images.unsplash.com/photo-1504051771394-dd2e66b2e08f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-    link: "/blog/category/runway-analysis"
+    slug: "cultural-conversations"
   },
   {
     id: 3,
     title: "The Artisan's Journey",
     description: "Intimate portraits of the hands and hearts behind pieces that transcend fashion to become personal heirlooms",
     image: "https://images.unsplash.com/photo-1456327102063-fb5054efe647?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    link: "/blog/category/artisan-craftsmanship"
+    slug: "artisans-journey"
   },
   {
     id: 4,
     title: "Living Intentionally",
     description: "Exploring how thoughtful choices in our personal style become expressions of our values and aspirations",
     image: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1495&q=80",
-    link: "/blog/category/fashion-tech"
+    slug: "living-intentionally"
   },
   {
     id: 5,
     title: "Fashion & Technology",
     description: "Exploring the intersection of innovation and style in the digital age",
     image: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1701&q=80",
-    link: "/blog/category/fashion-tech"
+    slug: "fashion-technology"
   },
   {
     id: 6,
     title: "Seasonal Transitions",
     description: "Navigating style through changing seasons with thoughtful wardrobe adaptations",
     image: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1495&q=80",
-    link: "/blog/category/seasonal-style"
+    slug: "seasonal-transitions"
   }
 ];
 
@@ -103,7 +103,7 @@ const TrendingSection = () => {
           {trendingTopics.map((topic) => (
             <motion.div key={topic.id} variants={itemVariants}>
               <Card className="overflow-hidden border-0 group h-full shadow-sm hover:shadow-md transition-all">
-                <Link to={topic.link} className="block h-full">
+                <Link to={`/blog/${topic.slug}`} className="block h-full">
                   <div className="relative h-[220px] overflow-hidden">
                     <img 
                       src={topic.image}

@@ -144,7 +144,7 @@ const ContentCalendar: React.FC = () => {
                 </Link>
                 
                 <h3 className="font-display text-lg mb-2 line-clamp-2 group-hover:text-yemalin-accent transition-colors">
-                  <Link to={item.link}>{item.title}</Link>
+                  <Link to={`/blog/${item.slug}`}>{item.title}</Link>
                 </h3>
                 
                 <p className="text-sm text-gray-600 mb-4 line-clamp-2 flex-grow">{item.description}</p>
@@ -157,7 +157,7 @@ const ContentCalendar: React.FC = () => {
                 <Separator className="my-3" />
                 
                 <Link 
-                  to={item.link} 
+                  to={`/blog/${item.slug}`} 
                   className="flex items-center text-sm font-medium text-yemalin-black hover:text-yemalin-accent transition-colors"
                 >
                   <BookOpen size={16} className="mr-2" />
