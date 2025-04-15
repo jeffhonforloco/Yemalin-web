@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Clock, ChevronDown } from 'lucide-react';
@@ -15,34 +16,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { blogCategories } from '@/data/blogCategoriesData';
 import sampleArticleContent from '@/data/sampleArticleContent';
-
-// Create a list of topic slugs that we know have content
-const availableArticleSlugs = Object.keys(sampleArticleContent);
+import { LeadMagnet } from '@/components/marketing/LeadMagnet';
 
 const YemalinEditSection = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const { posts, loading, error } = useWordPressPosts(1, 9); // Increased from 6 to 9 posts
+  const { posts, loading, error } = useWordPressPosts(1, 9);
   
-  // Filter sample articles based on selected category
   const getSampleArticles = () => {
     if (selectedCategory === 'All') {
-      return Object.values(sampleArticleContent).slice(0, 9); // Increased from 6 to 9
+      return Object.values(sampleArticleContent).slice(0, 9);
     }
     
     return Object.values(sampleArticleContent)
       .filter(article => article.category === selectedCategory)
-      .slice(0, 9); // Increased from 6 to 9
+      .slice(0, 9);
   };
   
   const sampleArticles = getSampleArticles();
-  
-  // Use sample articles if WordPress API fails
   const displayArticles = posts.length > 0 && !error ? posts : sampleArticles;
 
-  // Get featured article (first one)
   const featuredArticle = displayArticles.length > 0 ? displayArticles[0] : null;
-  // Rest of the articles
-  const remainingArticles = displayArticles.length > 1 ? displayArticles.slice(1) : [];
+  const remainingArticles = displayArticles.length > 1 ? displayArticles.slice(1, 8) : [];
   
   return (
     <section className="py-16 bg-white">
@@ -112,35 +106,49 @@ const YemalinEditSection = () => {
           <>
             {/* Featured Article (Large) */}
             {featuredArticle && (
-              <div className="mb-12">
-                <Card className="overflow-hidden border-none shadow-md group">
-                  <Link to={`/blog/${featuredArticle.slug}`} className="grid grid-cols-1 md:grid-cols-2 gap-0">
-                    <div className="h-[400px] md:h-[500px] overflow-hidden">
-                      <img 
-                        src={featuredArticle.image_url || 'https://via.placeholder.com/800x600?text=Yemalin+Journal'}
-                        alt={featuredArticle.title}
-                        className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                      />
-                    </div>
-                    <div className="p-8 md:p-12 flex flex-col justify-center">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-sm font-medium bg-yemalin-grey-100 px-3 py-1.5">
-                          {featuredArticle.category}
-                        </span>
-                        <span className="flex items-center text-sm text-gray-500">
-                          <Clock size={16} className="mr-1.5" />
-                          {featuredArticle.read_time}
-                        </span>
+              <div className="mb-12 grid md:grid-cols-2 gap-8">
+                <div>
+                  <Card className="overflow-hidden border-none shadow-md group h-full">
+                    <Link to={`/blog/${featuredArticle.slug}`} className="block h-full">
+                      <div className="h-[400px] overflow-hidden">
+                        <img 
+                          src={featuredArticle.image_url || 'https://via.placeholder.com/800x600?text=Yemalin+Journal'}
+                          alt={featuredArticle.title}
+                          className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                        />
                       </div>
-                      <h3 className="text-2xl md:text-3xl font-display mb-4">{featuredArticle.title}</h3>
-                      <div 
-                        className="text-yemalin-grey-600 mb-6 line-clamp-4"
-                        dangerouslySetInnerHTML={{ __html: featuredArticle.excerpt }}
-                      />
-                      <Button className="self-start">Read Article</Button>
-                    </div>
-                  </Link>
-                </Card>
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="text-sm font-medium bg-yemalin-grey-100 px-3 py-1.5">
+                            {featuredArticle.category}
+                          </span>
+                          <span className="flex items-center text-sm text-gray-500">
+                            <Clock size={16} className="mr-1.5" />
+                            {featuredArticle.read_time}
+                          </span>
+                        </div>
+                        <h3 className="text-2xl font-display mb-4">{featuredArticle.title}</h3>
+                        <div 
+                          className="text-yemalin-grey-600 mb-6 line-clamp-4"
+                          dangerouslySetInnerHTML={{ __html: featuredArticle.excerpt }}
+                        />
+                        <Button className="self-start">Read Full Article</Button>
+                      </CardContent>
+                    </Link>
+                  </Card>
+                </div>
+                
+                {/* Transactional Content (10%) */}
+                <div className="bg-yemalin-grey-100 p-8 flex flex-col justify-center">
+                  <LeadMagnet 
+                    type="inline"
+                    offer="trend-insights"
+                    title="Get Exclusive Fashion Insights"
+                    description="Subscribe to receive curated trend reports, designer interviews, and deep-dive editorials directly to your inbox."
+                    source="Yemalin Edit Sidebar"
+                    className="bg-transparent p-0"
+                  />
+                </div>
               </div>
             )}
             
