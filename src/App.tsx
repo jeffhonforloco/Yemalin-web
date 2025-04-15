@@ -47,6 +47,7 @@ import ProductLaunchLandingPage from './pages/ProductLaunchLandingPage';
 import Showcase from './pages/Showcase';
 import Materials from './pages/Materials';
 import MaterialStory from './pages/MaterialStory';
+import Favorites from './pages/Favorites';
 
 // Initialize analytics
 analytics.init({
@@ -99,6 +100,7 @@ const App = () => (
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
+                <Route path="/favorites" element={<Favorites />} />
                 
                 {/* Landing Pages */}
                 <Route path="/early-access" element={<EarlyAccessLanding />} />
