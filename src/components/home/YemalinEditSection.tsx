@@ -142,7 +142,7 @@ const YemalinEditSection = () => {
                 <div className="bg-yemalin-grey-100 p-8 flex flex-col justify-center">
                   <LeadMagnet 
                     type="inline"
-                    offer="trend-insights"
+                    offer="newsletter"
                     title="Get Exclusive Fashion Insights"
                     description="Subscribe to receive curated trend reports, designer interviews, and deep-dive editorials directly to your inbox."
                     source="Yemalin Edit Sidebar"
