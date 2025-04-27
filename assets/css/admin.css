@@ -1,0 +1,7 @@
+/* Admin dashboard custom styles */
+#adminmenu, #adminmenuback, #adminmenuwrap {
+    background-color: #111 !important;
+}
+#wpadminbar {
+    background: #000;
+}
